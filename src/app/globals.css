@@ -1,54 +1,163 @@
+/* ---------------- Fonts ---------------- */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ---------------- Theme tokens ---------------- */
 @layer base {
   :root {
     --background: 0 0% 3%;
     --foreground: 0 0% 98%;
+
     --card: 0 0% 8%;
     --card-foreground: 0 0% 98%;
+
     --popover: 0 0% 3%;
     --popover-foreground: 0 0% 98%;
+
     --primary: 60 9% 78%;
     --primary-foreground: 0 0% 9%;
+
     --secondary: 0 0% 15%;
     --secondary-foreground: 0 0% 98%;
+
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 64%;
+
     --accent: 0 0% 15%;
     --accent-foreground: 0 0% 98%;
+
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
+
     --border: 0 0% 15%;
     --input: 0 0% 15%;
     --ring: 60 9% 78%;
+
     --radius: 0.5rem;
   }
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-  html {
-    scroll-behavior: smooth;
-  }
+  * { @apply border-border; }
+  html { scroll-behavior: smooth; }
   body {
-    @apply bg-background text-foreground;
-    font-family: 'Geist', sans-serif;
+    @apply bg-background text-foreground antialiased;
+    color-scheme: dark;
+    font-family: 'Geist', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
   }
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', serif;
+  h1,h2,h3,h4,h5,h6 {
+    font-family: 'Playfair Display', ui-serif, Georgia, "Times New Roman", serif;
   }
 }
 
-.font-serif {
-  font-family: 'Playfair Display', serif;
-}
+/* Utility font classes */
+.font-serif { font-family: 'Playfair Display', ui-serif, Georgia, "Times New Roman", serif; }
+.font-sans  { font-family: 'Geist', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial; }
 
-.font-sans {
-  font-family: 'Geist', sans-serif;
+/* ---------------- Animations & helpers ---------------- */
+@layer utilities {
+  /* Hero reveals */
+  @keyframes reveal-up {
+    0%   { opacity: 0; transform: translateY(8px) scale(.98); }
+    100% { opacity: 1; transform: translateY(0)  scale(1); }
+  }
+  @keyframes reveal-scale {
+    0%   { opacity: 0; transform: scale(.98); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  .reveal-up    { animation: reveal-up .66s ease-out both; }
+  .reveal-scale { animation: reveal-scale .66s ease-out both; }
+
+  /* Simple delays */
+  .delay-100 { animation-delay: .10s; }
+  .delay-200 { animation-delay: .20s; }
+  .delay-300 { animation-delay: .30s; }
+  .delay-400 { animation-delay: .40s; }
+  .delay-500 { animation-delay: .50s; }
+
+  /* ===== Seamless marquee (pixel-perfect, twin-track) ===== */
+  .marquee {
+    --gap: 56px;       /* spacing between logos */
+    --logo-w: 150px;   /* logo box width */
+    --logo-h: 60px;    /* logo box height */
+    --track-w: 0px;    /* set from JS */
+    --duration: 20s;   /* set from JS */
+    position: relative;
+    overflow: hidden;
+    transform: translateZ(0);
+  }
+
+  /* Edge fades (overlays above content) */
+  .marquee-fade-l,
+  .marquee-fade-r {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 5rem;
+    pointer-events: none;
+    z-index: 10;
+  }
+  .marquee-fade-l { left: 0;  background: linear-gradient(to right, hsl(var(--background)), transparent); }
+  .marquee-fade-r { right: 0; background: linear-gradient(to left,  hsl(var(--background)), transparent); }
+
+  .marquee-track {
+    display: flex;
+    align-items: center;
+    gap: var(--gap);
+    width: max-content;                  /* actual width of items */
+    will-change: transform;
+    animation: marquee-px var(--duration) linear infinite;
+  }
+  .marquee-track.second {
+    position: absolute;
+    top: 0; bottom: 0;
+    left: var(--track-w);                /* sits exactly after the first */
+  }
+
+  /* translate exactly one track width in pixels */
+  @keyframes marquee-px {
+    from { transform: translateX(0); }
+    to   { transform: translateX(calc(-1 * var(--track-w))); }
+  }
+
+  /* Fixed-size logo boxes (identical per item) */
+  .logo-item {
+    flex: 0 0 auto;
+    width: var(--logo-w);
+    height: var(--logo-h);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block; /* avoids baseline shifts */
+  }
+
+  /* Hover: glow only (no movement) */
+  .logo-dim {
+    opacity: .6;
+    filter: saturate(.9) brightness(.95);
+    transition: opacity .25s ease, filter .25s ease;
+  }
+  .logo-dim:hover {
+    opacity: 1;
+    filter: saturate(1.15) brightness(1.15) drop-shadow(0 0 12px rgba(255,255,255,.12));
+  }
+
+  /* Accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-up, .reveal-scale, .marquee-track { animation: none !important; }
+  }
+
+  /* Selection */
+  ::selection {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
 }
