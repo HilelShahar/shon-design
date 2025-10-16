@@ -295,13 +295,13 @@ export default function HomePage() {
           <LogoMarquee
             logos={[
               "/logos/figma.svg",
+              "/logos/kling.svg",
+              "/logos/mid.svg",
+              "/logos/ps.svg", 
+              "/logos/pp.svg",
               "/logos/ai.svg",
-              "/logos/ps.svg",
-              "/logos/canva.svg",
-              "/logos/lr.svg",
+              "/logos/ae.svg",
               "/logos/indesign.svg",
-              "/logos/blender.svg",
-              "/logos/c4d.svg",
             ]}
             speed={60}
             gap={56}
