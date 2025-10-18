@@ -25,7 +25,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Shon Simhon",
+  title: "Shon's Design",
   description: "Developed by Shahar Hilel",
   icons: { icon: "/favicon.ico" }, // add /public/favicon.ico
   metadataBase: new URL("https://your-domain.com"), // set your real domain

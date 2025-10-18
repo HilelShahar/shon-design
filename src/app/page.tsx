@@ -206,7 +206,7 @@ export default function HomePage() {
           {/* CTAs */}
           <div className="mb-14 flex flex-col sm:flex-row items-center justify-center gap-3 reveal-up delay-300">
             <Button size="lg" onClick={() => scrollToSection("work")} className="rounded-full px-6">
-              See recent work
+              See work
             </Button>
             <Button size="lg" variant="outline" onClick={() => scrollToSection("contact")} className="rounded-full px-6">
               Get in touch
@@ -264,7 +264,7 @@ export default function HomePage() {
             {[
               { src: "/p2.png", title: "Poster Series", tag: "Print" },
               { src: "/p2.png", title: "Brand System", tag: "Branding" },
-              { src: "/p2.png", title: "Web Graphics", tag: "Web" },
+              { src: "/example.jpg", title: "ZACH - Track Design", tag: "2024" },
               // { src: "/p2.png", title: "Campaign Kit", tag: "Marketing" },
             ].map((item, i) => (
               <Card key={i} className="overflow-hidden group">
