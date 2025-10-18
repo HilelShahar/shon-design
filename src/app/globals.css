@@ -152,7 +152,9 @@
 
   /* Accessibility */
   @media (prefers-reduced-motion: reduce) {
-    .reveal-up, .reveal-scale, .marquee-track { animation: none !important; }
+  .reveal-up,
+  .reveal-scale { animation: none !important; }
+  /* keep marquee running */
   }
 
   /* Selection */
