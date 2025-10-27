@@ -143,7 +143,7 @@ export default function HomePage() {
 
           {/* subtitle placeholder */}
           <p className="mx-auto mb-10 max-w-2xl text-base sm:text-lg text-muted-foreground reveal-up delay-200">
-            I am the greatest designer alive, and Shahar is my King!
+            I am the greatest designer alive, and Shahar is my King!!
           </p>
 
           {/* CTAs */}
