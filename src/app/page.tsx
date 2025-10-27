@@ -123,8 +123,29 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+
+      {/* Desktop-only floating logo (doesn't affect layout) */}
+      <Link
+        href="/"
+        aria-label="Home"
+        className="hidden md:flex fixed top-4 left-6 z-40 items-center"
+      >
+        <img
+          src="/icon.png"
+          alt="Shon Simhon"
+          className="h-14 w-auto md:h-16"
+        />
+      </Link>
+
+
+
+
+
       {/* NEW frosted pill nav */}
       <PillNav onJump={scrollToSection} activeSection={activeSection} />
+
+
+
 
       {/* HERO */}
       <section id="home" className="min-h-screen flex items-center justify-center px-4 pt-28 sm:pt-32">
@@ -142,8 +163,8 @@ export default function HomePage() {
           </h1>
 
           {/* subtitle placeholder */}
-          <p className="mx-auto mb-10 max-w-2xl text-base sm:text-lg text-muted-foreground reveal-up delay-200">
-            I am the greatest designer alive, and Shahar is my King!!
+          <p className="whitespace-pre-wrap mx-auto mb-10 max-w-2xl text-base sm:text-lg text-muted-foreground reveal-up delay-200">
+            Sharp design.  Creative thinking.  Work that stands out.
           </p>
 
           {/* CTAs */}
@@ -214,9 +235,9 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
-              { src: "/p2.png", title: "Poster Series", tag: "Print" },
-              { src: "/p2.png", title: "Brand System", tag: "Branding" },
-              { src: "/example.jpg", title: "ZACH - Track Design", tag: "2024" },
+              { src: "/studio.jpg", title: "Single cover design - Dolev Dadon", tag: "2025" },
+              { src: "/single.jpg", title: "Branding design - Studio Movimiento", tag: "2025" },
+              { src: "/zach.jpg", title: "ZACH - Track Design", tag: "2025" },
               // { src: "/p2.png", title: "Campaign Kit", tag: "Marketing" },
             ].map((item, i) => (
               <Card key={i} className="overflow-hidden group">

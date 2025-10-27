@@ -12,7 +12,7 @@ export const projects: Project[] = [
     slug: "zach-track-design",
     title: "ZACH – Track Design",
     year: 2024,
-    cover: "/example.jpg",
+    cover: "/zach.jpg",
     longImage: "/projects/zach-long.jpg",
     description:
       "Visual identity and track graphics for ZACH. Clean shapes, crisp type, and a bold contrast system tailored for social and large-format print.",
