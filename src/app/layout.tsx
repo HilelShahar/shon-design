@@ -2,6 +2,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import RouteProgress from "@/components/RouteProgress";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -65,6 +66,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         ].join(" ")}
       >
         <main className="min-h-dvh">{children}</main>
+        <RouteProgress /> 
       </body>
     </html>
   );

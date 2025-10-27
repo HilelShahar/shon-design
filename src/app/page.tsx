@@ -5,66 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState, useMemo, useRef } from "react";
-import { Home, LayoutGrid, MessageCircle, Mail } from "lucide-react";
-
-
-/* =========================
-   Frosted Pill Navigation
-   ========================= */
-function PillNav({
-  active,
-  onJump,
-}: {
-  active: string;
-  onJump: (id: string) => void;
-}) {
-  const items = [
-    { id: "home", label: "Home", Icon: Home },
-    { id: "work", label: "Work", Icon: LayoutGrid },     // portfolio/grid
-    { id: "testimonials", label: "Testimonials", Icon: MessageCircle },  // clean chat bubble
-    { id: "contact", label: "Contact", Icon: Mail },
-  ];
-
-  return (
-    <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
-      <div
-        className="
-          relative flex items-center gap-1 md:gap-2 p-2
-          rounded-[80px]
-          bg-white/5 backdrop-blur-xl
-          border border-white/10
-          shadow-[0_-8px_24px_rgba(255,255,255,0.06),0_8px_24px_rgba(0,0,0,0.5)]
-        "
-      >
-        {items.map(({ id, label, Icon }) => {
-          const isActive = active === id;
-          return (
-            <button
-              key={id}
-              onClick={() => onJump(id)}
-              aria-label={label}
-              className={`relative inline-flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full transition-colors ${isActive ? "bg-white/15" : "hover:bg-white/10"
-                }`}
-            >
-              <Icon
-                size={22}
-                strokeWidth={1.8}
-                className={isActive ? "text-white" : "text-white/70"}
-                aria-hidden
-              />
-              {isActive && (
-                <>
-                  <span className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-white/20" />
-                  <span className="pointer-events-none absolute inset-0 rounded-full shadow-[0_0_24px_rgba(255,255,255,0.18)]" />
-                </>
-              )}
-            </button>
-          );
-        })}
-      </div>
-    </nav>
-  );
-}
+import PillNav from "@/components/PillNav";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 /* =========================
    Logo Marquee (your current version)
@@ -181,7 +124,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* NEW frosted pill nav */}
-      <PillNav active={activeSection} onJump={scrollToSection} />
+      <PillNav onJump={scrollToSection} activeSection={activeSection} />
 
       {/* HERO */}
       <section id="home" className="min-h-screen flex items-center justify-center px-4 pt-28 sm:pt-32">
@@ -216,7 +159,7 @@ export default function HomePage() {
           {/* hero image */}
           <div className="relative mx-auto max-w-lg reveal-scale delay-400">
             <Image
-              src="/p2.png"
+              src="/edited_Shon.png"
               alt="Shon portrait"
               width={800}
               height={1000}
@@ -258,6 +201,15 @@ export default function HomePage() {
         <div className="mx-auto max-w-6xl">
           <div className="mb-10 flex items-center justify-between">
             <h2 className="text-3xl md:text-4xl font-serif">Recent work</h2>
+            <Link href="/work">
+              <Button
+                variant="outline"
+                className="rounded-full px-4 h-9 border-white/30 text-foreground hover:bg-white/10 hover:border-white/50"
+              >
+                See all
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
           </div>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -297,7 +249,7 @@ export default function HomePage() {
               "/logos/figma.svg",
               "/logos/kling.svg",
               "/logos/mid.svg",
-              "/logos/ps.svg", 
+              "/logos/ps.svg",
               "/logos/pp.svg",
               "/logos/ai.svg",
               "/logos/ae.svg",
