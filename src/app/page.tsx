@@ -12,6 +12,25 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { projects } from "@/lib/projects";
 import ProjectView from "@/components/ProjectView";
 
+/* ---------- Overlay driven by ?project=... (wrapped in Suspense) ---------- */
+function RecentProjectOverlay() {
+  const search = useSearchParams();
+  const q = search?.get("project") ?? null;
+  const activeProject = projects.find(p => p.slug === q);
+  if (!activeProject) return null;
+
+  return (
+    <ProjectView
+      overlay
+      title={activeProject.title}
+      year={activeProject.year}
+      description={activeProject.description}
+      longImage={activeProject.longImage}
+      closeHref="/#work"
+    />
+  );
+}
+
 /* =========================
    Logo Marquee (your current version)
    ========================= */
@@ -111,28 +130,6 @@ export default function HomePage() {
     }
   };
 
-  const router = useRouter();
-  const search = useSearchParams();
-  const q = search?.get("project") ?? null;
-  const activeProject = projects.find(p => p.slug === q) ?? null;
-
-  const slugByTitle: Record<string, string | undefined> = {
-    "ZACH - Track Design": "zach-track-design",
-    "Single cover design - Dolev Dadon": "dolev-dadon-single-cover",
-    "Branding design - Studio Movimiento": "studio-movimiento-branding",
-  };
-
-  const openProjectByTitle = (title: string) => {
-    const slug = slugByTitle[title];
-    if (slug) {
-      router.push(`/?project=${slug}#work`, { scroll: false });
-    } else {
-      router.push("/work");
-    }
-  };
-
-
-
   useEffect(() => {
     const handleScroll = () => {
       const sections = ["home", "about", "work", "testimonials", "faq", "contact"];
@@ -168,7 +165,7 @@ export default function HomePage() {
         />
       </Link>
 
-      {/* NEW frosted pill nav */}
+      {/* Frosted pill nav */}
       <PillNav onJump={scrollToSection} activeSection={activeSection} />
 
       {/* HERO */}
@@ -184,7 +181,6 @@ export default function HomePage() {
             Shon Simhon,<br /> <span className="italic">Graphic designer</span>
           </h1>
 
-          {/* subtitle placeholder */}
           <p className="whitespace-pre-wrap mx-auto mb-10 max-w-2xl text-base sm:text-lg text-muted-foreground reveal-up delay-200">
             Sharp design.  Creative thinking.  Work that stands out.
           </p>
@@ -450,18 +446,10 @@ export default function HomePage() {
         </div>
       </footer>
 
-      {activeProject && (
-        <ProjectView
-          overlay
-          title={activeProject.title}
-          year={activeProject.year}
-          description={activeProject.description}
-          longImage={activeProject.longImage}
-          closeHref="/#work"
-        />
-      )}
-
-
+      {/* URL-driven overlay must be inside Suspense */}
+      <Suspense fallback={null}>
+        <RecentProjectOverlay />
+      </Suspense>
     </div>
   );
 }
