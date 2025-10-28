@@ -9,6 +9,19 @@ import { Card, CardContent } from "@/components/ui/card";
 export default function WorkPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
+      {/* Desktop-only floating logo (doesn't affect layout) */}
+      <Link
+        href="/"
+        aria-label="Home"
+        className="hidden md:flex fixed top-4 left-6 z-40 items-center"
+      >
+        <img
+          src="/icon.png"
+          alt="Shon Simhon"
+          className="h-14 w-auto md:h-16"
+        />
+      </Link>
+      
       <PillNav />
 
       <section className="px-4 pt-28 sm:pt-32 pb-16">
