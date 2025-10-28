@@ -28,7 +28,13 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Shon's Design",
   description: "Developed by Shahar Hilel",
-  icons: { icon: { url: "/icon.ico", type: "image/png", sizes: "48x48" } }, // add /public/favicon.ico
+  icons: {
+    icon: [ 
+      { url: "/favicon.ico" },
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+  },
   metadataBase: new URL("https://your-domain.com"), // set your real domain
   openGraph: {
     title: "Shon Simhon — Graphic Designer",

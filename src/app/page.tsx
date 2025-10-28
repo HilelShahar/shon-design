@@ -137,15 +137,8 @@ export default function HomePage() {
         />
       </Link>
 
-
-
-
-
       {/* NEW frosted pill nav */}
       <PillNav onJump={scrollToSection} activeSection={activeSection} />
-
-
-
 
       {/* HERO */}
       <section id="home" className="min-h-screen flex items-center justify-center px-4 pt-28 sm:pt-32">
@@ -235,8 +228,8 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
-              { src: "/studio.jpg", title: "Single cover design - Dolev Dadon", tag: "2025" },
-              { src: "/single.jpg", title: "Branding design - Studio Movimiento", tag: "2025" },
+              { src: "/single.jpg", title: "Single cover design - Dolev Dadon", tag: "2025" },
+              { src: "/studio.jpg", title: "Branding design - Studio Movimiento", tag: "2025" },
               { src: "/zach.jpg", title: "ZACH - Track Design", tag: "2025" },
               // { src: "/p2.png", title: "Campaign Kit", tag: "Marketing" },
             ].map((item, i) => (
