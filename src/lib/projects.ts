@@ -15,7 +15,7 @@ export const projects: Project[] = [
     title: "Single Cover — Dolev Dadon",
     year: 2025,
     cover: "/single.jpg",
-    longImage: "/projects/dolev-dadon-long.jpg",
+    longImage: "/dadon_long.jpg",
     description:
       "Cover art exploration and final exports for streaming platforms and socials.",
   },
@@ -33,7 +33,7 @@ export const projects: Project[] = [
     title: "ZACH — Track Design",
     year: 2025,
     cover: "/zach.jpg",
-    longImage: "/projects/zach-long.jpg",
+    longImage: "/zach_long.jpg",
     description:
       "Visual direction and key art for the ZACH release; bold type and high-contrast assets for web and print.",
   },

@@ -8,6 +8,9 @@ import { useEffect, useState, useMemo, useRef } from "react";
 import PillNav from "@/components/PillNav";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { projects } from "@/lib/projects";
+import ProjectView from "@/components/ProjectView";
 
 /* =========================
    Logo Marquee (your current version)
@@ -101,6 +104,28 @@ function LogoMarquee({
 
 export default function HomePage() {
   const [activeSection, setActiveSection] = useState("home");
+
+  const router = useRouter();
+  const search = useSearchParams();
+  const q = search?.get("project") ?? null;
+  const activeProject = projects.find(p => p.slug === q) ?? null;
+
+  const slugByTitle: Record<string, string | undefined> = {
+    "ZACH - Track Design": "zach-track-design",
+    "Single cover design - Dolev Dadon": "dolev-dadon-single-cover",
+    "Branding design - Studio Movimiento": "studio-movimiento-branding",
+  };
+
+  const openProjectByTitle = (title: string) => {
+    const slug = slugByTitle[title];
+    if (slug) {
+      router.push(`/?project=${slug}#work`, { scroll: false });
+    } else {
+      router.push("/work");
+    }
+  };
+
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -231,27 +256,34 @@ export default function HomePage() {
               { src: "/single.jpg", title: "Single cover design - Dolev Dadon", tag: "2025" },
               { src: "/studio.jpg", title: "Branding design - Studio Movimiento", tag: "2025" },
               { src: "/zach.jpg", title: "ZACH - Track Design", tag: "2025" },
-              // { src: "/p2.png", title: "Campaign Kit", tag: "Marketing" },
             ].map((item, i) => (
-              <Card key={i} className="overflow-hidden group">
-                <div className="relative aspect-[4/3]">
-                  <Image
-                    src={item.src}
-                    alt={item.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                  />
-                </div>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <p className="font-medium">{item.title}</p>
-                    <span className="text-xs opacity-60">{item.tag}</span>
+              <button
+                key={i}
+                onClick={() => openProjectByTitle(item.title)}
+                className="group text-left"
+                aria-label={`Open project ${item.title}`}
+              >
+                <Card className="overflow-hidden group">
+                  <div className="relative aspect-[4/3]">
+                    <Image
+                      src={item.src}
+                      alt={item.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                    />
                   </div>
-                </CardContent>
-              </Card>
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between">
+                      <p className="font-medium">{item.title}</p>
+                      <span className="text-xs opacity-60">{item.tag}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </button>
             ))}
           </div>
+
         </div>
       </section>
 
@@ -380,10 +412,27 @@ export default function HomePage() {
           <p className="mx-auto mb-10 max-w-2xl text-lg text-muted-foreground">
             Tell me about your project and timelines — I’ll reply quickly with next steps.
           </p>
+
           <div className="flex justify-center gap-3">
-            <Button size="lg" className="rounded-full px-8">Let’s talk</Button>
-            <Button size="lg" variant="outline" className="rounded-full px-8">Book a call</Button>
+            {/* WhatsApp (no prefilled message) */}
+            <Button size="lg" className="rounded-full px-8" asChild>
+              <a
+                href="https://wa.me/972502739221"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Let’s talk
+              </a>
+            </Button>
+
+            {/* Email */}
+            <Button size="lg" variant="outline" className="rounded-full px-8" asChild>
+              <a href="mailto:shonsimhon@gmail.com?subject=Project%20Inquiry">
+                Book a call
+              </a>
+            </Button>
           </div>
+
         </div>
       </section>
 
@@ -398,6 +447,19 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+      {activeProject && (
+        <ProjectView
+          overlay
+          title={activeProject.title}
+          year={activeProject.year}
+          description={activeProject.description}
+          longImage={activeProject.longImage}
+          closeHref="/#work"
+        />
+      )}
+
+
     </div>
   );
 }
