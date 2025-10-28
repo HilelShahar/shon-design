@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useMemo, useRef, Suspense } from "react";
 import PillNav from "@/components/PillNav";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -29,10 +29,9 @@ function LogoMarquee({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
-  // build one track; if you have 1–2 logos, repeat them so it doesn't look empty
   const trackLogos = useMemo(() => {
     const base = logos.length ? logos : ["/logos/figma.svg"];
-    const minItems = Math.max(6, 14 / Math.max(1, base.length)); // heuristic
+    const minItems = Math.max(6, 14 / Math.max(1, base.length));
     return Array.from({ length: Math.ceil(minItems) }, () => base).flat();
   }, [logos]);
 
@@ -41,15 +40,10 @@ function LogoMarquee({
     const wrap = wrapperRef.current;
     if (!el || !wrap) return;
 
-    // compute exact pixel width of one track
-    // each item contributes box.w + gap, except last which doesn't add gap
     const itemCount = trackLogos.length;
     const trackWidth = itemCount * box.w + (itemCount - 1) * gap;
+    const durationSec = Math.max(6, trackWidth / Math.max(20, speed));
 
-    // compute duration from speed (px/s)
-    const durationSec = Math.max(6, trackWidth / Math.max(20, speed)); // min duration cap
-
-    // set CSS custom props on wrapper so both tracks use identical values
     wrap.style.setProperty("--track-w", `${trackWidth}px`);
     wrap.style.setProperty("--duration", `${durationSec}s`);
   }, [trackLogos, speed, gap, box.w]);
@@ -60,18 +54,15 @@ function LogoMarquee({
       className="marquee"
       style={
         {
-          // keep CSS vars in sync with props; JS will overwrite after measure
           "--gap": `${gap}px`,
           "--logo-w": `${box.w}px`,
           "--logo-h": `${box.h}px`,
         } as React.CSSProperties
       }
     >
-      {/* edge fades */}
       <div className="marquee-fade-l" />
       <div className="marquee-fade-r" />
 
-      {/* first track */}
       <div ref={trackRef} className="marquee-track">
         {trackLogos.map((src, i) => (
           <div className="logo-item" key={`t1-${i}-${src}`}>
@@ -85,7 +76,6 @@ function LogoMarquee({
         ))}
       </div>
 
-      {/* second track (identical), positioned exactly after the first */}
       <div className="marquee-track second" aria-hidden="true">
         {trackLogos.map((src, i) => (
           <div className="logo-item" key={`t2-${i}-${src}`}>
@@ -104,6 +94,22 @@ function LogoMarquee({
 
 export default function HomePage() {
   const [activeSection, setActiveSection] = useState("home");
+  const router = useRouter();
+
+  const slugByTitle: Record<string, string | undefined> = {
+    "ZACH - Track Design": "zach-track-design",
+    "Single cover design - Dolev Dadon": "dolev-dadon-single-cover",
+    "Branding design - Studio Movimiento": "studio-movimiento-branding",
+  };
+
+  const openProjectByTitle = (title: string) => {
+    const slug = slugByTitle[title];
+    if (slug) {
+      router.push(`/?project=${slug}#work`, { scroll: false });
+    } else {
+      router.push("/work");
+    }
+  };
 
   const router = useRouter();
   const search = useSearchParams();
@@ -168,14 +174,12 @@ export default function HomePage() {
       {/* HERO */}
       <section id="home" className="min-h-screen flex items-center justify-center px-4 pt-28 sm:pt-32">
         <div className="mx-auto w-full max-w-6xl text-center">
-          {/* tags */}
           <div className="mb-10 flex flex-wrap justify-center gap-2 md:gap-3 reveal-up">
             <Badge variant="secondary" className="rounded-full px-3 py-2 text-xs md:text-sm">Branding</Badge>
             <Badge variant="secondary" className="rounded-full px-3 py-2 text-xs md:text-sm">Web graphics</Badge>
             <Badge variant="secondary" className="rounded-full px-3 py-2 text-xs md:text-sm">Print</Badge>
           </div>
 
-          {/* title */}
           <h1 className="mb-4 text-4xl sm:text-6xl md:text-7xl font-serif leading-tight reveal-up delay-100">
             Shon Simhon,<br /> <span className="italic">Graphic designer</span>
           </h1>
@@ -185,7 +189,6 @@ export default function HomePage() {
             Sharp design.  Creative thinking.  Work that stands out.
           </p>
 
-          {/* CTAs */}
           <div className="mb-14 flex flex-col sm:flex-row items-center justify-center gap-3 reveal-up delay-300">
             <Button size="lg" onClick={() => scrollToSection("work")} className="rounded-full px-6">
               See work
@@ -195,7 +198,6 @@ export default function HomePage() {
             </Button>
           </div>
 
-          {/* hero image */}
           <div className="relative mx-auto max-w-lg reveal-scale delay-400">
             <Image
               src="/edited_Shon.png"
