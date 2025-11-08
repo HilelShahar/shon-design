@@ -50,7 +50,7 @@ export const projects: Project[] = [
     slug: "barbershop-design",
     title: "Barbershop Design",
     year: 2024,
-    cover: "/barbershop_long.jpg",
+    cover: "/barbershop.jpg",
     longImage: "/barbershop_long.jpg",
     description:
       "Brand identity, signage, and promotional materials for a modern barbershop.",
@@ -59,7 +59,7 @@ export const projects: Project[] = [
     slug: "clothing-brand-design",
     title: "Branding — Valorea",
     year: 2024,
-    cover: "/valorea_long.jpg",
+    cover: "/valorea.jpg",
     longImage: "/valorea_long.jpg",
     description:
       "Visual identity and packaging for a sustainable clothing brand.",
