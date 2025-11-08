@@ -15,7 +15,7 @@ export const projects: Project[] = [
     title: "Single Cover — Dolev Dadon",
     year: 2025,
     cover: "/single.jpg",
-    longImage: "/dadon_long.jpg",
+    longImage: "/single_long.jpg",
     description:
       "Cover art exploration and final exports for streaming platforms and socials.",
   },
@@ -37,17 +37,38 @@ export const projects: Project[] = [
     description:
       "Visual direction and key art for the ZACH release; bold type and high-contrast assets for web and print.",
   },
+  {
+    slug: "wedding-design",
+    title: "Wedding Design",
+    year: 2025,
+    cover: "/wedding_long.jpg",
+    longImage: "/wedding_long.jpg",
+    description:
+      "Wedding invitation suite, signage, and social announcements with a modern yet timeless aesthetic.",
+  },
+  {
+    slug: "barbershop-design",
+    title: "Barbershop Design",
+    year: 2024,
+    cover: "/barbershop_long.jpg",
+    longImage: "/barbershop_long.jpg",
+    description:
+      "Brand identity, signage, and promotional materials for a modern barbershop.",
+  },
+  {
+    slug: "clothing-brand-design",
+    title: "Branding — Valorea",
+    year: 2024,
+    cover: "/valorea_long.jpg",
+    longImage: "/valorea_long.jpg",
+    description:
+      "Visual identity and packaging for a sustainable clothing brand.",
+  },
+
 
   // === Extra placeholders — swap titles/years/images when ready ===
-  {
-    slug: "poster-series-a",
-    title: "Poster Series A",
-    year: 2024,
-    cover: "/work/poster-a/cover.jpg",
-    longImage: "/projects/poster-a-long.jpg",
-    description:
-      "Type-led poster study exploring rhythm, spacing, and negative space.",
-  },
+
+/*
   {
     slug: "brand-system-b",
     title: "Brand System B",
@@ -56,24 +77,6 @@ export const projects: Project[] = [
     longImage: "/projects/brand-b-long.jpg",
     description:
       "Compact identity system: logo suite, color tokens, typography, and usage rules.",
-  },
-  {
-    slug: "web-graphics-c",
-    title: "Web Graphics C",
-    year: 2023,
-    cover: "/work/web-c/cover.jpg",
-    longImage: "/projects/web-c-long.jpg",
-    description:
-      "Hero visuals and responsive social cut-downs optimized for load and clarity.",
-  },
-  {
-    slug: "campaign-kit-d",
-    title: "Campaign Kit D",
-    year: 2023,
-    cover: "/work/campaign-d/cover.jpg",
-    longImage: "/projects/campaign-d-long.jpg",
-    description:
-      "OOH, stories, and paid placements with a consistent visual thread.",
   },
   {
     slug: "editorial-e",
@@ -121,3 +124,4 @@ export const projects: Project[] = [
       "Lean identity package built for small-biz speed and clarity.",
   },
 ];
+*/];
