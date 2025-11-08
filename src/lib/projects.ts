@@ -39,7 +39,7 @@ export const projects: Project[] = [
   },
   {
     slug: "wedding-design",
-    title: "Wedding Design",
+    title: "Wessing & Events Invitation Design",
     year: 2025,
     cover: "/wedding_long.jpg",
     longImage: "/wedding_long.jpg",
@@ -48,8 +48,8 @@ export const projects: Project[] = [
   },
   {
     slug: "barbershop-design",
-    title: "Barbershop Design",
-    year: 2024,
+    title: "Hair Stylist — Logo Design",
+    year: 2024, 
     cover: "/barbershop.jpg",
     longImage: "/barbershop_long.jpg",
     description:
@@ -57,12 +57,12 @@ export const projects: Project[] = [
   },
   {
     slug: "clothing-brand-design",
-    title: "Branding — Valorea",
+    title: "Branding — VALOREA",
     year: 2024,
     cover: "/valorea.jpg",
     longImage: "/valorea_long.jpg",
     description:
-      "Visual identity and packaging for a sustainable clothing brand.",
+    ""
   },
 
 
