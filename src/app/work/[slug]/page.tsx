@@ -20,6 +20,8 @@ export default async function ProjectPage({ params }: Props) {
       title={project.title}
       year={project.year}
       description={project.description}
+      descriptionRtl={project.descriptionRtl}
+      descriptionFooter={project.descriptionFooter}
       longImage={project.longImage}
       closeHref="/work"
     />

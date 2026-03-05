@@ -74,6 +74,7 @@ export default function ProjectOverlay({
               alt={title}
               width={2000}
               height={6000}
+              quality={100}
               className="w-full h-auto object-cover"
               priority
             />

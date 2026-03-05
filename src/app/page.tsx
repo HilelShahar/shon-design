@@ -25,6 +25,8 @@ function RecentProjectOverlay() {
       title={activeProject.title}
       year={activeProject.year}
       description={activeProject.description}
+      descriptionRtl={activeProject.descriptionRtl}
+      descriptionFooter={activeProject.descriptionFooter}
       longImage={activeProject.longImage}
       closeHref="/#work"
     />
@@ -200,6 +202,7 @@ export default function HomePage() {
               alt="Shon portrait"
               width={800}
               height={1000}
+              quality={100}
               className="h-auto w-full rounded-3xl transition-transform duration-500 hover:scale-[1.02]"
               priority
             />
@@ -214,19 +217,26 @@ export default function HomePage() {
           <div className="grid gap-8 md:grid-cols-2">
             <Card className="p-6 md:p-8">
               <h3 className="mb-3 text-xl font-medium">Approach</h3>
-              <p className="text-sm md:text-base text-muted-foreground">
-                I design clean, minimal visuals that communicate clearly. Fast iterations, honest feedback,
-                and crisp delivery files are my default. From brand identities to web heroes and posters,
-                I aim for work that feels refined and practical.
-              </p>
+              <div className="space-y-3 text-sm md:text-base text-muted-foreground">
+                <p>
+                  I focus on creating visual identities and designs that feel clear, memorable, and refined.
+                </p>
+                <p>
+                  My work combines clean aesthetics with strong visual thinking, turning ideas into bold and distinctive visual solutions.
+                </p>
+                <p>
+                  From brand identities and logos to posters and creative visuals, I aim to design work that communicates clearly, stands out, and leaves a lasting impression.
+                </p>
+              </div>
             </Card>
             <Card className="p-6 md:p-8">
               <h3 className="mb-3 text-xl font-medium">Capabilities</h3>
               <ul className="list-disc space-y-2 pl-5 text-sm md:text-base text-muted-foreground">
-                <li>Brand identity (logos, palettes, type)</li>
-                <li>Web graphics & hero visuals</li>
-                <li>Marketing assets (posters, social kits, decks)</li>
-                <li>Production-ready exports & tidy source files</li>
+                <li>Brand identity design (logos, color palettes, typography)</li>
+                <li>Visual branding systems</li>
+                <li>Poster design & creative campaigns</li>
+                <li>Cover art & promotional visuals</li>
+                <li>Organized, production-ready design files</li>
               </ul>
             </Card>
           </div>
@@ -251,13 +261,20 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
-              { src: "/single.jpg", title: "Single cover design - Dolev Dadon", tag: "2025" },
-              { src: "/studio.jpg", title: "Branding design - Studio Movimiento", tag: "2025" },
-              { src: "/zach.jpg", title: "ZACH - Track Design", tag: "2025" },
+              { src: "/single.jpg", title: "Single cover design - Dolev Dadon", tag: "2025", longImage: "/single_long.jpg" },
+              { src: "/studio.jpg", title: "Branding design - Studio Movimiento", tag: "2025", longImage: "/studio_long.jpg" },
+              { src: "/zach.jpg", title: "ZACH - Track Design", tag: "2025", longImage: "/zach_long.jpg" },
             ].map((item, i) => (
               <button
                 key={i}
                 onClick={() => openProjectByTitle(item.title)}
+                onMouseEnter={() => {
+                  const link = document.createElement("link");
+                  link.rel = "preload";
+                  link.as = "image";
+                  link.href = item.longImage;
+                  document.head.appendChild(link);
+                }}
                 className="group text-left"
                 aria-label={`Open project ${item.title}`}
               >
@@ -268,6 +285,7 @@ export default function HomePage() {
                       alt={item.title}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      quality={100}
                       className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                     />
                   </div>
@@ -348,7 +366,7 @@ export default function HomePage() {
                 </div>
                 <blockquote className="mb-6 text-sm">“{t.text}”</blockquote>
                 <div className="flex items-center gap-3">
-                  <img src={t.avatar} alt={t.name} className="h-10 w-10 rounded-full" />
+                  <Image src={t.avatar} alt={t.name} width={40} height={40} className="h-10 w-10 rounded-full object-cover" />
                   <div>
                     <div className="text-sm font-medium">{t.name}</div>
                     <div className="text-xs text-muted-foreground">{t.title}</div>
@@ -361,33 +379,33 @@ export default function HomePage() {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="px-4 py-20">
+      <section id="faq" className="px-4 py-20" dir="rtl">
         <div className="mx-auto max-w-4xl">
-          <Accordion type="single" collapsible className="space-y-4">
+          <Accordion type="multiple" className="space-y-4">
             {[
               {
-                q: "What’s your typical timeline for projects?",
-                a: "Most branding or small site graphics wrap in 1–3 weeks. Larger systems or multi-asset campaigns can run 4–6 weeks. I’ll give you a clear schedule before we start."
+                q: "מה זמן העבודה הממוצע על פרויקט?",
+                a: "זה משתנה מפרויקט לפרויקט, אבל בדרך כלל אני עובד בטווח של שבוע עד שלושה.\nאני שואף לעבוד בצורה יעילה, בלי לוותר על איכות.\n\nבמקרים של פרויקטים מורכבים או מיתוגים רחבים, לוח הזמנים יכול להתארך – בהתאם לצורך ולתיאום מראש."
               },
               {
-                q: "How do we collaborate and share feedback?",
-                a: "I work in short, focused rounds with async check-ins. We use comments (Figma/PDF) and a shared doc for decisions. You’ll always know what’s next."
+                q: "איך מתבצע התהליך מולך? איך מעבירים הערות?",
+                a: "במה שנוח לך – וואטסאפ, מייל, שיחת טלפון.\nאני זמין, מקשיב, משתף אותך בשלבים, והכי חשוב – גורם לך להרגיש חלק מהתהליך."
               },
               {
-                q: "What files do I receive on delivery?",
-                a: "You get tidy, organized sources (AI/PSD/FIG as relevant), web exports (SVG/PNG/JPG), and a short handoff note with colors, type, and usage."
+                q: "אילו קבצים אני מקבל בסיום העבודה?",
+                a: "כל מה שצריך: לוגואים בפורמטים שונים (SVG, PNG, PDF), קבצים לרשתות חברתיות, חומרים להדפסה וכל מה שסוכם מראש.\nמסודר, מוכן, ונוח לשימוש."
               },
               {
-                q: "Do you offer ongoing support?",
-                a: "Yes. I can stay on for monthly design support or ad-hoc updates. We’ll tailor the cadence to your pace."
+                q: "אתה נותן גם ליווי אחרי שהפרויקט נגמר?",
+                a: "כן, לגמרי.\nגם אחרי שהפרויקט מסתיים אני כאן אם צריך התאמה, שינוי קטן, או סתם עוד עין מקצועית."
               },
               {
-                q: "How many revisions are included?",
-                a: "Each round includes feedback and refinements. Most projects land within 2–3 rounds because we align early with references and goals."
+                q: "כמה סבבי תיקונים כלולים?",
+                a: "בדרך כלל 2–3 סבבים, אבל אני פחות סופר ויותר דואג שיצא מדויק.\nהמטרה היא שזה ירגיש טוב ונכון לשני הצדדים."
               },
               {
-                q: "Can you help with print or web production?",
-                a: "Yep—prepress for print, and optimized assets for web/social. If a developer or printer needs anything special, I coordinate directly."
+                q: "אתה גם עוזר בהכנה להדפסה או לאתר?",
+                a: "כן.\nאם צריך – אני עובד מול בתי דפוס או מתכנתים כדי לוודא שהתוצאה יוצאת כמו שצריך – גם בדיגיטל וגם בדפוס."
               },
             ].map((item, i) => (
               <AccordionItem
@@ -396,7 +414,7 @@ export default function HomePage() {
                 className="bg-card border border-border rounded-2xl px-6"
               >
                 <AccordionTrigger>{item.q}</AccordionTrigger>
-                <AccordionContent>{item.a}</AccordionContent>
+                <AccordionContent className="whitespace-pre-line">{item.a}</AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>

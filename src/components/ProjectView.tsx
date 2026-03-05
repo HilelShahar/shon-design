@@ -8,6 +8,8 @@ type Props = {
   title: string;
   year?: string | number;
   description?: string;
+  descriptionRtl?: boolean;
+  descriptionFooter?: string;
   longImage: string;
   closeHref: string;   // e.g. "/work" or "/#work"
   overlay?: boolean;   // ← NEW (optional)
@@ -17,6 +19,8 @@ export default function ProjectView({
   title,
   year,
   description,
+  descriptionRtl = false,
+  descriptionFooter,
   longImage,
   closeHref,
   overlay = false,
@@ -72,7 +76,12 @@ export default function ProjectView({
         </header>
 
         {description && (
-          <p className="mb-8 text-muted-foreground">{description}</p>
+          <div className="mb-8" dir={descriptionRtl ? "rtl" : undefined}>
+            <p className="text-muted-foreground whitespace-pre-line">{description}</p>
+            {descriptionFooter && (
+              <p className="mt-4 text-xs text-muted-foreground/70">{descriptionFooter}</p>
+            )}
+          </div>
         )}
 
         <div className="overflow-hidden rounded-2xl border border-border">
@@ -81,6 +90,7 @@ export default function ProjectView({
             alt={title}
             width={2000}
             height={6000}
+            quality={100}
             className="w-full h-auto object-cover"
             priority
           />
@@ -109,7 +119,12 @@ export default function ProjectView({
           </header>
 
           {description && (
-            <p className="mb-8 text-muted-foreground">{description}</p>
+            <div className="mb-8" dir={descriptionRtl ? "rtl" : undefined}>
+              <p className="text-muted-foreground whitespace-pre-line">{description}</p>
+              {descriptionFooter && (
+                <p className="mt-4 text-xs text-muted-foreground/70">{descriptionFooter}</p>
+              )}
+            </div>
           )}
 
           <div className="overflow-hidden rounded-2xl border border-border">
@@ -118,6 +133,7 @@ export default function ProjectView({
               alt={title}
               width={2000}
               height={6000}
+              quality={100}
               className="w-full h-auto object-cover"
               priority
             />
