@@ -27,7 +27,7 @@ const AccordionTrigger = React.forwardRef<
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        "flex w-full items-center justify-between py-6 text-left text-base md:text-lg font-medium",
+        "flex w-full items-center justify-between py-6 text-start text-base md:text-lg font-medium font-sans",
         "transition-colors hover:text-foreground",
         // rotate the plus to make an “X” when open
         "[&[data-state=open]>svg]:rotate-45",
@@ -35,7 +35,7 @@ const AccordionTrigger = React.forwardRef<
       )}
       {...props}
     >
-      <span className="pr-6">{children}</span>
+      <span className="pe-6">{children}</span>
       <Plus
         className="h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-200"
         strokeWidth={1.8}
@@ -53,12 +53,12 @@ const AccordionContent = React.forwardRef<
   <AccordionPrimitive.Content
     ref={ref}
     className={cn(
-      "overflow-hidden text-sm md:text-base text-muted-foreground",
+      "overflow-hidden text-sm md:text-base text-muted-foreground text-start font-sans",
       "data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
     )}
     {...props}
   >
-    <div className={cn("pb-6 pt-0", className)}>{children}</div>
+    <div className={cn("pb-6 pt-0 pe-6", className)}>{children}</div>
   </AccordionPrimitive.Content>
 ))
 AccordionContent.displayName = AccordionPrimitive.Content.displayName

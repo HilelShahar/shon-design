@@ -21,9 +21,8 @@ export default function RouteProgress() {
     if (timerRef.current) window.clearTimeout(timerRef.current);
     timerRef.current = window.setTimeout(() => {
       setWidth(100);
-      // hide after finish animation
-      setTimeout(() => setVisible(false), 250);
-    }, 400); // tweak (300–700ms) to taste
+      setTimeout(() => setVisible(false), 150);
+    }, 200);
 
     return () => {
       if (timerRef.current) window.clearTimeout(timerRef.current);

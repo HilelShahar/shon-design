@@ -35,7 +35,18 @@ export default function WorkPage() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {projects.map((p) => (
-              <Link key={p.slug} href={`/work/${p.slug}`} className="group">
+              <Link
+                key={p.slug}
+                href={`/work/${p.slug}`}
+                className="group"
+                onMouseEnter={() => {
+                  const link = document.createElement("link");
+                  link.rel = "preload";
+                  link.as = "image";
+                  link.href = p.longImage;
+                  document.head.appendChild(link);
+                }}
+              >
                 <Card className="overflow-hidden">
                   <div className="relative aspect-[4/3]">
                     <Image
@@ -43,6 +54,7 @@ export default function WorkPage() {
                       alt={p.title}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      quality={100}
                       className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                     />
                   </div>
