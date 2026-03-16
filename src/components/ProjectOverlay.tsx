@@ -68,15 +68,13 @@ export default function ProjectOverlay({
 
         {/* Long image */}
         <div className="px-5 pb-6">
-          <div className="overflow-hidden rounded-2xl border border-border bg-muted">
+          <div className="overflow-hidden rounded-2xl border border-border">
             <Image
               src={longImage}
               alt={title}
               width={2000}
               height={6000}
               quality={100}
-              placeholder="blur"
-              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAn/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBEQACEQAD8QAf/9k="
               className="w-full h-auto object-cover"
               priority
             />

@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import PillNav from "@/components/PillNav";
@@ -8,22 +7,6 @@ import { projects } from "@/lib/projects";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function WorkPage() {
-  // Preload first 3 long images after page load to speed up first project open
-  useEffect(() => {
-    const recentLongImages = projects.slice(0, 3).map((p) => p.longImage);
-    const id = setTimeout(() => {
-      recentLongImages.forEach((src) => {
-        const link = document.createElement("link");
-        link.rel = "preload";
-        link.as = "image";
-        link.href = `/_next/image?url=${encodeURIComponent(src)}&w=2000&q=100`;
-        document.head.appendChild(link);
-      });
-    }, 1500);
-
-    return () => clearTimeout(id);
-  }, []);
-
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Desktop-only floating logo (doesn't affect layout) */}
@@ -65,7 +48,7 @@ export default function WorkPage() {
                 }}
               >
                 <Card className="overflow-hidden">
-                  <div className="relative aspect-[4/3] bg-muted">
+                  <div className="relative aspect-[4/3]">
                     <Image
                       src={p.cover}
                       alt={p.title}

@@ -148,20 +148,22 @@ export default function HomePage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Preload first 3 long images (Recent work) after page load to speed up first project open
+  // Preload Recent work long images after page is idle (doesn't block initial load)
   useEffect(() => {
-    const recentLongImages = ["/single_long.jpg", "/studio_long.jpg", "/zach_long.jpg"];
-    const id = setTimeout(() => {
-      recentLongImages.forEach((src) => {
+    const preload = () => {
+      ["/single_long.jpg", "/studio_long.jpg", "/zach_long.jpg"].forEach((src) => {
         const link = document.createElement("link");
         link.rel = "preload";
         link.as = "image";
         link.href = `/_next/image?url=${encodeURIComponent(src)}&w=2000&q=100`;
         document.head.appendChild(link);
       });
-    }, 1500);
-
-    return () => clearTimeout(id);
+    };
+    if (typeof requestIdleCallback !== "undefined") {
+      requestIdleCallback(preload, { timeout: 2000 });
+    } else {
+      setTimeout(preload, 2000);
+    }
   }, []);
 
   const scrollToSection = (id: string) =>
@@ -212,7 +214,7 @@ export default function HomePage() {
             </Button>
           </div>
 
-          <div className="relative mx-auto max-w-lg reveal-scale delay-400 bg-muted rounded-3xl overflow-hidden">
+          <div className="relative mx-auto max-w-lg reveal-scale delay-400">
             <Image
               src="/edited_Shon.png"
               alt="Shon portrait"
@@ -295,7 +297,7 @@ export default function HomePage() {
                 aria-label={`Open project ${item.title}`}
               >
                 <Card className="overflow-hidden group">
-                  <div className="relative aspect-[4/3] bg-muted">
+                  <div className="relative aspect-[4/3]">
                     <Image
                       src={item.src}
                       alt={item.title}
