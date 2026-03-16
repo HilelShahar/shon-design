@@ -272,7 +272,7 @@ export default function HomePage() {
                   const link = document.createElement("link");
                   link.rel = "preload";
                   link.as = "image";
-                  link.href = item.longImage;
+                  link.href = `/_next/image?url=${encodeURIComponent(item.longImage)}&w=2000&q=100`;
                   document.head.appendChild(link);
                 }}
                 className="group text-left"
@@ -288,7 +288,7 @@ export default function HomePage() {
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       quality={100}
                       placeholder="blur"
-                      blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAn/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBEQACEQAD8QAf/9k="
                       className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                     />
                   </div>
