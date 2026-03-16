@@ -157,7 +157,7 @@ export default function HomePage() {
         const link = document.createElement("link");
         link.rel = "preload";
         link.as = "image";
-        link.href = `/_next/image?url=${encodeURIComponent(src)}&w=2000&q=100`;
+        link.href = src;
         document.head.appendChild(link);
       });
     };
@@ -292,7 +292,7 @@ export default function HomePage() {
                   const link = document.createElement("link");
                   link.rel = "preload";
                   link.as = "image";
-                  link.href = `/_next/image?url=${encodeURIComponent(item.longImage)}&w=2000&q=100`;
+                  link.href = item.longImage;
                   document.head.appendChild(link);
                 }}
                 className="group text-left"

@@ -45,7 +45,7 @@ export default function WorkPage() {
                   const link = document.createElement("link");
                   link.rel = "preload";
                   link.as = "image";
-                  link.href = `/_next/image?url=${encodeURIComponent(p.longImage)}&w=2000&q=100`;
+                  link.href = p.longImage;
                   document.head.appendChild(link);
                 }}
               >
