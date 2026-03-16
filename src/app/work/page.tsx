@@ -34,7 +34,7 @@ export default function WorkPage() {
           </header>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {projects.map((p) => (
+            {projects.map((p, i) => (
               <Link
                 key={p.slug}
                 href={`/work/${p.slug}`}
@@ -53,8 +53,11 @@ export default function WorkPage() {
                       src={p.cover}
                       alt={p.title}
                       fill
+                      loading={i < 3 ? "eager" : "lazy"}
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       quality={100}
+                      placeholder="blur"
+                      blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
                       className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                     />
                   </div>

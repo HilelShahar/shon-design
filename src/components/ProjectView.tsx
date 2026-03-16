@@ -91,6 +91,8 @@ export default function ProjectView({
             width={2000}
             height={6000}
             quality={100}
+            placeholder="blur"
+            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
             className="w-full h-auto object-cover"
             priority
           />
@@ -134,6 +136,8 @@ export default function ProjectView({
               width={2000}
               height={6000}
               quality={100}
+              placeholder="blur"
+              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
               className="w-full h-auto object-cover"
               priority
             />
