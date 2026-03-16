@@ -34,7 +34,7 @@ export default function WorkPage() {
           </header>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {projects.map((p) => (
+            {projects.map((p, i) => (
               <Link
                 key={p.slug}
                 href={`/work/${p.slug}`}
@@ -43,7 +43,7 @@ export default function WorkPage() {
                   const link = document.createElement("link");
                   link.rel = "preload";
                   link.as = "image";
-                  link.href = p.longImage;
+                  link.href = `/_next/image?url=${encodeURIComponent(p.longImage)}&w=2000&q=100`;
                   document.head.appendChild(link);
                 }}
               >
@@ -53,8 +53,11 @@ export default function WorkPage() {
                       src={p.cover}
                       alt={p.title}
                       fill
+                      loading={i < 3 ? "eager" : "lazy"}
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       quality={100}
+                      placeholder="blur"
+                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAn/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBEQACEQAD8QAf/9k="
                       className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                     />
                   </div>

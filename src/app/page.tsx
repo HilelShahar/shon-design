@@ -272,7 +272,7 @@ export default function HomePage() {
                   const link = document.createElement("link");
                   link.rel = "preload";
                   link.as = "image";
-                  link.href = item.longImage;
+                  link.href = `/_next/image?url=${encodeURIComponent(item.longImage)}&w=2000&q=100`;
                   document.head.appendChild(link);
                 }}
                 className="group text-left"
@@ -284,8 +284,11 @@ export default function HomePage() {
                       src={item.src}
                       alt={item.title}
                       fill
+                      loading="eager"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       quality={100}
+                      placeholder="blur"
+                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAn/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBEQACEQAD8QAf/9k="
                       className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                     />
                   </div>
@@ -325,52 +328,55 @@ export default function HomePage() {
       </section>
 
       {/* TESTIMONIALS */}
-      <section id="testimonials" className="px-4 py-20">
+      <section id="testimonials" className="px-4 py-20" dir="rtl">
         <div className="mx-auto max-w-6xl">
-          <h2 className="mb-12 text-3xl md:text-4xl font-serif">What others say</h2>
+          <h2 className="mb-12 text-3xl md:text-4xl font-serif">מה אומרים עליי</h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {[
               {
-                text: "Shon’s work exceeded all expectations. Fresh ideas and an exceptional finish.",
-                name: "Jordan P.", title: "Startup Founder",
-                avatar: "https://ext.same-assets.com/4129804017/849432527.jpeg",
+                text: "פניתי לשון לעיצוב עטיפה למוזיקה והוא הצליח לתרגם את האווירה של השיר בצורה ויזואלית ממש יפה. העיצוב עם השקיעות והאווירה האפריקאית יצא מאוד מיוחד",
+                name: "מיסטיקן.", title: "יוצר מוזיקה",
+                stars: 5,
               },
               {
-                text: "From concept to completion, the portfolio reflects our brand perfectly.",
-                name: "Samantha R.", title: "Creative Director",
-                avatar: "https://ext.same-assets.com/4129804017/3647061311.png",
+                text: "שון עובד איתי על עיצוב קטלוג והוא מאוד מסודר ומקצועי בתהליך. הוא שולח סקיצות, מקשיב לפידבק ותמיד זמין לשינויים. העבודה איתו נעימה והתוצאה נראית מצוין",
+                name: "מיה ר.", title: "בעלת עסק",
+                stars: 4,
               },
               {
-                text: "Unique approach, smooth process, polished and cohesive results.",
-                name: "Nina S.", title: "Marketing Manager",
-                avatar: "https://ext.same-assets.com/4129804017/3065586418.jpeg",
+                text: "שון הגיע לסטודיו כדי להבין את האווירה והסגנון שלי, וזה ממש הורגש בתוצאה. דרך התמונות והשיחה בינינו הוא הצליח למצוא כיוון ללוגו שמרגיש מאוד מדויק לעסק",
+                name: "יעל ק.", title: "בעלת סטודיו",
+                stars: 5,
               },
               {
-                text: "Innovative designs that align with our identity and perform.",
-                name: "Lucas M.", title: "Photographer",
-                avatar: "https://ext.same-assets.com/4129804017/3647061311.png",
+                text: "מה שאהבתי אצל שון זה הגישה הנעימה והמקצועית. הוא מקשיב, מציע רעיונות משלו ומצליח להביא משהו קצת אחר מהרגיל",
+                name: "נועם ש.", title: "יזם",
+                stars: 4,
               },
               {
-                text: "Transformed our vision into reality with creativity and care.",
-                name: "Juno C.", title: "Small Business Owner",
-                avatar: "https://ext.same-assets.com/4129804017/3065586418.jpeg",
+                text: "שון הגיע לפגישה איתי כדי להבין את העסק והכיוון למיתוג, וזה ממש עזר לתהליך. הוא הביא כמה רעיונות מעניינים ללוגו ובסוף הצלחנו להגיע לפתרון שמרגיש נכון למותג",
+                name: "עומר ל.", title: "בעל מותג",
+                stars: 5,
+              },
+              {
+                text: "עבדתי עם שון על תהליך מיתוג והוא ליווה אותי גם בבחירות לקראת ההדפסה הוא הסביר על החומרים, הצבעים ומה יעבוד הכי טוב בפועל הרגשתי שיש מישהו שממש חושב עד הפרטים הקטנים ולא רק על העיצוב עצמו.",
+                name: "יוסי זוהר",
+                title: "בעל עסק",
+                stars: 5,
               },
             ].map((t, i) => (
               <Card key={i} className="p-6">
                 <div className="mb-3 flex">
-                  {[...Array(5)].map((_, idx) => (
+                  {[...Array(t.stars)].map((_, idx) => (
                     <svg key={idx} width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="text-yellow-400">
                       <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
                     </svg>
                   ))}
                 </div>
                 <blockquote className="mb-6 text-sm">“{t.text}”</blockquote>
-                <div className="flex items-center gap-3">
-                  <Image src={t.avatar} alt={t.name} width={40} height={40} className="h-10 w-10 rounded-full object-cover" />
-                  <div>
-                    <div className="text-sm font-medium">{t.name}</div>
-                    <div className="text-xs text-muted-foreground">{t.title}</div>
-                  </div>
+                <div>
+                  <div className="text-sm font-medium">{t.name}</div>
+                  <div className="text-xs text-muted-foreground">{t.title}</div>
                 </div>
               </Card>
             ))}
