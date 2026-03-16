@@ -5,8 +5,10 @@ import Link from "next/link";
 import PillNav from "@/components/PillNav";
 import { projects } from "@/lib/projects";
 import { Card, CardContent } from "@/components/ui/card";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 export default function WorkPage() {
+  const isMobile = useIsMobile();
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Desktop-only floating logo (doesn't affect layout) */}
@@ -56,8 +58,8 @@ export default function WorkPage() {
                       loading={i < 3 ? "eager" : "lazy"}
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       quality={100}
-                      placeholder="blur"
-                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAn/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBEQACEQAD8QAf/9k="
+                      placeholder={isMobile ? "empty" : "blur"}
+                      blurDataURL={isMobile ? undefined : "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAn/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBEQACEQAD8QAf/9k="}
                       className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                     />
                   </div>

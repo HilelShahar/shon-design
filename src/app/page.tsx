@@ -11,6 +11,7 @@ import { ArrowRight } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { projects } from "@/lib/projects";
 import ProjectView from "@/components/ProjectView";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 /* ---------- Overlay driven by ?project=... (wrapped in Suspense) ---------- */
 function RecentProjectOverlay() {
@@ -116,6 +117,7 @@ function LogoMarquee({
 export default function HomePage() {
   const [activeSection, setActiveSection] = useState("home");
   const router = useRouter();
+  const isMobile = useIsMobile();
 
   const slugByTitle: Record<string, string | undefined> = {
     "ZACH - Track Design": "zach-track-design",
@@ -305,8 +307,8 @@ export default function HomePage() {
                       loading="eager"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       quality={100}
-                      placeholder="blur"
-                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAn/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBEQACEQAD8QAf/9k="
+                      placeholder={isMobile ? "empty" : "blur"}
+                      blurDataURL={isMobile ? undefined : "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAn/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBEQACEQAD8QAf/9k="}
                       className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                     />
                   </div>
