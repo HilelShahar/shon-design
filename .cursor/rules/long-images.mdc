@@ -1,0 +1,14 @@
+---
+description: Run make-progressive when new long images are added
+alwaysApply: true
+---
+
+# Long Images - Progressive JPEG
+
+When the user adds new long images (`*_long.jpg`) to the `public/` folder, always run:
+
+```bash
+npm run make-progressive
+```
+
+This converts them to progressive JPEGs so they load top-to-bottom for a better UX. The script auto-detects all `*_long.jpg` files in `public/`, so no manual updates are needed.

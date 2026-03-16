@@ -48,7 +48,7 @@ export default function WorkPage() {
                 }}
               >
                 <Card className="overflow-hidden">
-                  <div className="relative aspect-[4/3]">
+                  <div className="relative aspect-[4/3] bg-muted/30">
                     <Image
                       src={p.cover}
                       alt={p.title}

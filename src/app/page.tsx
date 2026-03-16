@@ -297,7 +297,7 @@ export default function HomePage() {
                 aria-label={`Open project ${item.title}`}
               >
                 <Card className="overflow-hidden group">
-                  <div className="relative aspect-[4/3]">
+                  <div className="relative aspect-[4/3] bg-muted/30">
                     <Image
                       src={item.src}
                       alt={item.title}

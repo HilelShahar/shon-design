@@ -89,7 +89,7 @@ export default function ProjectView({
           </div>
         )}
 
-        <div className="overflow-hidden rounded-2xl border border-border">
+        <div className="overflow-hidden rounded-2xl border border-border bg-muted/30">
           <Image
             src={longImage}
             alt={title}
@@ -134,7 +134,7 @@ export default function ProjectView({
             </div>
           )}
 
-          <div className="overflow-hidden rounded-2xl border border-border">
+          <div className="overflow-hidden rounded-2xl border border-border bg-muted/30">
             <Image
               src={longImage}
               alt={title}

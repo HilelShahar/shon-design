@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -H 0.0.0.0 --turbopack",
+    "make-progressive": "node scripts/make-progressive.js",
     "build": "next build",
     "start": "next start",
     "lint": "bunx tsc --noEmit && next lint",

@@ -40,6 +40,11 @@
 @layer base {
   * { @apply border-border; }
   html { scroll-behavior: smooth; }
+  /* Hide broken image icon / placeholder on mobile */
+  img {
+    font-size: 0;
+    line-height: 0;
+  }
   body {
     @apply bg-background text-foreground antialiased;
     color-scheme: dark;
