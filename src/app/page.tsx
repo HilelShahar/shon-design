@@ -18,6 +18,7 @@ import {
 } from "@/lib/introSequence";
 import ProjectView from "@/components/ProjectView";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { useHeroPortraitReveal } from "@/hooks/useHeroPortraitReveal";
 
 /* ---------- Overlay driven by ?project=... (wrapped in Suspense) ---------- */
 function RecentProjectOverlay() {
@@ -123,6 +124,7 @@ function LogoMarquee({
 export default function HomePage() {
   const [activeSection, setActiveSection] = useState("home");
   const [heroEntrance, setHeroEntrance] = useState<"armed" | "run">("armed");
+  const heroRef = useHeroPortraitReveal<HTMLElement>();
   const router = useRouter();
   const isMobile = useIsMobile();
 
@@ -218,7 +220,7 @@ export default function HomePage() {
       <PillNav onJump={scrollToSection} activeSection={activeSection} />
 
       {/* HERO */}
-      <section id="home" className="min-h-screen flex items-center justify-center px-4 pt-28 sm:pt-32">
+      <section ref={heroRef} id="home" className="min-h-screen flex items-center justify-center px-4 pt-28 sm:pt-32">
         <div className="mx-auto w-full max-w-6xl text-center">
           <div className="mb-10 flex flex-wrap justify-center gap-2 md:gap-3 hero-chips">
             <Badge variant="secondary" className="rounded-full px-3 py-2 text-xs md:text-sm">Branding</Badge>
@@ -226,7 +228,7 @@ export default function HomePage() {
             <Badge variant="secondary" className="rounded-full px-3 py-2 text-xs md:text-sm">Print</Badge>
           </div>
 
-          <h1 className="mb-4 font-serif">
+          <h1 className="mb-4 font-serif hero-title">
             <span className="hero-line hero-line-name">
               <span className="hero-name">Shon Simhon,</span>
             </span>
@@ -249,15 +251,17 @@ export default function HomePage() {
           </div>
 
           <div className="relative mx-auto max-w-lg hero-portrait">
-            <Image
-              src="/edited_Shon.png"
-              alt="Shon portrait"
-              width={800}
-              height={1000}
-              quality={100}
-              className="h-auto w-full rounded-3xl transition-transform duration-500 hover:scale-[1.02]"
-              priority
-            />
+            <div className="hero-portrait-reveal">
+              <Image
+                src="/edited_Shon.png"
+                alt="Shon portrait"
+                width={800}
+                height={1000}
+                quality={100}
+                className="h-auto w-full rounded-3xl transition-transform duration-500 hover:scale-[1.02]"
+                priority
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -502,7 +506,7 @@ export default function HomePage() {
             {/* Email */}
             <Button size="lg" variant="outline" className="rounded-full px-8" asChild>
               <a href="mailto:shonsimhon@gmail.com?subject=Project%20Inquiry">
-                Book a call
+                Email me
               </a>
             </Button>
           </div>

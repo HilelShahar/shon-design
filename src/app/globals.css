@@ -224,6 +224,10 @@
   /* ===== Hero first-view entrance (armed on load, run after the curtain) ===== */
   [data-hero-entrance] {
     --hero-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    /* Scroll reveal defaults; the hook overrides these on the hero section. */
+    --hero-p: 0;
+    --hero-mask-a: 0%;
+    --hero-mask-b: 0%;
   }
 
   /* Clip-mask wrapper: the padding keeps italic descenders/overhang inside the
@@ -317,6 +321,32 @@
     to   { opacity: 1; }
   }
 
+  /* ===== Scroll-linked portrait reveal (scrubbed by --hero-p, never triggered) =====
+     Kept off the elements the entrance animates: the reveal sits on an inner
+     wrapper, and the hero copy dims via filter so it cannot fight the
+     fill-forwards opacity of the entrance keyframes. */
+  .hero-portrait-reveal {
+    -webkit-mask-image: linear-gradient(to bottom, #000 var(--hero-mask-a), transparent var(--hero-mask-b));
+    mask-image: linear-gradient(to bottom, #000 var(--hero-mask-a), transparent var(--hero-mask-b));
+    transform: translate3d(0, calc(var(--hero-p) * -44px), 0) scale(calc(0.98 + 0.04 * var(--hero-p)));
+    will-change: transform;
+  }
+  .hero-title {
+    transform: translate3d(0, calc(var(--hero-p) * -10px), 0);
+  }
+  .hero-chips,
+  .hero-para,
+  .hero-cta {
+    filter: opacity(calc(1 - 0.4 * var(--hero-p)));
+  }
+
+  /* Mobile: lighter reveal, no scale */
+  @media (max-width: 767px) {
+    .hero-portrait-reveal {
+      transform: translate3d(0, calc(var(--hero-p) * -22px), 0);
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     [data-hero-entrance] .hero-name,
     [data-hero-entrance] .hero-sub,
@@ -324,10 +354,18 @@
     [data-hero-entrance] .hero-para,
     [data-hero-entrance] .hero-cta,
     [data-hero-entrance] .hero-portrait,
+    [data-hero-entrance] .hero-portrait-reveal,
+    [data-hero-entrance] .hero-title,
     [data-hero-entrance] .pill-nav {
       animation: none !important;
       opacity: 1 !important;
       transform: none !important;
+      filter: none !important;
+    }
+    /* Static, fully revealed portrait — no scroll-driven mask */
+    [data-hero-entrance] .hero-portrait-reveal {
+      -webkit-mask-image: none !important;
+      mask-image: none !important;
     }
   }
 
