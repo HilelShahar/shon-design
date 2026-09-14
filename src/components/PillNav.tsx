@@ -24,7 +24,7 @@ export default function PillNav({ onJump, activeSection }: Props) {
   const onWorkPage = pathname.startsWith("/work");
 
   return (
-    <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
+    <nav className="pill-nav fixed top-6 left-1/2 -translate-x-1/2 z-50">
       <div
         className="
           relative flex items-center gap-1 md:gap-2 p-2

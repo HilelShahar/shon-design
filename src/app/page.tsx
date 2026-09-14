@@ -6,10 +6,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState, useMemo, useRef, Suspense } from "react";
 import PillNav from "@/components/PillNav";
+import IntroOverlay from "@/components/IntroOverlay";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { projects } from "@/lib/projects";
+import {
+  HERO_REVEAL_AT_MS,
+  HERO_REVEAL_EVENT,
+  INTRO_SEEN_KEY,
+} from "@/lib/introSequence";
 import ProjectView from "@/components/ProjectView";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
@@ -116,6 +122,7 @@ function LogoMarquee({
 
 export default function HomePage() {
   const [activeSection, setActiveSection] = useState("home");
+  const [heroEntrance, setHeroEntrance] = useState<"armed" | "run">("armed");
   const router = useRouter();
   const isMobile = useIsMobile();
 
@@ -133,6 +140,26 @@ export default function HomePage() {
       router.push("/work");
     }
   };
+
+  // Hero entrance waits for the intro curtain to clear the hero. Without the
+  // intro (already seen this session, or reduced motion) it runs on mount.
+  useEffect(() => {
+    const start = () => setHeroEntrance("run");
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || sessionStorage.getItem(INTRO_SEEN_KEY) === "1") {
+      start();
+      return;
+    }
+
+    window.addEventListener(HERO_REVEAL_EVENT, start, { once: true });
+    const failsafe = window.setTimeout(start, HERO_REVEAL_AT_MS + 1200);
+
+    return () => {
+      window.removeEventListener(HERO_REVEAL_EVENT, start);
+      window.clearTimeout(failsafe);
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -172,7 +199,7 @@ export default function HomePage() {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground" data-hero-entrance={heroEntrance}>
 
       {/* Desktop-only floating logo (doesn't affect layout) */}
       <Link
@@ -193,22 +220,27 @@ export default function HomePage() {
       {/* HERO */}
       <section id="home" className="min-h-screen flex items-center justify-center px-4 pt-28 sm:pt-32">
         <div className="mx-auto w-full max-w-6xl text-center">
-          <div className="mb-10 flex flex-wrap justify-center gap-2 md:gap-3 reveal-up">
+          <div className="mb-10 flex flex-wrap justify-center gap-2 md:gap-3 hero-chips">
             <Badge variant="secondary" className="rounded-full px-3 py-2 text-xs md:text-sm">Branding</Badge>
             <Badge variant="secondary" className="rounded-full px-3 py-2 text-xs md:text-sm">Web graphics</Badge>
             <Badge variant="secondary" className="rounded-full px-3 py-2 text-xs md:text-sm">Print</Badge>
           </div>
 
-          <h1 className="mb-4 text-4xl sm:text-6xl md:text-7xl font-serif leading-tight reveal-up delay-100">
-            Shon Simhon,<br /> <span className="italic">Graphic designer</span>
+          <h1 className="mb-4 font-serif">
+            <span className="hero-line hero-line-name">
+              <span className="hero-name">Shon Simhon,</span>
+            </span>
+            <span className="hero-line hero-line-sub">
+              <span className="hero-sub italic">Graphic designer</span>
+            </span>
           </h1>
 
-          <p className="whitespace-pre-wrap mx-auto mb-10 max-w-2xl text-base sm:text-lg text-muted-foreground reveal-up delay-200">
+          <p className="whitespace-pre-wrap mx-auto mb-10 max-w-2xl text-base sm:text-lg text-muted-foreground hero-para">
             Sharp design.  Creative thinking.  Work that stands out.
           </p>
 
-          <div className="mb-14 flex flex-col sm:flex-row items-center justify-center gap-3 reveal-up delay-300">
-            <Button size="lg" onClick={() => scrollToSection("work")} className="rounded-full px-6">
+          <div className="mb-14 flex flex-col sm:flex-row items-center justify-center gap-3 hero-cta">
+            <Button size="lg" variant="accent" onClick={() => scrollToSection("work")} className="rounded-full px-6">
               See work
             </Button>
             <Button size="lg" variant="outline" onClick={() => scrollToSection("contact")} className="rounded-full px-6">
@@ -216,7 +248,7 @@ export default function HomePage() {
             </Button>
           </div>
 
-          <div className="relative mx-auto max-w-lg reveal-scale delay-400">
+          <div className="relative mx-auto max-w-lg hero-portrait">
             <Image
               src="/edited_Shon.png"
               alt="Shon portrait"
@@ -457,7 +489,7 @@ export default function HomePage() {
 
           <div className="flex justify-center gap-3">
             {/* WhatsApp (no prefilled message) */}
-            <Button size="lg" className="rounded-full px-8" asChild>
+            <Button size="lg" variant="accent" className="rounded-full px-8" asChild>
               <a
                 href="https://wa.me/972502739221"
                 target="_blank"
@@ -494,6 +526,8 @@ export default function HomePage() {
       <Suspense fallback={null}>
         <RecentProjectOverlay />
       </Suspense>
+
+      <IntroOverlay />
     </div>
   );
 }

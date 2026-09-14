@@ -34,6 +34,11 @@
     --ring: 60 9% 78%;
 
     --radius: 0.5rem;
+
+    /* Primary action accent — CTAs only, not a brand fill */
+    --accent-primary: #5B3F8C;
+    --accent-hover: #6B4DA6;
+    --accent-active: #47316D;
   }
 }
 
@@ -61,6 +66,19 @@
 
 /* ---------------- Animations & helpers ---------------- */
 @layer utilities {
+  /* Primary action CTA; :active after :hover so press wins */
+  .btn-accent {
+    background-color: var(--accent-primary);
+    color: hsl(var(--foreground));
+    transition: background-color 220ms ease, color 220ms ease;
+  }
+  .btn-accent:hover {
+    background-color: var(--accent-hover);
+  }
+  .btn-accent:active {
+    background-color: var(--accent-active);
+  }
+
   /* Hero reveals */
   @keyframes reveal-up {
     0%   { opacity: 0; transform: translateY(8px) scale(.98); }
@@ -149,6 +167,155 @@
   .logo-dim:hover {
     opacity: 1;
     filter: saturate(1.15) brightness(1.15) drop-shadow(0 0 12px rgba(255,255,255,.12));
+  }
+
+  /* ===== Homepage intro overlay (isolated; does not affect layout) ===== */
+  .intro-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    pointer-events: auto;
+  }
+  .intro-overlay-curtain {
+    position: absolute;
+    inset: 0;
+    background: #000;
+    transform-origin: right center;
+    will-change: transform;
+    animation: intro-wipe 2.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+  .intro-overlay-runner {
+    position: absolute;
+    top: 52%;
+    left: 0;
+    width: 29px;
+    height: 54px;
+    will-change: transform;
+    animation: intro-run 2.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+  .intro-overlay-runner svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  @keyframes intro-wipe {
+    0%, 8% { transform: scaleX(1); }
+    100% { transform: scaleX(0); }
+  }
+  @keyframes intro-run {
+    0%, 8% { transform: translate3d(-28px, -50%, 0); }
+    100% { transform: translate3d(100vw, -50%, 0); }
+  }
+
+  /* ===== Hero first-view entrance (armed on load, run after the curtain) ===== */
+  [data-hero-entrance] {
+    --hero-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Clip-mask wrapper: the padding keeps italic descenders/overhang inside the
+     clip box, the matching negative margin removes it from layout again. */
+  .hero-line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.14em;
+    margin-bottom: -0.14em;
+    padding-inline: 0.1em;
+    margin-inline: -0.1em;
+  }
+  .hero-line > span {
+    display: block;
+    will-change: transform;
+  }
+  .hero-line-name {
+    font-size: clamp(2.5rem, 7.6vw, 4.75rem);
+    line-height: 1.02;
+  }
+  .hero-line-sub {
+    font-size: clamp(1.8rem, 5.5vw, 3.4rem);
+    line-height: 1.1;
+  }
+
+  /* Armed: pre-entrance resting state while the curtain is still up */
+  [data-hero-entrance="armed"] .hero-name {
+    transform: translate3d(0, calc(100% + 0.18em), 0);
+  }
+  [data-hero-entrance="armed"] .hero-sub {
+    transform: translate3d(0, calc(100% + 0.36em), 0);
+  }
+  [data-hero-entrance="armed"] .hero-chips > *,
+  [data-hero-entrance="armed"] .hero-para,
+  [data-hero-entrance="armed"] .hero-cta,
+  [data-hero-entrance="armed"] .pill-nav {
+    opacity: 0;
+  }
+  [data-hero-entrance="armed"] .hero-portrait {
+    transform: translate3d(0, 26px, 0);
+  }
+
+  /* Run: ~1.06s total, sequenced name -> subtitle -> chips -> copy -> CTAs */
+  [data-hero-entrance="run"] .hero-name {
+    animation: hero-line-in 720ms var(--hero-ease) both;
+  }
+  [data-hero-entrance="run"] .hero-sub {
+    animation: hero-line-in-sub 700ms var(--hero-ease) 130ms both;
+  }
+  [data-hero-entrance="run"] .hero-chips > * {
+    animation: hero-soft-in 450ms var(--hero-ease) both;
+  }
+  [data-hero-entrance="run"] .hero-chips > *:nth-child(1) { animation-delay: 150ms; }
+  [data-hero-entrance="run"] .hero-chips > *:nth-child(2) { animation-delay: 220ms; }
+  [data-hero-entrance="run"] .hero-chips > *:nth-child(3) { animation-delay: 290ms; }
+  [data-hero-entrance="run"] .hero-para {
+    animation: hero-soft-in 520ms var(--hero-ease) 330ms both;
+  }
+  [data-hero-entrance="run"] .hero-cta {
+    animation: hero-cta-in 520ms var(--hero-ease) 420ms both;
+  }
+  [data-hero-entrance="run"] .hero-portrait {
+    animation: hero-portrait-in 760ms var(--hero-ease) 300ms both;
+  }
+  [data-hero-entrance="run"] .pill-nav {
+    animation: hero-nav-in 520ms var(--hero-ease) 120ms both;
+  }
+
+  @keyframes hero-line-in {
+    from { transform: translate3d(0, calc(100% + 0.18em), 0); }
+    to   { transform: translate3d(0, 0, 0); }
+  }
+  @keyframes hero-line-in-sub {
+    from { transform: translate3d(0, calc(100% + 0.36em), 0); }
+    to   { transform: translate3d(0, 0, 0); }
+  }
+  @keyframes hero-soft-in {
+    from { opacity: 0; transform: translate3d(0, 14px, 0); }
+    to   { opacity: 1; transform: translate3d(0, 0, 0); }
+  }
+  @keyframes hero-cta-in {
+    from { opacity: 0; transform: translate3d(0, 14px, 0) scale(.98); }
+    to   { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+  }
+  @keyframes hero-portrait-in {
+    from { transform: translate3d(0, 26px, 0); }
+    to   { transform: translate3d(0, 0, 0); }
+  }
+  @keyframes hero-nav-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-hero-entrance] .hero-name,
+    [data-hero-entrance] .hero-sub,
+    [data-hero-entrance] .hero-chips > *,
+    [data-hero-entrance] .hero-para,
+    [data-hero-entrance] .hero-cta,
+    [data-hero-entrance] .hero-portrait,
+    [data-hero-entrance] .pill-nav {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
   }
 
   /* Accessibility */
