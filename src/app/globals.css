@@ -188,24 +188,37 @@
     position: absolute;
     top: 52%;
     left: 0;
-    width: 29px;
-    height: 54px;
+    width: clamp(74px, 10.8vw, 96px);
+    aspect-ratio: 700 / 725;
     will-change: transform;
     animation: intro-run 2.4s cubic-bezier(0.4, 0, 0.2, 1) both;
   }
-  .intro-overlay-runner svg {
-    display: block;
+  .intro-overlay-sprite {
     width: 100%;
     height: 100%;
-    overflow: visible;
+    overflow: hidden;
+    background-image: url("/runner/runner-sprite.webp");
+    background-repeat: no-repeat;
+    background-size: 600% 100%;
+    animation:
+      intro-sprite 0.36s steps(6) infinite,
+      intro-bob 0.18s ease-in-out infinite;
   }
   @keyframes intro-wipe {
     0%, 8% { transform: scaleX(1); }
     100% { transform: scaleX(0); }
   }
   @keyframes intro-run {
-    0%, 8% { transform: translate3d(-28px, -50%, 0); }
+    0%, 8% { transform: translate3d(-100%, -50%, 0); }
     100% { transform: translate3d(100vw, -50%, 0); }
+  }
+  @keyframes intro-sprite {
+    from { background-position: 0 0; }
+    to { background-position: 120% 0; }
+  }
+  @keyframes intro-bob {
+    from, to { transform: translateY(0); }
+    50% { transform: translateY(-2px); }
   }
 
   /* ===== Hero first-view entrance (armed on load, run after the curtain) ===== */
