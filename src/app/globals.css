@@ -331,13 +331,32 @@
     transform: translate3d(0, calc(var(--hero-p) * -44px), 0) scale(calc(0.98 + 0.04 * var(--hero-p)));
     will-change: transform;
   }
-  .hero-title {
-    transform: translate3d(0, calc(var(--hero-p) * -10px), 0);
-  }
   .hero-chips,
   .hero-para,
   .hero-cta {
     filter: opacity(calc(1 - 0.4 * var(--hero-p)));
+  }
+
+  /* Supporting line: slow, independent micro-drift. Inner spans so this
+     cannot fight the entrance transform on .hero-para. */
+  .hero-phrase {
+    display: inline-block;
+  }
+  .hero-phrase-a {
+    --phrase-x: 2px;
+    animation: hero-phrase-drift 5.2s ease-in-out infinite;
+  }
+  .hero-phrase-b {
+    --phrase-x: -3px;
+    animation: hero-phrase-drift 6.4s ease-in-out -2.1s infinite;
+  }
+  .hero-phrase-c {
+    --phrase-x: 1.5px;
+    animation: hero-phrase-drift 7s ease-in-out -4.4s infinite;
+  }
+  @keyframes hero-phrase-drift {
+    0%, 100% { transform: translate3d(calc(var(--phrase-x) * -1), 0, 0); }
+    50% { transform: translate3d(var(--phrase-x), 0, 0); }
   }
 
   /* Mobile: lighter reveal, no scale */
@@ -345,6 +364,9 @@
     .hero-portrait-reveal {
       transform: translate3d(0, calc(var(--hero-p) * -22px), 0);
     }
+    .hero-phrase-a { --phrase-x: 1.25px; }
+    .hero-phrase-b { --phrase-x: -1.75px; }
+    .hero-phrase-c { --phrase-x: 0.75px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -356,6 +378,7 @@
     [data-hero-entrance] .hero-portrait,
     [data-hero-entrance] .hero-portrait-reveal,
     [data-hero-entrance] .hero-title,
+    [data-hero-entrance] .hero-phrase,
     [data-hero-entrance] .pill-nav {
       animation: none !important;
       opacity: 1 !important;

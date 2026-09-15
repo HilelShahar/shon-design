@@ -37,21 +37,22 @@ export function useHeroPortraitReveal<T extends HTMLElement>() {
       range = Math.min(520, Math.max(160, sectionBottom - window.innerHeight));
     };
 
-    // Visible fraction of the portrait for a given scroll progress.
-    // Delayed start so the name reads first; then head → face → body → full.
+    // Visible fraction of the portrait. Held nearly closed at the start so
+    // the name reads first, then opens more in the second half of the range.
     const visibleAt = (p: number) => {
-      if (p <= 0) return 0;
-      if (p <= 0.2) return (p / 0.2) * 0.12;
-      if (p <= 0.4) return 0.12 + ((p - 0.2) / 0.2) * 0.3;
-      if (p <= 0.65) return 0.42 + ((p - 0.4) / 0.25) * 0.28;
-      return 0.7 + ((p - 0.65) / 0.35) * 0.3;
+      if (p <= 0.12) return 0;
+      if (p <= 0.28) return ((p - 0.12) / 0.16) * 0.1;
+      if (p <= 0.48) return 0.1 + ((p - 0.28) / 0.2) * 0.32;
+      if (p <= 0.68) return 0.42 + ((p - 0.48) / 0.2) * 0.28;
+      if (p <= 0.85) return 0.7 + ((p - 0.68) / 0.17) * 0.2;
+      return 0.9 + ((p - 0.85) / 0.15) * 0.1;
     };
 
     const update = () => {
       frame = 0;
       const p = Math.min(1, Math.max(0, window.scrollY / range));
       const a = visibleAt(p);
-      const b = p <= 0 ? 0 : Math.min(1, a + 0.16);
+      const b = a <= 0 ? 0 : Math.min(1, a + 0.16);
       section.style.setProperty("--hero-p", p.toFixed(4));
       section.style.setProperty("--hero-mask-a", `${(a * 100).toFixed(2)}%`);
       section.style.setProperty("--hero-mask-b", `${(b * 100).toFixed(2)}%`);

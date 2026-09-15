@@ -237,8 +237,12 @@ export default function HomePage() {
             </span>
           </h1>
 
-          <p className="whitespace-pre-wrap mx-auto mb-10 max-w-2xl text-base sm:text-lg text-muted-foreground hero-para">
-            Sharp design.  Creative thinking.  Work that stands out.
+          <p className="mx-auto mb-10 max-w-2xl text-base sm:text-lg text-muted-foreground hero-para">
+            <span className="hero-phrase hero-phrase-a">Sharp design.</span>
+            {"  "}
+            <span className="hero-phrase hero-phrase-b">Creative thinking.</span>
+            {"  "}
+            <span className="hero-phrase hero-phrase-c">Work that stands out.</span>
           </p>
 
           <div className="mb-14 flex flex-col sm:flex-row items-center justify-center gap-3 hero-cta">
