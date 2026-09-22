@@ -706,7 +706,7 @@
 /* Salif Keita / Zach case study. Scoped so the rest of the site stays as it is. */
 .zach-hero {
   position: relative;
-  min-height: min(92vh, 920px);
+  width: 100%;
   overflow: hidden;
   color: #f7f1ea;
 }
@@ -715,20 +715,27 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: #140606;
+  background: #8f2a10;
 }
 
-.zach-sky-photo {
+.zach-sky-photo,
+.zach-sky-video {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center center;
-  transform: scale(1.45) translate(8%, -12%);
-  transform-origin: center center;
+  object-position: center 42%;
   pointer-events: none;
   user-select: none;
+}
+
+.zach-sky-video {
+  opacity: 0;
+}
+
+.zach-sky-video.is-ready {
+  opacity: 1;
 }
 
 .zach-sky-shade {
@@ -762,17 +769,9 @@
   .zach-haze {
     animation: none;
   }
-}
 
-@media (min-width: 768px) {
-  .zach-sky-photo {
-    transform: scale(1.7) translate(18%, -4%);
-  }
-}
-
-@media (min-width: 1200px) {
-  .zach-sky-photo {
-    transform: scale(1.85) translate(26%, -2%);
+  .zach-sky-video {
+    display: none;
   }
 }
 
@@ -788,17 +787,42 @@
   background: linear-gradient(to bottom, transparent, hsl(var(--background)));
 }
 
+.salif-vinyl {
+  top: 5.5rem;
+  z-index: 1;
+}
+
+.salif-vinyl img,
+.salif-vinyl video {
+  filter: brightness(0.86) saturate(0.88) sepia(0.12) drop-shadow(0 14px 22px rgba(48, 12, 4, 0.22));
+}
+
 .zach-hero-layout {
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.15fr);
-  gap: clamp(1.5rem, 4vw, 4rem);
-  align-items: end;
+  grid-template-columns: 1fr;
+  justify-items: center;
+  align-items: start;
   width: min(1440px, 100%);
-  min-height: min(92vh, 920px);
   margin: 0 auto;
-  padding: 7.5rem 5vw 5.5rem;
+  padding: calc(5.5rem + 40vw + 2rem) 1.25rem 3.5rem;
+}
+
+@media (min-width: 1024px) {
+  .zach-hero {
+    height: 100svh;
+    min-height: 100svh;
+  }
+
+  .zach-hero-layout {
+    grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.15fr);
+    justify-items: start;
+    gap: clamp(1.5rem, 4vw, 4rem);
+    height: 100%;
+    min-height: 100%;
+    padding: min(66svh, calc(100svh - 17.5rem)) 5vw clamp(2.75rem, 6vh, 4.5rem);
+  }
 }
 
 .zach-hero-art {
@@ -824,10 +848,11 @@
 .zach-hero-copy {
   position: relative;
   isolation: isolate;
+  width: min(100%, 36rem);
   max-width: 36rem;
   padding-bottom: 1.5rem;
   text-align: center;
-  justify-self: start;
+  justify-self: center;
 }
 
 .zach-hero-copy::before {
@@ -836,11 +861,27 @@
   z-index: -1;
   inset: -2.5rem -1.5rem -1rem -2.5rem;
   background: radial-gradient(
-    ellipse at 35% 45%,
+    ellipse at 50% 45%,
     rgba(24, 8, 6, 0.72) 0%,
     rgba(24, 8, 6, 0.42) 48%,
     transparent 78%
   );
+}
+
+@media (min-width: 1024px) {
+  .zach-hero-copy {
+    text-align: left;
+    justify-self: start;
+  }
+
+  .zach-hero-copy::before {
+    background: radial-gradient(
+      ellipse at 35% 45%,
+      rgba(24, 8, 6, 0.72) 0%,
+      rgba(24, 8, 6, 0.42) 48%,
+      transparent 78%
+    );
+  }
 }
 
 .zach-tags {
@@ -851,6 +892,12 @@
   margin: 0 0 1.1rem;
   padding: 0;
   list-style: none;
+}
+
+@media (min-width: 1024px) {
+  .zach-tags {
+    justify-content: flex-start;
+  }
 }
 
 .zach-tags li {
@@ -1047,18 +1094,7 @@
   }
 }
 
-@media (max-width: 767px) {
-  .zach-hero,
-  .zach-hero-layout {
-    min-height: 0;
-  }
-
-  .zach-hero-layout {
-    grid-template-columns: 1fr;
-    align-items: start;
-    padding: 6.25rem 1.25rem 3.5rem;
-  }
-
+@media (max-width: 1023px) {
   .zach-hero-art {
     justify-self: stretch;
   }
@@ -1071,7 +1107,9 @@
     background:
       linear-gradient(180deg, rgba(8, 3, 2, 0.38) 0%, transparent 16%, transparent 36%, rgba(8, 3, 2, 0.55) 62%, rgba(6, 2, 2, 0.78) 100%);
   }
+}
 
+@media (max-width: 767px) {
   .zach-title {
     font-size: clamp(2.8rem, 14vw, 3.6rem);
   }

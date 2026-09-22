@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUp } from "lucide-react";
 import PillNav from "@/components/PillNav";
+import SalifVinylVideo from "@/components/SalifVinylVideo";
 import { MaskedReveal, Reveal } from "@/components/motion/Motion";
 import type { Project } from "@/lib/projects";
 
@@ -98,6 +99,70 @@ const PROCESS = [
   },
 ];
 
+function ZachSkyVideo() {
+  const ref = useRef<HTMLVideoElement>(null);
+  const armed = useRef(false);
+  const [ready, setReady] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    const video = ref.current;
+    if (!video) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || video.error) {
+      setFailed(true);
+      return;
+    }
+
+    const reveal = () => setReady(true);
+    const arm = () => {
+      if (armed.current) return;
+      if (typeof video.requestVideoFrameCallback === "function") {
+        armed.current = true;
+        video.requestVideoFrameCallback(() => reveal());
+        return;
+      }
+      if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+        armed.current = true;
+        reveal();
+      }
+    };
+
+    arm();
+    video.addEventListener("loadeddata", arm);
+    video.addEventListener("canplay", arm);
+    video.addEventListener("playing", arm);
+    const onError = () => setFailed(true);
+    video.addEventListener("error", onError);
+    return () => {
+      video.removeEventListener("loadeddata", arm);
+      video.removeEventListener("canplay", arm);
+      video.removeEventListener("playing", arm);
+      video.removeEventListener("error", onError);
+    };
+  }, []);
+
+  if (failed) return null;
+
+  return (
+    <video
+      ref={ref}
+      className={ready ? "zach-sky-video is-ready" : "zach-sky-video"}
+      src="/media/salif/safari-sunset-loop.mp4"
+      poster="/media/salif/safari-sunset-poster.jpg"
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="auto"
+      onCanPlay={(event) => {
+        const video = event.currentTarget;
+        video.muted = true;
+        if (video.paused) video.play().catch(() => undefined);
+      }}
+    />
+  );
+}
+
 export default function ZachCaseStudy({ project }: { project: Project }) {
   return (
     <div className="zach-study min-h-screen bg-background text-foreground">
@@ -105,10 +170,21 @@ export default function ZachCaseStudy({ project }: { project: Project }) {
 
       <section className="zach-hero" aria-label="Salif Keita, Zach">
         <div className="zach-sky" aria-hidden="true">
-          <img className="zach-sky-photo" src="/zach-hero-sky.jpg" alt="" />
+          <img
+            className="zach-sky-photo"
+            src="/media/salif/safari-sunset-poster.jpg"
+            alt=""
+            width={1024}
+            height={576}
+            fetchPriority="high"
+            decoding="async"
+          />
+          <ZachSkyVideo />
           <span className="zach-sky-shade" />
           <span className="zach-haze" />
         </div>
+
+        <SalifVinylVideo />
 
         <div className="zach-hero-layout">
           <div className="zach-hero-copy">
@@ -126,10 +202,6 @@ export default function ZachCaseStudy({ project }: { project: Project }) {
               <p className="zach-title-sub">Zach</p>
             </Reveal>
           </div>
-
-          <figure className="zach-hero-art">
-            <img src={project.cover} alt="Salif Keita cover artwork for the ZACH remix" />
-          </figure>
         </div>
       </section>
 
