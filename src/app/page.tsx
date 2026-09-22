@@ -2,14 +2,14 @@
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState, useMemo, useRef, Suspense } from "react";
 import PillNav from "@/components/PillNav";
 import IntroOverlay from "@/components/IntroOverlay";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { projects } from "@/lib/projects";
 import {
   HERO_REVEAL_AT_MS,
@@ -17,8 +17,8 @@ import {
   INTRO_SEEN_KEY,
 } from "@/lib/introSequence";
 import ProjectView from "@/components/ProjectView";
-import { useIsMobile } from "@/hooks/useIsMobile";
 import { useHeroPortraitReveal } from "@/hooks/useHeroPortraitReveal";
+import RecentWorkShowcase from "@/components/RecentWorkShowcase";
 import { MaskedReveal, Reveal, Stagger } from "@/components/motion/Motion";
 
 /* ---------- Overlay driven by ?project=... (wrapped in Suspense) ---------- */
@@ -126,23 +126,6 @@ export default function HomePage() {
   const [activeSection, setActiveSection] = useState("home");
   const [heroEntrance, setHeroEntrance] = useState<"armed" | "run">("armed");
   const heroRef = useHeroPortraitReveal<HTMLElement>();
-  const router = useRouter();
-  const isMobile = useIsMobile();
-
-  const slugByTitle: Record<string, string | undefined> = {
-    "ZACH - Track Design": "zach-track-design",
-    "Single cover design - Dolev Dadon": "dolev-dadon-single-cover",
-    "Branding design - Studio Movimiento": "studio-movimiento-branding",
-  };
-
-  const openProjectByTitle = (title: string) => {
-    const slug = slugByTitle[title];
-    if (slug) {
-      router.push(`/?project=${slug}#work`, { scroll: false });
-    } else {
-      router.push("/work");
-    }
-  };
 
   // Hero entrance waits for the intro curtain to clear the hero. Without the
   // intro (already seen this session, or reduced motion) it runs on mount.
@@ -271,39 +254,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ABOUT */}
-      <section id="about" className="px-4 py-20">
-        <div className="mx-auto max-w-6xl">
-          <MaskedReveal className="mb-10 text-3xl md:text-4xl font-serif">About me</MaskedReveal>
-          <Stagger className="grid gap-8 md:grid-cols-2">
-            <Card className="p-6 md:p-8">
-              <h3 className="mb-3 text-xl font-medium">Approach</h3>
-              <div className="space-y-3 text-sm md:text-base text-muted-foreground">
-                <p>
-                  I focus on creating visual identities and designs that feel clear, memorable, and refined.
-                </p>
-                <p>
-                  My work combines clean aesthetics with strong visual thinking, turning ideas into bold and distinctive visual solutions.
-                </p>
-                <p>
-                  From brand identities and logos to posters and creative visuals, I aim to design work that communicates clearly, stands out, and leaves a lasting impression.
-                </p>
-              </div>
-            </Card>
-            <Card className="p-6 md:p-8">
-              <h3 className="mb-3 text-xl font-medium">Capabilities</h3>
-              <ul className="list-disc space-y-2 pl-5 text-sm md:text-base text-muted-foreground">
-                <li>Brand identity design (logos, color palettes, typography)</li>
-                <li>Visual branding systems</li>
-                <li>Poster design & creative campaigns</li>
-                <li>Cover art & promotional visuals</li>
-                <li>Organized, production-ready design files</li>
-              </ul>
-            </Card>
-          </Stagger>
-        </div>
-      </section>
-
       {/* RECENT WORK */}
       <section id="work" className="px-4 py-20">
         <div className="mx-auto max-w-6xl">
@@ -322,72 +272,11 @@ export default function HomePage() {
             </Reveal>
           </div>
 
-          <Stagger media className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              { src: "/single.jpg", title: "Single cover design - Dolev Dadon", tag: "2025", longImage: "/single_long.jpg" },
-              { src: "/studio.jpg", title: "Branding design - Studio Movimiento", tag: "2025", longImage: "/studio_long.jpg" },
-              { src: "/zach.jpg", title: "ZACH - Track Design", tag: "2025", longImage: "/zach_long.jpg" },
-            ].map((item, i) => (
-              <button
-                key={i}
-                onClick={() => openProjectByTitle(item.title)}
-                onMouseEnter={() => {
-                  const link = document.createElement("link");
-                  link.rel = "preload";
-                  link.as = "image";
-                  link.href = item.longImage;
-                  document.head.appendChild(link);
-                }}
-                className="group text-left"
-                aria-label={`Open project ${item.title}`}
-              >
-                <Card className="overflow-hidden group">
-                  <div className="relative aspect-[4/3] bg-muted/30">
-                    <Image
-                      src={item.src}
-                      alt={item.title}
-                      fill
-                      loading="eager"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      quality={100}
-                      placeholder={isMobile ? "empty" : "blur"}
-                      blurDataURL={isMobile ? undefined : "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAn/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBEQACEQAD8QAf/9k="}
-                      className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                    />
-                  </div>
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                      <p className="font-medium">{item.title}</p>
-                      <span className="text-xs opacity-60">{item.tag}</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </button>
-            ))}
-          </Stagger>
+          <Reveal>
+            <RecentWorkShowcase />
+          </Reveal>
 
         </div>
-      </section>
-
-      {/* LOGO MARQUEE (tools) */}
-      <section aria-label="Design tools" className="px-4 py-16">
-        <Reveal className="mx-auto max-w-6xl">
-          <LogoMarquee
-            logos={[
-              "/logos/figma.svg",
-              "/logos/kling.svg",
-              "/logos/mid.svg",
-              "/logos/ps.svg",
-              "/logos/pp.svg",
-              "/logos/ai.svg",
-              "/logos/ae.svg",
-              "/logos/indesign.svg",
-            ]}
-            speed={60}
-            gap={56}
-            box={{ w: 150, h: 60 }}
-          />
-        </Reveal>
       </section>
 
       {/* TESTIMONIALS */}
@@ -492,6 +381,60 @@ export default function HomePage() {
           </Accordion>
           </Stagger>
         </div>
+      </section>
+
+      {/* ABOUT */}
+      <section id="about" className="px-4 py-20">
+        <div className="mx-auto max-w-6xl">
+          <MaskedReveal className="mb-10 text-3xl md:text-4xl font-serif">About me</MaskedReveal>
+          <Stagger className="grid gap-8 md:grid-cols-2">
+            <Card className="p-6 md:p-8">
+              <h3 className="mb-3 text-xl font-medium">Approach</h3>
+              <div className="space-y-3 text-sm md:text-base text-muted-foreground">
+                <p>
+                  I focus on creating visual identities and designs that feel clear, memorable, and refined.
+                </p>
+                <p>
+                  My work combines clean aesthetics with strong visual thinking, turning ideas into bold and distinctive visual solutions.
+                </p>
+                <p>
+                  From brand identities and logos to posters and creative visuals, I aim to design work that communicates clearly, stands out, and leaves a lasting impression.
+                </p>
+              </div>
+            </Card>
+            <Card className="p-6 md:p-8">
+              <h3 className="mb-3 text-xl font-medium">Capabilities</h3>
+              <ul className="list-disc space-y-2 pl-5 text-sm md:text-base text-muted-foreground">
+                <li>Brand identity design (logos, color palettes, typography)</li>
+                <li>Visual branding systems</li>
+                <li>Poster design & creative campaigns</li>
+                <li>Cover art & promotional visuals</li>
+                <li>Organized, production-ready design files</li>
+              </ul>
+            </Card>
+          </Stagger>
+        </div>
+      </section>
+
+      {/* LOGO MARQUEE (tools) */}
+      <section aria-label="Design tools" className="px-4 py-16">
+        <Reveal className="mx-auto max-w-6xl">
+          <LogoMarquee
+            logos={[
+              "/logos/figma.svg",
+              "/logos/kling.svg",
+              "/logos/mid.svg",
+              "/logos/ps.svg",
+              "/logos/pp.svg",
+              "/logos/ai.svg",
+              "/logos/ae.svg",
+              "/logos/indesign.svg",
+            ]}
+            speed={60}
+            gap={56}
+            box={{ w: 150, h: 60 }}
+          />
+        </Reveal>
       </section>
 
       {/* CONTACT / FOOTER CTA */}
