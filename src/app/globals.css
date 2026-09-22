@@ -551,7 +551,7 @@
 
 .work-scroller {
   position: relative;
-  height: clamp(13.5rem, 58vw, 17rem);
+  height: clamp(238px, calc(20.6vw + 170px), 468px);
   margin-top: 2.25rem;
   overflow-x: auto;
   overflow-y: hidden;
@@ -596,9 +596,9 @@
 
 .work-canvas {
   position: absolute;
-  top: 52%;
+  top: 40%;
   left: 0;
-  width: 60vw;
+  width: clamp(188px, calc(17.4vw + 130px), 380px);
   aspect-ratio: 4 / 3;
   overflow: hidden;
   border: 0;
@@ -658,13 +658,7 @@
 
 @media (min-width: 768px) {
   .work-scroller {
-    height: clamp(16rem, 38vh, 21rem);
     margin-top: 2.75rem;
-  }
-
-  .work-canvas {
-    width: min(34vw, 320px);
-    top: 50%;
   }
 
   .work-info-title {
@@ -678,13 +672,7 @@
 
 @media (min-width: 1024px) {
   .work-scroller {
-    height: clamp(18rem, 36vh, 23rem);
     margin-top: 3rem;
-  }
-
-  .work-canvas {
-    width: min(27vw, 380px);
-    top: 48%;
   }
 
   .work-copy {

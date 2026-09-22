@@ -14,10 +14,7 @@ const RECENT_COUNT = 7;
 
 const recentProjects = projects.slice(0, RECENT_COUNT);
 
-/** Small designed angles. Focus eases each one toward 0. */
-const ROTATION = [-3.4, 2.5, -4.5, 3.2, -2.4, 4.8, -3.6];
-/** A few pixels off the ascending line so the row is not a ruler. */
-const WOBBLE = [2, -1, 1, -2, 2, -1, 1];
+const ROTATION_BIAS = [-0.35, 0.28, -0.22, 0.32, -0.26, 0.18, -0.3];
 
 const BLUR =
   "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAn/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBEQACEQAD8QAf/9k=";
@@ -30,10 +27,33 @@ function pad(n: number) {
   return String(n).padStart(2, "0");
 }
 
-function strideRatio(viewport: number) {
-  if (viewport < 768) return 0.84;
-  if (viewport < 1024) return 0.88;
-  return 0.86;
+/** Desktop reference width. CSS canvas width resolves to this at 1440px. */
+const REFERENCE_WIDTH = 380;
+/** Same neighbor overlap at every width: stride is this fraction of the canvas. */
+const STRIDE_RATIO = 0.82;
+const ARC_AMPLITUDE = 104;
+
+function compositionScale(canvasWidth: number) {
+  return clamp(canvasWidth / REFERENCE_WIDTH, 0.48, 1);
+}
+
+const ARC_LEFT = [0, 0.42, 0.8, 1];
+const ARC_RIGHT = [0, 0.28, 0.54, 0.74];
+
+function sampleCurve(distance: number, samples: number[]) {
+  const max = samples.length - 1;
+  const t = Math.min(Math.max(0, distance), max);
+  const index = Math.floor(t);
+  const blend = t - index;
+  const eased = blend * blend * (3 - 2 * blend);
+  const from = samples[index];
+  const to = samples[Math.min(max, index + 1)];
+  return from + (to - from) * eased;
+}
+
+/** Authored display line. 0 at the focus (highest). Left falls further than the right. */
+function arcDrop(offset: number) {
+  return sampleCurve(Math.abs(offset), offset < 0 ? ARC_LEFT : ARC_RIGHT);
 }
 
 function smoothstep(value: number) {
@@ -93,11 +113,11 @@ export default function RecentWorkShowcase() {
     const { snaps, stride } = metricsRef.current;
     if (!scroller || snaps.length === 0 || stride <= 0) return;
 
-    const viewport = window.innerWidth;
-    const rotPose = viewport < 768 ? 0.5 : viewport < 1024 ? 0.72 : 1;
-    const rise = viewport < 768 ? 22 : viewport < 1024 ? 36 : 52;
+    const canvasWidth = itemRefs.current[0]?.offsetWidth ?? REFERENCE_WIDTH;
+    const scale = compositionScale(canvasWidth);
+    const arc = ARC_AMPLITUDE * scale;
+    const rotPose = 0.7 + 0.3 * scale;
     const scroll = scroller.scrollLeft;
-    const view = scroller.clientWidth;
 
     let best = 0;
     let bestDist = Infinity;
@@ -111,15 +131,18 @@ export default function RecentWorkShowcase() {
 
       const canvas = itemRefs.current[index];
       if (!canvas) return;
-      const away = Math.abs(scroll - snap) / stride;
-      const near = smoothstep(1 - Math.min(1.15, away));
-      const scale = 0.96 + 0.04 * near;
-      const rot = ROTATION[index] * rotPose * (1 - near * 0.9);
-      const center = view * 0.5 - (scroll - snap);
-      const t = center / Math.max(1, view);
-      const y = (0.5 - t) * rise + WOBBLE[index] * (viewport < 768 ? 0.45 : 1);
-      canvas.style.transform = `translate3d(0, calc(-50% + ${y}px), 0) rotate(${rot}deg) scale(${scale})`;
-      canvas.style.zIndex = String(index + 1 + Math.round(near * 10));
+      const offset = (snap - scroll) / stride;
+      const distance = Math.abs(offset);
+      const near = smoothstep(1 - Math.min(1.15, distance));
+      const drop = arcDrop(offset);
+      const y = drop * arc;
+      const dir = offset < 0 ? -1 : 1;
+      const x = dir * (Math.pow(distance, 2.1) * 26 - distance * 20) * scale;
+      const tilt = Math.min(4.6, distance * 2.35);
+      const rot = (dir * tilt + ROTATION_BIAS[index] * (1 - near)) * rotPose;
+      const pose = 0.985 + 0.015 * near;
+      canvas.style.transform = `translate3d(${x}px, calc(-50% + ${y}px), 0) rotate(${rot}deg) scale(${pose})`;
+      canvas.style.zIndex = String(48 - Math.round(distance * 8) + (offset > 0 ? 1 : 0));
     });
 
     if (best !== activeRef.current) {
@@ -245,7 +268,7 @@ export default function RecentWorkShowcase() {
     const viewport = scroller.clientWidth;
     if (width < 1 || viewport < 1) return;
 
-    const stride = width * strideRatio(window.innerWidth);
+    const stride = width * STRIDE_RATIO;
     const focusX = viewport * 0.5;
     const pad = focusX - width / 2;
     const count = recentProjects.length;
@@ -510,7 +533,7 @@ export default function RecentWorkShowcase() {
                   quality={100}
                   draggable={false}
                   className="object-cover"
-                  sizes="(max-width: 767px) 60vw, (max-width: 1023px) 34vw, 380px"
+                  sizes="(max-width: 390px) 188px, (min-width: 1440px) 380px, calc(17.4vw + 130px)"
                   placeholder={isMobile ? "empty" : "blur"}
                   blurDataURL={isMobile ? undefined : BLUR}
                   priority={index === 0}
