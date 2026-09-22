@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import PillNav from "@/components/PillNav";
+import { MaskedReveal, Reveal, Stagger } from "@/components/motion/Motion";
 import { projects } from "@/lib/projects";
 import { Card, CardContent } from "@/components/ui/card";
 import { useIsMobile } from "@/hooks/useIsMobile";
@@ -29,13 +30,15 @@ export default function WorkPage() {
       <section className="px-4 pt-28 sm:pt-32 pb-16">
         <div className="mx-auto w-full max-w-6xl">
           <header className="mb-10 text-center">
-            <h1 className="text-4xl sm:text-6xl font-serif leading-tight">Work</h1>
-            <p className="mt-3 text-muted-foreground">
-              Selected projects & explorations.
-            </p>
+            <MaskedReveal as="h1" className="text-4xl sm:text-6xl font-serif leading-tight">Work</MaskedReveal>
+            <Reveal delay={90}>
+              <p className="mt-3 text-muted-foreground">
+                Selected projects & explorations.
+              </p>
+            </Reveal>
           </header>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <Stagger media className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {projects.map((p, i) => (
               <Link
                 key={p.slug}
@@ -72,7 +75,7 @@ export default function WorkPage() {
                 </Card>
               </Link>
             ))}
-          </div>
+          </Stagger>
         </div>
       </section>
     </div>

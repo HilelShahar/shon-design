@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { MaskedReveal, Reveal } from "@/components/motion/Motion";
 
 type Props = {
   title: string;
@@ -111,28 +112,33 @@ export default function ProjectView({
       <section className="px-4 pt-28 sm:pt-32 pb-16" onClick={stop}>
         <div className="mx-auto w-full max-w-4xl">
           <header className="mb-6 flex items-center justify-between">
-            <h1 className="text-3xl md:text-4xl font-serif">{title}</h1>
-            {year && <span className="text-sm text-muted-foreground">{year}</span>}
+            <MaskedReveal as="h1" className="text-3xl md:text-4xl font-serif">{title}</MaskedReveal>
+            {year && (
+              <Reveal delay={80}>
+                <span className="text-sm text-muted-foreground">{year}</span>
+              </Reveal>
+            )}
           </header>
 
           {description && (
-            <div className="mb-8" dir={descriptionRtl ? "rtl" : undefined}>
-              <p className="text-muted-foreground whitespace-pre-line">{description}</p>
-              {descriptionFooter && (
-                <p className="mt-4 text-xs text-muted-foreground/70">{descriptionFooter}</p>
-              )}
-            </div>
+            <Reveal className="mb-8" delay={100}>
+              <div dir={descriptionRtl ? "rtl" : undefined}>
+                <p className="text-muted-foreground whitespace-pre-line">{description}</p>
+                {descriptionFooter && (
+                  <p className="mt-4 text-xs text-muted-foreground/70">{descriptionFooter}</p>
+                )}
+              </div>
+            </Reveal>
           )}
 
-          <div className="overflow-hidden rounded-2xl border border-border bg-muted/30">
-            {/* Native img for progressive JPEG loading (top-to-bottom reveal) */}
+          <Reveal media className="overflow-hidden rounded-2xl border border-border bg-muted/30">
             <img
               src={longImage}
               alt={title}
               loading="eager"
               className="w-full h-auto object-cover"
             />
-          </div>
+          </Reveal>
         </div>
       </section>
     </div>

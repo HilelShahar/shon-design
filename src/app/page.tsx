@@ -19,6 +19,7 @@ import {
 import ProjectView from "@/components/ProjectView";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useHeroPortraitReveal } from "@/hooks/useHeroPortraitReveal";
+import { MaskedReveal, Reveal, Stagger } from "@/components/motion/Motion";
 
 /* ---------- Overlay driven by ?project=... (wrapped in Suspense) ---------- */
 function RecentProjectOverlay() {
@@ -273,8 +274,8 @@ export default function HomePage() {
       {/* ABOUT */}
       <section id="about" className="px-4 py-20">
         <div className="mx-auto max-w-6xl">
-          <h2 className="mb-10 text-3xl md:text-4xl font-serif">About me</h2>
-          <div className="grid gap-8 md:grid-cols-2">
+          <MaskedReveal className="mb-10 text-3xl md:text-4xl font-serif">About me</MaskedReveal>
+          <Stagger className="grid gap-8 md:grid-cols-2">
             <Card className="p-6 md:p-8">
               <h3 className="mb-3 text-xl font-medium">Approach</h3>
               <div className="space-y-3 text-sm md:text-base text-muted-foreground">
@@ -299,7 +300,7 @@ export default function HomePage() {
                 <li>Organized, production-ready design files</li>
               </ul>
             </Card>
-          </div>
+          </Stagger>
         </div>
       </section>
 
@@ -307,19 +308,21 @@ export default function HomePage() {
       <section id="work" className="px-4 py-20">
         <div className="mx-auto max-w-6xl">
           <div className="mb-10 flex items-center justify-between">
-            <h2 className="text-3xl md:text-4xl font-serif">Recent work</h2>
-            <Link href="/work">
-              <Button
-                variant="outline"
-                className="rounded-full px-4 h-9 border-white/30 text-foreground hover:bg-white/10 hover:border-white/50"
-              >
-                See all
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
+            <MaskedReveal className="text-3xl md:text-4xl font-serif">Recent work</MaskedReveal>
+            <Reveal delay={90}>
+              <Link href="/work">
+                <Button
+                  variant="outline"
+                  className="rounded-full px-4 h-9 border-white/30 text-foreground hover:bg-white/10 hover:border-white/50"
+                >
+                  See all
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </Reveal>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <Stagger media className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
               { src: "/single.jpg", title: "Single cover design - Dolev Dadon", tag: "2025", longImage: "/single_long.jpg" },
               { src: "/studio.jpg", title: "Branding design - Studio Movimiento", tag: "2025", longImage: "/studio_long.jpg" },
@@ -361,14 +364,14 @@ export default function HomePage() {
                 </Card>
               </button>
             ))}
-          </div>
+          </Stagger>
 
         </div>
       </section>
 
       {/* LOGO MARQUEE (tools) */}
       <section aria-label="Design tools" className="px-4 py-16">
-        <div className="mx-auto max-w-6xl">
+        <Reveal className="mx-auto max-w-6xl">
           <LogoMarquee
             logos={[
               "/logos/figma.svg",
@@ -384,14 +387,14 @@ export default function HomePage() {
             gap={56}
             box={{ w: 150, h: 60 }}
           />
-        </div>
+        </Reveal>
       </section>
 
       {/* TESTIMONIALS */}
       <section id="testimonials" className="px-4 py-20" dir="rtl">
         <div className="mx-auto max-w-6xl">
-          <h2 className="mb-12 text-3xl md:text-4xl font-serif">מה אומרים עליי</h2>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <MaskedReveal className="mb-12 text-3xl md:text-4xl font-serif">מה אומרים עליי</MaskedReveal>
+          <Stagger className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {[
               {
                 text: "פניתי לשון לעיצוב עטיפה למוזיקה והוא הצליח לתרגם את האווירה של השיר בצורה ויזואלית ממש יפה. העיצוב עם השקיעות והאווירה האפריקאית יצא מאוד מיוחד",
@@ -440,13 +443,14 @@ export default function HomePage() {
                 </div>
               </Card>
             ))}
-          </div>
+          </Stagger>
         </div>
       </section>
 
       {/* FAQ */}
       <section id="faq" className="px-4 py-20" dir="rtl">
         <div className="mx-auto max-w-4xl">
+          <Stagger nested className="mx-auto max-w-4xl">
           <Accordion type="multiple" className="space-y-4">
             {[
               {
@@ -477,6 +481,8 @@ export default function HomePage() {
               <AccordionItem
                 key={i}
                 value={`item-${i}`}
+                data-motion-item=""
+                style={{ animationDelay: `${Math.min(i, 5) * 85}ms` }}
                 className="bg-card border border-border rounded-2xl px-6"
               >
                 <AccordionTrigger>{item.q}</AccordionTrigger>
@@ -484,18 +490,22 @@ export default function HomePage() {
               </AccordionItem>
             ))}
           </Accordion>
+          </Stagger>
         </div>
       </section>
 
       {/* CONTACT / FOOTER CTA */}
       <section id="contact" className="px-4 py-20 text-center">
         <div className="mx-auto max-w-4xl">
-          <h2 className="mb-6 text-4xl md:text-5xl font-serif">Ready to start?</h2>
-          <p className="mx-auto mb-10 max-w-2xl text-lg text-muted-foreground">
-            Tell me about your project and timelines — I’ll reply quickly with next steps.
-          </p>
+          <MaskedReveal as="h2" className="mb-6 text-4xl md:text-5xl font-serif">Ready to start?</MaskedReveal>
+          <Reveal delay={90}>
+            <p className="mx-auto mb-10 max-w-2xl text-lg text-muted-foreground">
+              Tell me about your project and timelines — I’ll reply quickly with next steps.
+            </p>
+          </Reveal>
 
-          <div className="flex justify-center gap-3">
+          <Reveal delay={170}>
+            <div className="flex justify-center gap-3">
             {/* WhatsApp (no prefilled message) */}
             <Button size="lg" variant="accent" className="rounded-full px-8" asChild>
               <a
@@ -513,21 +523,21 @@ export default function HomePage() {
                 Email me
               </a>
             </Button>
-          </div>
-
+            </div>
+          </Reveal>
         </div>
       </section>
 
       {/* Minimal Footer */}
       <footer className="border-t border-border px-4 py-10">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 text-sm text-muted-foreground md:flex-row">
+        <Reveal className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 text-sm text-muted-foreground md:flex-row">
           <div>© {new Date().getFullYear()} Shon Simhon</div>
           <div className="flex items-center gap-4">
             <button onClick={() => scrollToSection("work")} className="hover:text-foreground">Work</button>
             <button onClick={() => scrollToSection("about")} className="hover:text-foreground">About</button>
             <button onClick={() => scrollToSection("contact")} className="hover:text-foreground">Contact</button>
           </div>
-        </div>
+        </Reveal>
       </footer>
 
       {/* URL-driven overlay must be inside Suspense */}
