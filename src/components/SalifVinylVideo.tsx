@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { SalifContactShadow, SalifDust } from '@/components/SalifVinylAtmosphere';
 
 /** Place inside a position:relative, full-width hero with overflow:hidden. */
 export default function SalifVinylVideo({
@@ -40,6 +41,7 @@ export default function SalifVinylVideo({
       position: 'absolute', left: 0, width: '100%',
       aspectRatio: '1600 / 720', pointerEvents: 'none',
     }}>
+      <SalifContactShadow />
       <img src={`${basePath}/salif-end.png`} alt="" style={{
         display: 'block', width: '100%', height: '100%',
         visibility: source && playing && !finished ? 'hidden' : 'visible',
@@ -55,6 +57,7 @@ export default function SalifVinylVideo({
             objectFit: 'contain', opacity: playing ? 1 : 0 }}
         />
       )}
+      <SalifDust videoRef={ref} active={Boolean(source) && playing && !finished} />
     </div>
   );
 }
