@@ -613,7 +613,9 @@
 .work-copy {
   position: relative;
   z-index: 9;
-  margin-top: 1.35rem;
+  /* Pulled toward the canvases so title, description, and tags read with the
+     collection. The raise scales with the composition: 32px, 44px, 64px. */
+  margin-top: calc(1.35rem - 32px);
 }
 
 .work-canvas img {
@@ -666,7 +668,7 @@
   }
 
   .work-copy {
-    margin-top: 1.5rem;
+    margin-top: calc(1.5rem - 44px);
   }
 }
 
@@ -676,7 +678,7 @@
   }
 
   .work-copy {
-    margin-top: 1.65rem;
+    margin-top: calc(1.65rem - 64px);
   }
 }
 
@@ -712,41 +714,66 @@
 .zach-sky {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(ellipse 48% 36% at 78% 42%, rgba(18, 6, 4, 0.42), transparent 70%),
-    radial-gradient(ellipse 36% 24% at 22% 18%, rgba(255, 196, 140, 0.28), transparent 72%),
-    radial-gradient(ellipse 42% 30% at 62% 16%, rgba(255, 150, 90, 0.22), transparent 70%),
-    linear-gradient(180deg, #140608 0%, #4a120e 16%, #9a2c18 40%, #e15a2b 58%, #f0a15a 74%, #6e2416 90%, #100606 100%);
+  z-index: 0;
+  background: #140606;
 }
 
-.zach-cloud {
+.zach-sky-photo {
   position: absolute;
-  border-radius: 999px;
-  background: rgba(255, 228, 206, 0.34);
-  filter: blur(28px);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  transform: scale(1.45) translate(8%, -12%);
+  transform-origin: center center;
+  pointer-events: none;
+  user-select: none;
 }
 
-.zach-cloud-a { width: 42vw; height: 16vw; left: -4%; top: 12%; }
-.zach-cloud-b { width: 36vw; height: 14vw; left: 30%; top: 6%; background: rgba(255, 244, 232, 0.28); }
-.zach-cloud-c { width: 30vw; height: 12vw; right: -2%; top: 18%; background: rgba(255, 176, 120, 0.26); }
+.zach-sky-shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 62% 78% at 82% 64%, rgba(10, 3, 2, 0.62), transparent 70%),
+    linear-gradient(90deg, rgba(12, 4, 3, 0.12) 0%, rgba(12, 4, 3, 0.02) 38%, rgba(8, 3, 2, 0.34) 100%),
+    linear-gradient(180deg, rgba(8, 3, 2, 0.42) 0%, transparent 18%, transparent 62%, rgba(6, 2, 2, 0.5) 100%);
+}
 
 .zach-haze {
   position: absolute;
   left: -10%;
-  right: -10%;
-  bottom: 18%;
-  height: 28%;
-  background: radial-gradient(ellipse at center, rgba(255, 186, 130, 0.28), transparent 70%);
-  filter: blur(18px);
+  right: -6%;
+  top: 34%;
+  height: 22%;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 36% 50%, rgba(255, 150, 70, 0.16), transparent 68%);
+  filter: blur(16px);
+  animation: zach-drift 110s ease-in-out infinite alternate;
 }
 
-.zach-ground {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 28%;
-  background: linear-gradient(to top, rgba(12, 4, 3, 0.72), transparent);
+@keyframes zach-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(2.2vw, -0.6vh, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zach-haze {
+    animation: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .zach-sky-photo {
+    transform: scale(1.7) translate(18%, -4%);
+  }
+}
+
+@media (min-width: 1200px) {
+  .zach-sky-photo {
+    transform: scale(1.85) translate(26%, -2%);
+  }
 }
 
 .zach-hero::after {
@@ -765,7 +792,7 @@
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr);
+  grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.15fr);
   gap: clamp(1.5rem, 4vw, 4rem);
   align-items: end;
   width: min(1440px, 100%);
@@ -776,11 +803,15 @@
 
 .zach-hero-art {
   margin: 0;
+  justify-self: end;
   width: min(100%, 540px);
   aspect-ratio: 1 / 1;
   overflow: hidden;
   border-radius: 0.35rem;
-  box-shadow: 0 28px 70px rgba(18, 6, 4, 0.38);
+  box-shadow:
+    0 26px 54px rgba(8, 2, 1, 0.5),
+    0 8px 20px rgba(8, 2, 1, 0.28),
+    0 0 72px rgba(226, 84, 24, 0.22);
 }
 
 .zach-hero-art img {
@@ -792,22 +823,31 @@
 
 .zach-hero-copy {
   position: relative;
+  isolation: isolate;
   max-width: 36rem;
   padding-bottom: 1.5rem;
+  text-align: center;
+  justify-self: start;
 }
 
 .zach-hero-copy::before {
   content: "";
   position: absolute;
   z-index: -1;
-  inset: -2.5rem -1.5rem -1rem -2.5rem;
-  background: radial-gradient(ellipse at 35% 45%, rgba(24, 8, 6, 0.5), transparent 72%);
+  inset: -2.75rem -2.25rem -1.5rem -2.25rem;
+  background: radial-gradient(
+    ellipse at 50% 42%,
+    rgba(24, 8, 6, 0.62) 0%,
+    rgba(24, 8, 6, 0.4) 46%,
+    transparent 78%
+  );
 }
 
 .zach-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  justify-content: center;
+  gap: 0.28rem;
   margin: 0 0 1.1rem;
   padding: 0;
   list-style: none;
@@ -817,10 +857,10 @@
   border: 1px solid rgba(255, 228, 206, 0.32);
   background: rgba(20, 8, 6, 0.28);
   border-radius: 999px;
-  padding: 0.22rem 0.55rem;
-  font-size: 10px;
+  padding: 0.2rem 0.38rem;
+  font-size: 9px;
   font-weight: 500;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   line-height: 1.2;
   text-transform: uppercase;
   color: rgba(247, 241, 234, 0.82);
@@ -852,6 +892,7 @@
   overflow: hidden;
   max-width: 34rem;
   margin-top: 1.25rem;
+  margin-inline: auto;
   font-size: 0.98rem;
   line-height: 1.55;
   color: rgba(247, 241, 234, 0.84);
@@ -1018,11 +1059,79 @@
     padding: 6.25rem 1.25rem 3.5rem;
   }
 
+  .zach-hero-art {
+    justify-self: stretch;
+  }
+
   .zach-hero-art img {
     width: 100%;
   }
 
+  .zach-sky-shade {
+    background:
+      linear-gradient(180deg, rgba(8, 3, 2, 0.38) 0%, transparent 16%, transparent 36%, rgba(8, 3, 2, 0.55) 62%, rgba(6, 2, 2, 0.78) 100%);
+  }
+
   .zach-title {
     font-size: clamp(2.8rem, 14vw, 3.6rem);
+  }
+}
+
+.zach-to-top {
+  position: fixed;
+  right: 1.75rem;
+  bottom: calc(1.75rem + env(safe-area-inset-bottom, 0px));
+  z-index: 45;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 -8px 24px rgba(255, 255, 255, 0.06), 0 8px 24px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.92);
+  pointer-events: none;
+  transition: opacity 180ms ease, transform 180ms ease, background-color 180ms ease, color 180ms ease;
+}
+
+.zach-to-top.is-visible {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.zach-to-top:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.zach-to-top:focus-visible {
+  outline: none;
+  box-shadow:
+    0 -8px 24px rgba(255, 255, 255, 0.06),
+    0 8px 24px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 767px) {
+  .zach-to-top {
+    right: 1rem;
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zach-to-top {
+    transition: none;
   }
 }
