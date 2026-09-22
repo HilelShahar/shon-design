@@ -17,7 +17,8 @@ export function useHeroPortraitReveal<T extends HTMLElement>() {
   useEffect(() => {
     const section = ref.current;
     if (!section) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     let range = 1;
     let frame = 0;
@@ -51,6 +52,8 @@ export function useHeroPortraitReveal<T extends HTMLElement>() {
     const update = () => {
       frame = 0;
       const p = Math.min(1, Math.max(0, window.scrollY / range));
+      section.style.setProperty("--hero-hint", p.toFixed(4));
+      if (reduce) return;
       const a = visibleAt(p);
       const b = a <= 0 ? 0 : Math.min(1, a + 0.16);
       section.style.setProperty("--hero-p", p.toFixed(4));

@@ -226,6 +226,7 @@
     --hero-ease: cubic-bezier(0.16, 1, 0.3, 1);
     /* Scroll reveal defaults; the hook overrides these on the hero section. */
     --hero-p: 0;
+    --hero-hint: 0;
     --hero-mask-a: 0%;
     --hero-mask-b: 0%;
   }
@@ -335,6 +336,66 @@
   .hero-para,
   .hero-cta {
     filter: opacity(calc(1 - 0.4 * var(--hero-p)));
+  }
+
+  /* Quiet cue in the empty space under the first view. Fades with --hero-hint,
+     written by the same scroll pass as the portrait reveal. */
+  .hero-scroll-hint {
+    position: fixed;
+    left: 50%;
+    bottom: 60px;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.7rem;
+    margin: 0;
+    pointer-events: none;
+    color: rgba(255, 255, 255, 0.45);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    line-height: 1;
+    text-transform: uppercase;
+    opacity: max(0, calc(1 - var(--hero-hint) * 10));
+    transform: translate3d(-50%, calc(var(--hero-hint) * 8px), 0);
+  }
+  [data-hero-entrance="armed"] .hero-scroll-hint {
+    opacity: 0;
+  }
+  .hero-scroll-line {
+    position: relative;
+    display: block;
+    width: 1px;
+    height: 44px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.22);
+  }
+  .hero-scroll-stroke {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.72);
+    animation: hero-scroll-hint 3.4s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+  }
+  @keyframes hero-scroll-hint {
+    0% { transform: translate3d(0, -12px, 0); opacity: 0; }
+    18% { opacity: 0.9; }
+    78% { opacity: 0.55; }
+    100% { transform: translate3d(0, 44px, 0); opacity: 0; }
+  }
+  @media (max-width: 767px) {
+    .hero-scroll-hint { bottom: 50px; }
+    .hero-scroll-line { height: 32px; }
+    @keyframes hero-scroll-hint {
+      0% { transform: translate3d(0, -12px, 0); opacity: 0; }
+      18% { opacity: 0.9; }
+      78% { opacity: 0.55; }
+      100% { transform: translate3d(0, 32px, 0); opacity: 0; }
+    }
   }
 
   /* Supporting line: slow, independent micro-drift. Inner spans so this
@@ -460,6 +521,13 @@
       -webkit-mask-image: none !important;
       mask-image: none !important;
     }
+    .hero-scroll-stroke {
+      top: 16px;
+      height: 10px;
+      opacity: 0.65;
+      animation: none;
+      transform: none;
+    }
   }
 
   /* Accessibility */
@@ -498,8 +566,23 @@
   display: none;
 }
 
-.work-scroller.is-grabbing {
+.work-scroller.is-grabbing,
+.work-scroller.is-grabbing .work-canvas {
   cursor: grabbing;
+}
+
+.work-canvas.is-case {
+  cursor: pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .work-canvas.is-case:hover {
+    filter: brightness(1.05);
+  }
+}
+
+.work-scroller.is-grabbing .work-canvas.is-case {
+  filter: none;
 }
 
 .work-scroller:not([data-ready="true"]) .work-track {
@@ -627,5 +710,331 @@
   .work-info-panel {
     transition: none;
     animation: none;
+  }
+}
+
+/* Salif Keita / Zach case study. Scoped so the rest of the site stays as it is. */
+.zach-hero {
+  position: relative;
+  min-height: min(92vh, 920px);
+  overflow: hidden;
+  color: #f7f1ea;
+}
+
+.zach-sky {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 48% 36% at 78% 42%, rgba(18, 6, 4, 0.42), transparent 70%),
+    radial-gradient(ellipse 36% 24% at 22% 18%, rgba(255, 196, 140, 0.28), transparent 72%),
+    radial-gradient(ellipse 42% 30% at 62% 16%, rgba(255, 150, 90, 0.22), transparent 70%),
+    linear-gradient(180deg, #140608 0%, #4a120e 16%, #9a2c18 40%, #e15a2b 58%, #f0a15a 74%, #6e2416 90%, #100606 100%);
+}
+
+.zach-cloud {
+  position: absolute;
+  border-radius: 999px;
+  background: rgba(255, 228, 206, 0.34);
+  filter: blur(28px);
+}
+
+.zach-cloud-a { width: 42vw; height: 16vw; left: -4%; top: 12%; }
+.zach-cloud-b { width: 36vw; height: 14vw; left: 30%; top: 6%; background: rgba(255, 244, 232, 0.28); }
+.zach-cloud-c { width: 30vw; height: 12vw; right: -2%; top: 18%; background: rgba(255, 176, 120, 0.26); }
+
+.zach-haze {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: 18%;
+  height: 28%;
+  background: radial-gradient(ellipse at center, rgba(255, 186, 130, 0.28), transparent 70%);
+  filter: blur(18px);
+}
+
+.zach-ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 28%;
+  background: linear-gradient(to top, rgba(12, 4, 3, 0.72), transparent);
+}
+
+.zach-hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  height: 18%;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, hsl(var(--background)));
+}
+
+.zach-hero-layout {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: end;
+  width: min(1440px, 100%);
+  min-height: min(92vh, 920px);
+  margin: 0 auto;
+  padding: 7.5rem 5vw 5.5rem;
+}
+
+.zach-hero-art {
+  margin: 0;
+  width: min(100%, 540px);
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 0.35rem;
+  box-shadow: 0 28px 70px rgba(18, 6, 4, 0.38);
+}
+
+.zach-hero-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 52% 46%;
+}
+
+.zach-hero-copy {
+  position: relative;
+  max-width: 36rem;
+  padding-bottom: 1.5rem;
+}
+
+.zach-hero-copy::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -2.5rem -1.5rem -1rem -2.5rem;
+  background: radial-gradient(ellipse at 35% 45%, rgba(24, 8, 6, 0.5), transparent 72%);
+}
+
+.zach-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 1.1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.zach-tags li {
+  border: 1px solid rgba(255, 228, 206, 0.32);
+  background: rgba(20, 8, 6, 0.28);
+  border-radius: 999px;
+  padding: 0.22rem 0.55rem;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: rgba(247, 241, 234, 0.82);
+}
+
+.zach-title {
+  font-family: var(--font-playfair), ui-serif, Georgia, serif;
+  font-size: clamp(3.4rem, 6.2vw, 6.15rem);
+  font-weight: 500;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  color: #f7f1ea;
+}
+
+.zach-title-sub {
+  margin-top: 0.7rem;
+  font-family: var(--font-playfair), ui-serif, Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(1.7rem, 2.5vw, 2.4rem);
+  line-height: 1;
+  color: rgba(247, 241, 234, 0.9);
+}
+
+.zach-hero-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: 34rem;
+  margin-top: 1.25rem;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: rgba(247, 241, 234, 0.84);
+}
+
+.zach-block {
+  width: min(1080px, calc(100% - 2.5rem));
+  margin: 0 auto;
+  padding: 4.5rem 0 0.5rem;
+}
+
+.zach-end {
+  padding-bottom: 6rem;
+}
+
+.zach-heading {
+  font-family: var(--font-playfair), ui-serif, Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3.15rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.zach-prose {
+  max-width: 40rem;
+  font-size: 1.02rem;
+  line-height: 1.65;
+  color: hsl(var(--muted-foreground));
+}
+
+.zach-draft {
+  color: hsl(var(--muted-foreground));
+}
+
+.zach-overview {
+  display: grid;
+  gap: 2.5rem;
+}
+
+.zach-meta {
+  display: grid;
+  gap: 1.1rem;
+  margin: 0;
+}
+
+.zach-meta div {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  gap: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.zach-meta dt {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.46);
+}
+
+.zach-meta dd {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.zach-split {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.zach-process {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.zach-slot {
+  margin: 0;
+}
+
+.zach-slot-frame {
+  aspect-ratio: 4 / 3;
+  border: 1px dashed rgba(255, 255, 255, 0.22);
+  border-radius: 0.35rem;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.zach-slot figcaption {
+  margin-top: 0.75rem;
+}
+
+.zach-slot figcaption span {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.zach-slot figcaption p {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.zach-outcome {
+  margin-top: 2.25rem;
+  overflow: hidden;
+  border-radius: 0.4rem;
+}
+
+.zach-outcome img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.zach-back {
+  display: inline-flex;
+  margin-top: 2.5rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.24);
+  padding-bottom: 0.15rem;
+}
+
+.zach-back:hover {
+  color: #f7f1ea;
+}
+
+@media (min-width: 768px) {
+  .zach-overview {
+    grid-template-columns: minmax(0, 1.4fr) minmax(220px, 0.8fr);
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .zach-split {
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+  }
+
+  .zach-process {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem 1.5rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .zach-hero,
+  .zach-hero-layout {
+    min-height: 0;
+  }
+
+  .zach-hero-layout {
+    grid-template-columns: 1fr;
+    align-items: start;
+    padding: 6.25rem 1.25rem 3.5rem;
+  }
+
+  .zach-hero-art img {
+    width: 100%;
+  }
+
+  .zach-title {
+    font-size: clamp(2.8rem, 14vw, 3.6rem);
   }
 }

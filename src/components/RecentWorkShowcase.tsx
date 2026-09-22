@@ -23,6 +23,8 @@ const BLUR =
   "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAn/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBEQACEQAD8QAf/9k=";
 
 const DRAG_CLICK_THRESHOLD = 8;
+const ZACH_CASE_SLUG = "zach-track-design";
+const ZACH_CASE_HREF = "/work/zach-track-design";
 
 function pad(n: number) {
   return String(n).padStart(2, "0");
@@ -61,7 +63,7 @@ export default function RecentWorkShowcase() {
   const [frame, setFrame] = useState<Frame | null>(null);
 
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const itemRefs = useRef<(HTMLElement | null)[]>([]);
   const metricsRef = useRef<Metrics>({ snaps: [], stride: 1, maxScroll: 0 });
   const activeRef = useRef(0);
   const frameIdRef = useRef(0);
@@ -69,6 +71,7 @@ export default function RecentWorkShowcase() {
   const settlingRef = useRef(false);
   const layoutKeyRef = useRef("");
   const suppressClickRef = useRef(false);
+  const pressSlugRef = useRef<string | null>(null);
   const dragRef = useRef({
     active: false,
     pointerId: -1,
@@ -313,17 +316,39 @@ export default function RecentWorkShowcase() {
     applyPoses();
   }, [frame, active, applyPoses]);
 
-  const openProject = (slug: string) => {
-    router.push(`/?project=${slug}#work`, { scroll: false });
-  };
-
   const preload = (src: string) => {
     const image = new window.Image();
     image.src = src;
   };
 
+  const canvasSlugFrom = (target: EventTarget | null) => {
+    const element = target instanceof Element ? target.closest(".work-canvas") : null;
+    return element?.getAttribute("data-slug") ?? null;
+  };
+
+  const openZachFromPress = (pointerId: number, moved: number) => {
+    if (dragRef.current.pointerId !== pointerId) return;
+    const slug = pressSlugRef.current;
+    pressSlugRef.current = null;
+    if (slug !== ZACH_CASE_SLUG || moved > DRAG_CLICK_THRESHOLD) return;
+    suppressClickRef.current = true;
+    router.push(ZACH_CASE_HREF);
+  };
+
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (event.pointerType !== "mouse" || event.button !== 0) return;
+    pressSlugRef.current = canvasSlugFrom(event.target);
+    if (event.pointerType !== "mouse") {
+      dragRef.current = {
+        ...dragRef.current,
+        active: false,
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startScroll: 0,
+        moved: 0,
+      };
+      return;
+    }
+    if (event.button !== 0) return;
     const scroller = scrollerRef.current;
     if (!scroller) return;
     cancelSettle();
@@ -344,6 +369,12 @@ export default function RecentWorkShowcase() {
   const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     const drag = dragRef.current;
     const scroller = scrollerRef.current;
+    if (event.pointerType !== "mouse") {
+      if (event.pointerId !== drag.pointerId) return;
+      const dx = event.clientX - drag.startX;
+      drag.moved = Math.max(drag.moved, Math.abs(dx));
+      return;
+    }
     if (!drag.active || !scroller || event.pointerId !== drag.pointerId) return;
     const dx = event.clientX - drag.startX;
     drag.moved = Math.max(drag.moved, Math.abs(dx));
@@ -361,10 +392,18 @@ export default function RecentWorkShowcase() {
   const endDrag = (event: React.PointerEvent<HTMLDivElement>) => {
     const drag = dragRef.current;
     const scroller = scrollerRef.current;
+    if (event.pointerType !== "mouse") {
+      if (event.pointerId === drag.pointerId && drag.moved > DRAG_CLICK_THRESHOLD) {
+        suppressClickRef.current = true;
+      }
+      openZachFromPress(event.pointerId, drag.moved);
+      return;
+    }
     if (!drag.active || event.pointerId !== drag.pointerId) return;
     drag.active = false;
     scroller?.classList.remove("is-grabbing");
     if (drag.moved > DRAG_CLICK_THRESHOLD) suppressClickRef.current = true;
+    openZachFromPress(event.pointerId, drag.moved);
     release();
   };
 
@@ -373,7 +412,8 @@ export default function RecentWorkShowcase() {
       suppressClickRef.current = false;
       return;
     }
-    openProject(slug);
+    if (slug !== ZACH_CASE_SLUG) return;
+    router.push(ZACH_CASE_HREF);
   };
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -435,25 +475,31 @@ export default function RecentWorkShowcase() {
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}
-        onPointerCancel={endDrag}
+        onPointerCancel={(event) => {
+          pressSlugRef.current = null;
+          endDrag(event);
+        }}
         onKeyDown={onKeyDown}
       >
         <div className="work-track" style={frame ? { width: frame.track } : undefined}>
           {recentProjects.map((canvas, index) => {
             const focused = index === active;
+            const linked = canvas.slug === ZACH_CASE_SLUG;
+            const CanvasTag = linked ? "button" : "div";
             return (
-              <button
+              <CanvasTag
                 key={canvas.slug}
-                ref={(node) => {
+                ref={(node: HTMLElement | null) => {
                   itemRefs.current[index] = node;
                 }}
-                type="button"
-                className="work-canvas"
+                type={linked ? "button" : undefined}
+                className={linked ? "work-canvas is-case" : "work-canvas"}
+                data-slug={canvas.slug}
                 data-active={focused ? "true" : "false"}
                 aria-current={focused ? "true" : undefined}
-                aria-label={`Open project ${canvas.title}`}
+                aria-label={linked ? `Open ${canvas.title}` : canvas.title}
                 style={{ left: frame ? frame.lefts[index] : 0 }}
-                onClick={() => onCanvasClick(canvas.slug)}
+                onClick={linked ? () => onCanvasClick(canvas.slug) : undefined}
                 onMouseEnter={() => preload(canvas.longImage)}
                 onDragStart={(event) => event.preventDefault()}
               >
@@ -469,7 +515,7 @@ export default function RecentWorkShowcase() {
                   blurDataURL={isMobile ? undefined : BLUR}
                   priority={index === 0}
                 />
-              </button>
+              </CanvasTag>
             );
           })}
         </div>
@@ -481,14 +527,18 @@ export default function RecentWorkShowcase() {
             {pad(active + 1)} / {pad(total)}
           </p>
           <h3 className="work-info-title mt-2 text-foreground">
-            <button
-              type="button"
-              onClick={() => openProject(item.slug)}
-              onMouseEnter={() => preload(item.longImage)}
-              className="bg-transparent p-0 text-left font-[inherit] text-inherit transition-opacity duration-300 hover:opacity-80"
-            >
-              {item.title}
-            </button>
+            {item.slug === ZACH_CASE_SLUG ? (
+              <button
+                type="button"
+                onClick={() => router.push(ZACH_CASE_HREF)}
+                onMouseEnter={() => preload(item.longImage)}
+                className="bg-transparent p-0 text-left font-[inherit] text-inherit transition-opacity duration-300 hover:opacity-80"
+              >
+                {item.title}
+              </button>
+            ) : (
+              item.title
+            )}
           </h3>
           {description ? (
             <p

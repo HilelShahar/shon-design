@@ -251,6 +251,12 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+        <div className="hero-scroll-hint" aria-hidden="true">
+          <span>Scroll to reveal</span>
+          <span className="hero-scroll-line">
+            <span className="hero-scroll-stroke" />
+          </span>
+        </div>
       </section>
 
       {/* RECENT WORK */}

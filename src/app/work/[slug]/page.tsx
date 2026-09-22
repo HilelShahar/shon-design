@@ -2,6 +2,7 @@
 import { notFound } from "next/navigation";
 import { projects } from "@/lib/projects";
 import ProjectView from "@/components/ProjectView";
+import ZachCaseStudy from "@/components/case-studies/ZachCaseStudy";
 
 type Params = { slug: string };
 type Props = { params?: Promise<Params> }; // matches Vercel’s PageProps
@@ -13,6 +14,10 @@ export default async function ProjectPage({ params }: Props) {
 
   const project = projects.find((p) => p.slug === slug);
   if (!project) notFound();
+
+  if (slug === "zach-track-design") {
+    return <ZachCaseStudy project={project} />;
+  }
 
   // Same look as before; just adds the X and outside-click to close.
   return (
