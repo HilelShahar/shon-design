@@ -476,107 +476,156 @@
   }
 }
 
-/* Recent work — project canvases. Structure only; no scroll linkage. */
-.project-stage {
+/* Recent work — overlapping collection. Native horizontal pan, no page-scroll link. */
+.work-section {
   position: relative;
-  height: 26rem;
-  overflow: hidden;
 }
 
-.project-canvas {
+.work-scroller {
+  position: relative;
+  height: clamp(13.5rem, 58vw, 17rem);
+  margin-top: 2.25rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.work-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.work-scroller.is-grabbing {
+  cursor: grabbing;
+}
+
+.work-scroller:not([data-ready="true"]) .work-track {
+  visibility: hidden;
+}
+
+.work-track {
+  position: relative;
+  height: 100%;
+}
+
+.work-canvas {
   position: absolute;
-  display: block;
-  width: 48%;
+  top: 52%;
+  left: 0;
+  width: 60vw;
   aspect-ratio: 4 / 3;
   overflow: hidden;
   border: 0;
   padding: 0;
   background: transparent;
-  border-radius: 0.35rem;
-  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.38);
-  cursor: pointer;
+  border-radius: 0.3rem;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.22);
+  cursor: inherit;
+  transform-origin: center center;
 }
 
-.project-canvas img,
-.project-canvas-flat img {
-  transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+.work-copy {
+  position: relative;
+  z-index: 9;
+  margin-top: 1.35rem;
 }
 
-.project-canvas[data-slot="front"] {
-  left: 50%;
-  top: 50%;
-  z-index: 3;
-  width: 62%;
-  transform: translate(-50%, -50%) rotate(-1.25deg);
+.work-canvas img {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
-.project-canvas[data-slot="back-left"] {
-  left: 7%;
-  top: 18%;
-  z-index: 1;
-  transform: rotate(-3.5deg) scale(0.94);
+.work-info-title {
+  font-family: var(--font-playfair), ui-serif, Georgia, "Times New Roman", serif;
+  font-size: clamp(1.7rem, 2.9vw, 3.15rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  max-width: 22ch;
 }
 
-.project-canvas[data-slot="back-right"] {
-  right: 5%;
-  top: 12%;
-  z-index: 2;
-  transform: rotate(3deg) scale(0.96);
+.work-info-desc {
+  max-width: 34rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
 }
 
-.project-canvas[data-slot="front"]:hover img {
-  transform: scale(1.015);
+.work-info-panel {
+  animation: work-info-in 180ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.work-tag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.22rem 0.55rem;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .work-scroller {
+    height: clamp(16rem, 38vh, 21rem);
+    margin-top: 2.75rem;
+  }
+
+  .work-canvas {
+    width: min(34vw, 320px);
+    top: 50%;
+  }
+
+  .work-info-title {
+    font-size: clamp(2.05rem, 3.2vw, 3.15rem);
+  }
+
+  .work-copy {
+    margin-top: 1.5rem;
+  }
 }
 
 @media (min-width: 1024px) {
-  .project-stage {
-    height: 32rem;
+  .work-scroller {
+    height: clamp(18rem, 36vh, 23rem);
+    margin-top: 3rem;
   }
 
-  .project-canvas[data-slot="front"] {
-    width: 56%;
-    transform: translate(-50%, -50%) rotate(-1.5deg);
+  .work-canvas {
+    width: min(27vw, 380px);
+    top: 48%;
   }
 
-  .project-canvas[data-slot="back-left"] {
-    left: 0;
-    top: 14%;
-    transform: rotate(-6.5deg) scale(0.88);
+  .work-copy {
+    margin-top: 1.65rem;
   }
-
-  .project-canvas[data-slot="back-right"] {
-    right: 0;
-    top: 7%;
-    transform: rotate(5deg) scale(0.9);
-  }
-
 }
 
-.project-canvas-flat {
-  position: relative;
-  display: block;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  border: 0;
-  padding: 0;
-  background: transparent;
-  border-radius: 0.35rem;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.34);
-  cursor: pointer;
-}
-
-.project-canvas-flat-quiet {
-  opacity: 0.88;
-}
-
-.project-canvas-flat:not(.project-canvas-flat-quiet):hover img {
-  transform: scale(1.015);
+@keyframes work-info-in {
+  from {
+    opacity: 0.72;
+    transform: translate3d(0, 8px, 0);
+    clip-path: inset(0 0 16% 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    clip-path: inset(0 0 0 0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .project-canvas img,
-  .project-canvas-flat img {
+  .work-canvas,
+  .work-info-panel {
     transition: none;
+    animation: none;
   }
 }

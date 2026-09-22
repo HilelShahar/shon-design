@@ -8,7 +8,6 @@ import { useEffect, useState, useMemo, useRef, Suspense } from "react";
 import PillNav from "@/components/PillNav";
 import IntroOverlay from "@/components/IntroOverlay";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { projects } from "@/lib/projects";
 import {
@@ -185,13 +184,13 @@ export default function HomePage() {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   return (
-    <div className="min-h-screen bg-background text-foreground" data-hero-entrance={heroEntrance}>
+    <div className="relative min-h-screen bg-background text-foreground" data-hero-entrance={heroEntrance}>
 
-      {/* Desktop-only floating logo (doesn't affect layout) */}
+      {/* Opening mark. It lives at the top of the page and scrolls away. */}
       <Link
         href="/"
         aria-label="Home"
-        className="hidden md:flex fixed top-4 left-6 z-40 items-center"
+        className="absolute top-4 left-6 z-40 hidden items-center md:flex"
       >
         <img
           src="/icon.png"
@@ -255,28 +254,8 @@ export default function HomePage() {
       </section>
 
       {/* RECENT WORK */}
-      <section id="work" className="px-4 py-20">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-10 flex items-center justify-between">
-            <MaskedReveal className="text-3xl md:text-4xl font-serif">Recent work</MaskedReveal>
-            <Reveal delay={90}>
-              <Link href="/work">
-                <Button
-                  variant="outline"
-                  className="rounded-full px-4 h-9 border-white/30 text-foreground hover:bg-white/10 hover:border-white/50"
-                >
-                  See all
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-            </Reveal>
-          </div>
-
-          <Reveal>
-            <RecentWorkShowcase />
-          </Reveal>
-
-        </div>
+      <section id="work">
+        <RecentWorkShowcase />
       </section>
 
       {/* TESTIMONIALS */}
