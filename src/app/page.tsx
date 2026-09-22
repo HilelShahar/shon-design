@@ -6,15 +6,9 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState, useMemo, useRef, Suspense } from "react";
 import PillNav from "@/components/PillNav";
-import IntroOverlay from "@/components/IntroOverlay";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { projects } from "@/lib/projects";
-import {
-  HERO_REVEAL_AT_MS,
-  HERO_REVEAL_EVENT,
-  INTRO_SEEN_KEY,
-} from "@/lib/introSequence";
 import ProjectView from "@/components/ProjectView";
 import { useHeroPortraitReveal } from "@/hooks/useHeroPortraitReveal";
 import RecentWorkShowcase from "@/components/RecentWorkShowcase";
@@ -124,28 +118,7 @@ function LogoMarquee({
 
 export default function HomePage() {
   const [activeSection, setActiveSection] = useState("home");
-  const [heroEntrance, setHeroEntrance] = useState<"armed" | "run">("armed");
   const heroRef = useHeroPortraitReveal<HTMLElement>();
-
-  // Hero entrance waits for the intro curtain to clear the hero. Without the
-  // intro (already seen this session, or reduced motion) it runs on mount.
-  useEffect(() => {
-    const start = () => setHeroEntrance("run");
-
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce || sessionStorage.getItem(INTRO_SEEN_KEY) === "1") {
-      start();
-      return;
-    }
-
-    window.addEventListener(HERO_REVEAL_EVENT, start, { once: true });
-    const failsafe = window.setTimeout(start, HERO_REVEAL_AT_MS + 1200);
-
-    return () => {
-      window.removeEventListener(HERO_REVEAL_EVENT, start);
-      window.clearTimeout(failsafe);
-    };
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -185,7 +158,7 @@ export default function HomePage() {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   return (
-    <div className="relative min-h-screen bg-background text-foreground" data-hero-entrance={heroEntrance}>
+    <div className="relative min-h-screen bg-background text-foreground" data-hero-entrance="run">
 
       {/* Opening mark. It lives at the top of the page and scrolls away. */}
       <Link
@@ -418,8 +391,6 @@ export default function HomePage() {
       <Suspense fallback={null}>
         <RecentProjectOverlay />
       </Suspense>
-
-      <IntroOverlay />
     </div>
   );
 }

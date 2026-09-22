@@ -169,59 +169,7 @@
     filter: saturate(1.15) brightness(1.15) drop-shadow(0 0 12px rgba(255,255,255,.12));
   }
 
-  /* ===== Homepage intro overlay (isolated; does not affect layout) ===== */
-  .intro-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    pointer-events: auto;
-  }
-  .intro-overlay-curtain {
-    position: absolute;
-    inset: 0;
-    background: #000;
-    transform-origin: right center;
-    will-change: transform;
-    animation: intro-wipe 2.4s cubic-bezier(0.4, 0, 0.2, 1) both;
-  }
-  .intro-overlay-runner {
-    position: absolute;
-    top: 52%;
-    left: 0;
-    width: clamp(74px, 10.8vw, 96px);
-    aspect-ratio: 700 / 725;
-    will-change: transform;
-    animation: intro-run 2.4s cubic-bezier(0.4, 0, 0.2, 1) both;
-  }
-  .intro-overlay-sprite {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background-image: url("/runner/runner-sprite.webp");
-    background-repeat: no-repeat;
-    background-size: 600% 100%;
-    animation:
-      intro-sprite 0.36s steps(6) infinite,
-      intro-bob 0.18s ease-in-out infinite;
-  }
-  @keyframes intro-wipe {
-    0%, 8% { transform: scaleX(1); }
-    100% { transform: scaleX(0); }
-  }
-  @keyframes intro-run {
-    0%, 8% { transform: translate3d(-100%, -50%, 0); }
-    100% { transform: translate3d(100vw, -50%, 0); }
-  }
-  @keyframes intro-sprite {
-    from { background-position: 0 0; }
-    to { background-position: 120% 0; }
-  }
-  @keyframes intro-bob {
-    from, to { transform: translateY(0); }
-    50% { transform: translateY(-2px); }
-  }
-
-  /* ===== Hero first-view entrance (armed on load, run after the curtain) ===== */
+  /* ===== Hero first-view entrance (plays once on load) ===== */
   [data-hero-entrance] {
     --hero-ease: cubic-bezier(0.16, 1, 0.3, 1);
     /* Scroll reveal defaults; the hook overrides these on the hero section. */
@@ -254,24 +202,7 @@
     line-height: 1.1;
   }
 
-  /* Armed: pre-entrance resting state while the curtain is still up */
-  [data-hero-entrance="armed"] .hero-name {
-    transform: translate3d(0, calc(100% + 0.18em), 0);
-  }
-  [data-hero-entrance="armed"] .hero-sub {
-    transform: translate3d(0, calc(100% + 0.36em), 0);
-  }
-  [data-hero-entrance="armed"] .hero-chips > *,
-  [data-hero-entrance="armed"] .hero-para,
-  [data-hero-entrance="armed"] .hero-cta,
-  [data-hero-entrance="armed"] .pill-nav {
-    opacity: 0;
-  }
-  [data-hero-entrance="armed"] .hero-portrait {
-    transform: translate3d(0, 26px, 0);
-  }
-
-  /* Run: ~1.06s total, sequenced name -> subtitle -> chips -> copy -> CTAs */
+  /* ~1.06s total, sequenced name -> subtitle -> chips -> copy -> CTAs */
   [data-hero-entrance="run"] .hero-name {
     animation: hero-line-in 720ms var(--hero-ease) both;
   }
@@ -360,9 +291,6 @@
     text-transform: uppercase;
     opacity: max(0, calc(1 - var(--hero-hint) * 10));
     transform: translate3d(-50%, calc(var(--hero-hint) * 8px), 0);
-  }
-  [data-hero-entrance="armed"] .hero-scroll-hint {
-    opacity: 0;
   }
   .hero-scroll-line {
     position: relative;
