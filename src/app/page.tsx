@@ -18,6 +18,7 @@ import {
 import ProjectView from "@/components/ProjectView";
 import { useHeroPortraitReveal } from "@/hooks/useHeroPortraitReveal";
 import RecentWorkShowcase from "@/components/RecentWorkShowcase";
+import FeedbackCarousel from "@/components/FeedbackCarousel";
 import { MaskedReveal, Reveal, Stagger } from "@/components/motion/Motion";
 
 /* ---------- Overlay driven by ?project=... (wrapped in Suspense) ---------- */
@@ -264,62 +265,7 @@ export default function HomePage() {
         <RecentWorkShowcase />
       </section>
 
-      {/* TESTIMONIALS */}
-      <section id="testimonials" className="px-4 py-20" dir="rtl">
-        <div className="mx-auto max-w-6xl">
-          <MaskedReveal className="mb-12 text-3xl md:text-4xl font-serif">מה אומרים עליי</MaskedReveal>
-          <Stagger className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {[
-              {
-                text: "פניתי לשון לעיצוב עטיפה למוזיקה והוא הצליח לתרגם את האווירה של השיר בצורה ויזואלית ממש יפה. העיצוב עם השקיעות והאווירה האפריקאית יצא מאוד מיוחד",
-                name: "מיסטיקן.", title: "יוצר מוזיקה",
-                stars: 5,
-              },
-              {
-                text: "שון עובד איתי על עיצוב קטלוג והוא מאוד מסודר ומקצועי בתהליך. הוא שולח סקיצות, מקשיב לפידבק ותמיד זמין לשינויים. העבודה איתו נעימה והתוצאה נראית מצוין",
-                name: "מיה ר.", title: "בעלת עסק",
-                stars: 4,
-              },
-              {
-                text: "שון הגיע לסטודיו כדי להבין את האווירה והסגנון שלי, וזה ממש הורגש בתוצאה. דרך התמונות והשיחה בינינו הוא הצליח למצוא כיוון ללוגו שמרגיש מאוד מדויק לעסק",
-                name: "יעל ק.", title: "בעלת סטודיו",
-                stars: 5,
-              },
-              {
-                text: "מה שאהבתי אצל שון זה הגישה הנעימה והמקצועית. הוא מקשיב, מציע רעיונות משלו ומצליח להביא משהו קצת אחר מהרגיל",
-                name: "נועם ש.", title: "יזם",
-                stars: 4,
-              },
-              {
-                text: "שון הגיע לפגישה איתי כדי להבין את העסק והכיוון למיתוג, וזה ממש עזר לתהליך. הוא הביא כמה רעיונות מעניינים ללוגו ובסוף הצלחנו להגיע לפתרון שמרגיש נכון למותג",
-                name: "עומר ל.", title: "בעל מותג",
-                stars: 5,
-              },
-              {
-                text: "עבדתי עם שון על תהליך מיתוג והוא ליווה אותי גם בבחירות לקראת ההדפסה הוא הסביר על החומרים, הצבעים ומה יעבוד הכי טוב בפועל הרגשתי שיש מישהו שממש חושב עד הפרטים הקטנים ולא רק על העיצוב עצמו.",
-                name: "יוסי זוהר",
-                title: "בעל עסק",
-                stars: 5,
-              },
-            ].map((t, i) => (
-              <Card key={i} className="p-6">
-                <div className="mb-3 flex">
-                  {[...Array(t.stars)].map((_, idx) => (
-                    <svg key={idx} width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="text-yellow-400">
-                      <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
-                    </svg>
-                  ))}
-                </div>
-                <blockquote className="mb-6 text-sm">“{t.text}”</blockquote>
-                <div>
-                  <div className="text-sm font-medium">{t.name}</div>
-                  <div className="text-xs text-muted-foreground">{t.title}</div>
-                </div>
-              </Card>
-            ))}
-          </Stagger>
-        </div>
-      </section>
+      <FeedbackCarousel />
 
       {/* FAQ */}
       <section id="faq" className="px-4 py-20" dir="rtl">

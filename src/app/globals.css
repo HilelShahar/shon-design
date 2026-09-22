@@ -1205,3 +1205,132 @@
     transition: none;
   }
 }
+
+/* Homepage — Feedback carousel */
+.feedback-section {
+  position: relative;
+}
+
+.feedback-viewport {
+  overflow: hidden;
+  width: 100%;
+  margin-inline: auto;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.feedback-viewport:active {
+  cursor: grabbing;
+}
+
+.feedback-card {
+  transition:
+    transform 0.58s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.58s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.58s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.feedback-card-panel {
+  border-color: rgba(255, 255, 255, 0.1);
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 42%, rgba(255, 255, 255, 0.01) 100%),
+    hsl(var(--card));
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.feedback-card-panel--active {
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 28px 56px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.feedback-card-divider {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.feedback-nav-btn {
+  box-shadow:
+    0 -8px 24px rgba(255, 255, 255, 0.04),
+    0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.feedback-nav-btn:active {
+  transform: scale(0.96);
+}
+
+.feedback-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  border: 0;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.18);
+  transition: transform 0.25s ease, background-color 0.25s ease;
+  cursor: pointer;
+}
+
+.feedback-dot.is-active {
+  background: color-mix(in srgb, var(--accent-primary) 55%, rgba(255, 255, 255, 0.35));
+  transform: scale(1.15);
+}
+
+.feedback-dot:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.35);
+  outline-offset: 3px;
+}
+
+.feedback-carousel:focus {
+  outline: none;
+}
+
+.feedback-carousel:focus-visible {
+  outline: none;
+}
+
+@media (max-width: 639px) {
+  .feedback-carousel-row {
+    position: relative;
+    gap: 0;
+  }
+
+  .feedback-nav-prev,
+  .feedback-nav-next {
+    position: absolute;
+    top: 50%;
+    z-index: 50;
+    transform: translateY(-50%);
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .feedback-nav-prev {
+    left: 0;
+  }
+
+  .feedback-nav-next {
+    right: 0;
+  }
+
+  .feedback-nav-btn:active {
+    transform: translateY(-50%) scale(0.96);
+  }
+
+  .feedback-viewport {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feedback-card {
+    transition: none;
+  }
+
+  .feedback-dot {
+    transition: none;
+  }
+}

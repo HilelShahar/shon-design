@@ -1,0 +1,361 @@
+"use client";
+
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import {
+  TESTIMONIALS,
+  testimonialInitials,
+  type Testimonial,
+} from "@/lib/testimonials";
+import { MaskedReveal } from "@/components/motion/Motion";
+
+const SWIPE_THRESHOLD = 48;
+const DRAG_LOCK = 10;
+
+function circularOffset(index: number, active: number, count: number) {
+  let offset = index - active;
+  while (offset > count / 2) offset -= count;
+  while (offset < -count / 2) offset += count;
+  return offset;
+}
+
+function TestimonialAvatar({
+  name,
+  image,
+  initials,
+}: {
+  name: string;
+  image?: string;
+  initials?: string;
+}) {
+  if (image) {
+    return (
+      <img
+        src={image}
+        alt={name}
+        className="size-10 shrink-0 rounded-full object-cover ring-1 ring-white/10"
+      />
+    );
+  }
+  const custom = initials?.trim();
+  const label = custom || testimonialInitials(name);
+  return (
+    <span
+      aria-hidden="true"
+      className={`inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-[11px] font-medium tracking-wide text-foreground/85 ring-1 ring-white/10${custom ? "" : " uppercase"}`}
+    >
+      {label}
+    </span>
+  );
+}
+
+function Stars({ count }: { count: number }) {
+  return (
+    <div className="mb-4 flex gap-0.5" aria-hidden="true">
+      {[...Array(count)].map((_, idx) => (
+        <svg
+          key={idx}
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          className="text-amber-400/90"
+        >
+          <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
+        </svg>
+      ))}
+    </div>
+  );
+}
+
+function FeedbackCard({
+  item,
+  offset,
+  dragPx,
+  stride,
+  cardWidth,
+  sideScale,
+  onSelect,
+}: {
+  item: Testimonial;
+  offset: number;
+  dragPx: number;
+  stride: number;
+  cardWidth: number;
+  sideScale: number;
+  onSelect: () => void;
+}) {
+  const dragUnits = stride > 0 ? dragPx / stride : 0;
+  const dist = Math.abs(offset + dragUnits);
+  const near = Math.min(dist, 1);
+  const fade = dist <= 1 ? 1 : Math.max(0, 1 - (dist - 1) / 0.42);
+  const scale = sideScale + (1 - near) * (1 - sideScale);
+  const opacity = (0.64 + (1 - near) * 0.36) * fade;
+  const y = near * 8;
+  const x = offset * stride + dragPx;
+  const isCenter = dist < 0.35;
+
+  return (
+    <article
+      role="group"
+      aria-roledescription="slide"
+      aria-hidden={!isCenter}
+      className="feedback-card absolute left-1/2 top-0 will-change-transform"
+      style={{
+        width: cardWidth,
+        transform: `translate3d(calc(-50% + ${x}px), ${y}px, 0) scale(${scale})`,
+        opacity,
+        filter: `brightness(${0.86 + (1 - near) * 0.14})`,
+        zIndex: Math.round(10 + (1 - near) * 30),
+        pointerEvents: dist > 1.05 || fade < 0.05 ? "none" : "auto",
+        transition: dragPx !== 0 ? "none" : undefined,
+      }}
+      onClick={() => {
+        if (!isCenter) onSelect();
+      }}
+    >
+      <div
+        className={`feedback-card-panel flex h-full min-h-[17.5rem] flex-col rounded-2xl border p-6 md:min-h-[18.5rem] md:p-7 ${
+          isCenter ? "feedback-card-panel--active" : ""
+        }`}
+      >
+        <span className="feedback-quote-mark mb-1 block text-right font-serif text-3xl leading-none text-white/20" aria-hidden="true">
+          ”
+        </span>
+        <Stars count={item.stars} />
+        <blockquote dir="rtl" className="mb-auto text-right text-[0.9375rem] leading-relaxed text-foreground/92">
+          {item.text}
+        </blockquote>
+        <div className="feedback-card-divider mt-6 pt-5" dir="rtl">
+          <div className="flex items-center gap-3 text-right">
+            <TestimonialAvatar name={item.name} image={item.image} initials={item.initials} />
+            <div>
+              <div className="text-sm font-medium text-foreground">{item.name}</div>
+              <div className="text-xs text-muted-foreground">{item.title}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+const navBtn =
+  "feedback-nav-btn inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-white/70 backdrop-blur-xl transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25 disabled:pointer-events-none disabled:opacity-35";
+
+export default function FeedbackCarousel() {
+  const count = TESTIMONIALS.length;
+  const [active, setActive] = useState(0);
+  const [dragPx, setDragPx] = useState(0);
+  const [layout, setLayout] = useState({ cardWidth: 320, stride: 280, sideScale: 0.82 });
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef({
+    active: false,
+    pointerId: -1,
+    startX: 0,
+    startY: 0,
+    locked: null as "x" | "y" | null,
+  });
+
+  const measure = useCallback(() => {
+    const w = viewportRef.current?.clientWidth ?? 0;
+    if (!w) return;
+    const inset = w < 640 ? 52 : 10;
+    const usable = Math.max(0, w - inset * 2);
+
+    if (w < 760) {
+      const cardWidth = Math.min(usable * 0.92, 380);
+      const sideScale = 0.94;
+      const peek = 18;
+      setLayout({
+        cardWidth,
+        sideScale,
+        stride: w / 2 - peek + (cardWidth * sideScale) / 2,
+      });
+      return;
+    }
+
+    const sideScale = w < 900 ? 0.78 : 0.82;
+    const gap = w < 900 ? 16 : 26;
+    let cardWidth = (usable - gap * 2) / (1 + sideScale * 2);
+    cardWidth = Math.min(cardWidth, 400);
+    const spare = usable - (cardWidth * (1 + sideScale * 2) + gap * 2);
+    const fittedGap = gap + Math.max(0, spare) / 2;
+    setLayout({
+      cardWidth,
+      sideScale,
+      stride: (cardWidth * (1 + sideScale)) / 2 + fittedGap,
+    });
+  }, []);
+
+  useLayoutEffect(() => {
+    const node = viewportRef.current;
+    if (!node) return;
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [measure]);
+
+  const go = useCallback(
+    (delta: number) => {
+      setActive((i) => (i + delta + count) % count);
+    },
+    [count],
+  );
+
+  const goTo = useCallback(
+    (index: number) => {
+      setActive(((index % count) + count) % count);
+    },
+    [count],
+  );
+
+  const onKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      go(-1);
+    }
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      go(1);
+    }
+  };
+
+  const finishDrag = (dx: number) => {
+    if (Math.abs(dx) >= SWIPE_THRESHOLD) {
+      go(dx > 0 ? -1 : 1);
+    }
+    setDragPx(0);
+    dragRef.current = {
+      active: false,
+      pointerId: -1,
+      startX: 0,
+      startY: 0,
+      locked: null,
+    };
+  };
+
+  const onPointerDown = (event: React.PointerEvent) => {
+    if (event.button !== 0) return;
+    dragRef.current = {
+      active: true,
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      locked: null,
+    };
+    setDragPx(0);
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const onPointerMove = (event: React.PointerEvent) => {
+    const drag = dragRef.current;
+    if (!drag.active || event.pointerId !== drag.pointerId) return;
+    const dx = event.clientX - drag.startX;
+    const dy = event.clientY - drag.startY;
+    if (drag.locked === null) {
+      if (Math.abs(dx) < DRAG_LOCK && Math.abs(dy) < DRAG_LOCK) return;
+      drag.locked = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+    }
+    if (drag.locked === "y") return;
+    event.preventDefault();
+    setDragPx(dx);
+  };
+
+  const onPointerUp = (event: React.PointerEvent) => {
+    const drag = dragRef.current;
+    if (!drag.active || event.pointerId !== drag.pointerId) return;
+    const dx = drag.locked === "x" ? event.clientX - drag.startX : 0;
+    finishDrag(dx);
+    try {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    } catch {
+      /* already released */
+    }
+  };
+
+  const onPointerCancel = (event: React.PointerEvent) => {
+    if (event.pointerId !== dragRef.current.pointerId) return;
+    finishDrag(0);
+  };
+
+  return (
+    <section id="testimonials" className="feedback-section px-4 py-20 md:py-24" dir="ltr">
+      <div className="mx-auto max-w-6xl">
+        <header className="mb-10 md:mb-12">
+          <MaskedReveal className="text-left font-serif text-3xl tracking-tight text-foreground md:text-[2.65rem] md:leading-tight">
+            Feedback
+          </MaskedReveal>
+          <p className="mt-3 max-w-md text-left text-sm text-muted-foreground">
+            Notes from clients and collaborators.
+          </p>
+        </header>
+
+        <div
+          className="feedback-carousel relative"
+          onKeyDown={onKeyDown}
+          tabIndex={0}
+          aria-label="Client feedback carousel"
+          role="region"
+        >
+          <div className="feedback-carousel-row flex items-center justify-center gap-3 md:gap-5">
+            <button
+              type="button"
+              className={`${navBtn} feedback-nav-prev`}
+              aria-label="Previous feedback"
+              onClick={() => go(-1)}
+            >
+              <ChevronLeft size={22} strokeWidth={1.8} />
+            </button>
+
+            <div
+              ref={viewportRef}
+              className="feedback-viewport relative min-h-[19rem] flex-1 touch-pan-y md:min-h-[20rem]"
+              onPointerDown={onPointerDown}
+              onPointerMove={onPointerMove}
+              onPointerUp={onPointerUp}
+              onPointerCancel={onPointerCancel}
+            >
+              {TESTIMONIALS.map((item, index) => (
+                <FeedbackCard
+                  key={index}
+                  item={item}
+                  offset={circularOffset(index, active, count)}
+                  dragPx={dragPx}
+                  stride={layout.stride}
+                  cardWidth={layout.cardWidth}
+                  sideScale={layout.sideScale}
+                  onSelect={() => goTo(index)}
+                />
+              ))}
+            </div>
+
+            <button
+              type="button"
+              className={`${navBtn} feedback-nav-next`}
+              aria-label="Next feedback"
+              onClick={() => go(1)}
+            >
+              <ChevronRight size={22} strokeWidth={1.8} />
+            </button>
+          </div>
+
+          <div className="feedback-dots mt-8 flex items-center justify-center gap-2" role="tablist" aria-label="Feedback slides">
+            {TESTIMONIALS.map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                role="tab"
+                aria-selected={index === active}
+                aria-label={`Show feedback ${index + 1} of ${count}`}
+                className={index === active ? "feedback-dot is-active" : "feedback-dot"}
+                onClick={() => goTo(index)}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
