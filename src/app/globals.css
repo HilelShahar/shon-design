@@ -638,7 +638,7 @@
   line-height: 1.45;
 }
 
-.work-info-panel {
+.work-info-panel.is-switching {
   animation: work-info-in 180ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -697,7 +697,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .work-canvas,
-  .work-info-panel {
+  .work-info-panel,
+  .work-info-panel.is-switching {
     transition: none;
     animation: none;
   }

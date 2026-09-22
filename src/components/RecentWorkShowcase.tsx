@@ -3,10 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type AnimationEvent } from "react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { MaskedReveal, Reveal } from "@/components/motion/Motion";
+import { MaskedReveal, Reveal, Stagger } from "@/components/motion/Motion";
 import { projects } from "@/lib/projects";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
@@ -107,6 +107,26 @@ export default function RecentWorkShowcase() {
   const item = recentProjects[active];
   const description = item.description.trim();
   const tags = item.tags ?? [];
+  const infoSlug = useRef<string | null>(null);
+  const [infoSwitch, setInfoSwitch] = useState(false);
+
+  useEffect(() => {
+    if (infoSlug.current === null || infoSlug.current === item.slug) {
+      infoSlug.current = item.slug;
+      return;
+    }
+    infoSlug.current = item.slug;
+    setInfoSwitch(true);
+    const timer = window.setTimeout(() => setInfoSwitch(false), 200);
+    return () => window.clearTimeout(timer);
+  }, [item.slug]);
+
+  const settleStage = (event: AnimationEvent<HTMLDivElement>) => {
+    const node = event.target;
+    if (!(node instanceof HTMLElement) || !node.classList.contains("work-stage")) return;
+    if (event.animationName !== "motion-media-in") return;
+    node.style.animation = "none";
+  };
 
   const applyPoses = useCallback(() => {
     const scroller = scrollerRef.current;
@@ -475,7 +495,7 @@ export default function RecentWorkShowcase() {
   };
 
   return (
-    <div className="work-section">
+    <div className="work-section" onAnimationEnd={settleStage}>
       <div className="mx-auto flex w-full max-w-6xl items-end justify-between px-4 pt-24 md:pt-32">
         <MaskedReveal className="text-3xl font-serif md:text-4xl">Recent work</MaskedReveal>
         <Reveal delay={90}>
@@ -491,6 +511,7 @@ export default function RecentWorkShowcase() {
         </Reveal>
       </div>
 
+      <Reveal media className="work-stage">
       <div
         ref={scrollerRef}
         className="work-scroller"
@@ -543,9 +564,10 @@ export default function RecentWorkShowcase() {
           })}
         </div>
       </div>
+      </Reveal>
 
-      <div className="work-copy mx-auto w-full max-w-6xl px-4 pb-20 md:pb-28">
-        <div key={item.slug} className="work-info-panel" aria-live="polite">
+      <div className="work-copy mx-auto w-full max-w-6xl px-4 pb-20 md:pb-28" aria-live="polite">
+        <Stagger className={infoSwitch ? "work-info-panel is-switching" : "work-info-panel"}>
           <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-muted-foreground">
             {pad(active + 1)} / {pad(total)}
           </p>
@@ -580,7 +602,7 @@ export default function RecentWorkShowcase() {
               ))}
             </ul>
           ) : null}
-        </div>
+        </Stagger>
       </div>
     </div>
   );

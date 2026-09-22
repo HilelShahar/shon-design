@@ -1,13 +1,13 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState, type AnimationEvent } from "react";
 import {
   TESTIMONIALS,
   testimonialInitials,
   type Testimonial,
 } from "@/lib/testimonials";
-import { MaskedReveal } from "@/components/motion/Motion";
+import { MaskedReveal, Reveal, Stagger } from "@/components/motion/Motion";
 
 const SWIPE_THRESHOLD = 48;
 const DRAG_LOCK = 10;
@@ -75,6 +75,7 @@ function FeedbackCard({
   stride,
   cardWidth,
   sideScale,
+  entrance,
   onSelect,
 }: {
   item: Testimonial;
@@ -83,6 +84,7 @@ function FeedbackCard({
   stride: number;
   cardWidth: number;
   sideScale: number;
+  entrance?: boolean;
   onSelect: () => void;
 }) {
   const dragUnits = stride > 0 ? dragPx / stride : 0;
@@ -123,18 +125,37 @@ function FeedbackCard({
           ”
         </span>
         <Stars count={item.stars} />
-        <blockquote dir="rtl" className="mb-auto text-right text-[0.9375rem] leading-relaxed text-foreground/92">
-          {item.text}
-        </blockquote>
-        <div className="feedback-card-divider mt-6 pt-5" dir="rtl">
-          <div className="flex items-center gap-3 text-right">
-            <TestimonialAvatar name={item.name} image={item.image} initials={item.initials} />
-            <div>
-              <div className="text-sm font-medium text-foreground">{item.name}</div>
-              <div className="text-xs text-muted-foreground">{item.title}</div>
+        {entrance ? (
+          <Stagger className="flex min-h-0 flex-1 flex-col">
+            <blockquote dir="rtl" className="mb-auto text-right text-[0.9375rem] leading-relaxed text-foreground/92">
+              {item.text}
+            </blockquote>
+            <div className="feedback-card-divider mt-6 pt-5" dir="rtl">
+              <div className="flex items-center gap-3 text-right">
+                <TestimonialAvatar name={item.name} image={item.image} initials={item.initials} />
+                <div>
+                  <div className="text-sm font-medium text-foreground">{item.name}</div>
+                  <div className="text-xs text-muted-foreground">{item.title}</div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          </Stagger>
+        ) : (
+          <>
+            <blockquote dir="rtl" className="mb-auto text-right text-[0.9375rem] leading-relaxed text-foreground/92">
+              {item.text}
+            </blockquote>
+            <div className="feedback-card-divider mt-6 pt-5" dir="rtl">
+              <div className="flex items-center gap-3 text-right">
+                <TestimonialAvatar name={item.name} image={item.image} initials={item.initials} />
+                <div>
+                  <div className="text-sm font-medium text-foreground">{item.name}</div>
+                  <div className="text-xs text-muted-foreground">{item.title}</div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </article>
   );
@@ -280,8 +301,15 @@ export default function FeedbackCarousel() {
     finishDrag(0);
   };
 
+  const settleStage = (event: AnimationEvent<HTMLElement>) => {
+    const node = event.target;
+    if (!(node instanceof HTMLElement) || !node.classList.contains("feedback-stage")) return;
+    if (event.animationName !== "motion-media-in") return;
+    node.style.animation = "none";
+  };
+
   return (
-    <section id="testimonials" className="feedback-section px-4 py-20 md:py-24" dir="ltr">
+    <section id="testimonials" className="feedback-section px-4 py-20 md:py-24" dir="ltr" onAnimationEnd={settleStage}>
       <div className="mx-auto max-w-6xl">
         <header className="mb-10 md:mb-12">
           <MaskedReveal className="text-left font-serif text-3xl tracking-tight text-foreground md:text-[2.65rem] md:leading-tight">
@@ -292,6 +320,7 @@ export default function FeedbackCarousel() {
           </p>
         </header>
 
+        <Reveal media className="feedback-stage">
         <div
           className="feedback-carousel relative"
           onKeyDown={onKeyDown}
@@ -326,6 +355,7 @@ export default function FeedbackCarousel() {
                   stride={layout.stride}
                   cardWidth={layout.cardWidth}
                   sideScale={layout.sideScale}
+                  entrance={index === 0}
                   onSelect={() => goTo(index)}
                 />
               ))}
@@ -355,6 +385,7 @@ export default function FeedbackCarousel() {
             ))}
           </div>
         </div>
+        </Reveal>
       </div>
     </section>
   );
