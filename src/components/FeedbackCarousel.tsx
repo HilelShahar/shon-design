@@ -181,17 +181,32 @@ export default function FeedbackCarousel() {
   const measure = useCallback(() => {
     const w = viewportRef.current?.clientWidth ?? 0;
     if (!w) return;
-    const inset = w < 640 ? 52 : 10;
+    const inset = w < 640 ? 16 : 10;
     const usable = Math.max(0, w - inset * 2);
 
     if (w < 760) {
-      const cardWidth = Math.min(usable * 0.92, 380);
-      const sideScale = 0.94;
-      const peek = 18;
+      if (window.innerWidth <= 420) {
+        const sideScale = 0.92;
+        const cardWidth = w * 0.782;
+        const sideVisual = cardWidth * sideScale;
+        const peek = sideVisual * 0.1;
+        setLayout({
+          cardWidth,
+          sideScale,
+          stride: sideVisual / 2 + w / 2 - peek,
+        });
+        return;
+      }
+      const sideScale = w < 640 ? 0.66 : 0.76;
+      const gap = w < 640 ? 6 : 12;
+      let cardWidth = (usable - gap * 2) / (1 + sideScale * 2);
+      cardWidth = Math.min(cardWidth, 280);
+      const spare = usable - (cardWidth * (1 + sideScale * 2) + gap * 2);
+      const fittedGap = gap + Math.max(0, spare) / 2;
       setLayout({
         cardWidth,
         sideScale,
-        stride: w / 2 - peek + (cardWidth * sideScale) / 2,
+        stride: (cardWidth * (1 + sideScale)) / 2 + fittedGap,
       });
       return;
     }
@@ -217,6 +232,31 @@ export default function FeedbackCarousel() {
     observer.observe(node);
     return () => observer.disconnect();
   }, [measure]);
+
+  useLayoutEffect(() => {
+    const node = viewportRef.current;
+    if (!node) return;
+    const fit = () => {
+      const width = node.clientWidth;
+      let tallest = 0;
+      node.querySelectorAll<HTMLElement>(".feedback-card").forEach((card) => {
+        tallest = Math.max(tallest, card.offsetHeight);
+      });
+      if (!tallest) return;
+      if (width < 760) {
+        node.style.minHeight = `${Math.ceil(tallest + 64)}px`;
+        return;
+      }
+      node.style.minHeight = "";
+      const floor = node.clientHeight;
+      const needed = Math.ceil(tallest + 56);
+      if (needed > floor) node.style.minHeight = `${needed}px`;
+    };
+    fit();
+    const observer = new ResizeObserver(fit);
+    node.querySelectorAll(".feedback-card").forEach((card) => observer.observe(card));
+    return () => observer.disconnect();
+  }, [layout.cardWidth]);
 
   const go = useCallback(
     (delta: number) => {
