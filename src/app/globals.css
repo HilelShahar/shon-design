@@ -717,8 +717,13 @@
 }
 
 .salif-vinyl {
+  position: absolute;
   top: 5.5rem;
+  left: 0;
   z-index: 1;
+  width: 100%;
+  aspect-ratio: 1600 / 720;
+  pointer-events: none;
 }
 
 .salif-vinyl img,
@@ -809,11 +814,23 @@
 .zach-hero-copy {
   position: relative;
   isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: min(100%, 36rem);
   max-width: 36rem;
   padding-bottom: 1.5rem;
   text-align: center;
   justify-self: center;
+}
+
+.zach-hero-names {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: fit-content;
+  max-width: 100%;
+  text-align: left;
 }
 
 .zach-hero-copy::before {
@@ -831,6 +848,7 @@
 
 @media (min-width: 1024px) {
   .zach-hero-copy {
+    align-items: flex-start;
     text-align: left;
     justify-self: start;
   }
@@ -849,6 +867,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  width: 100%;
   gap: 0.28rem;
   margin: 0 0 1.1rem;
   padding: 0;
@@ -1052,6 +1071,75 @@
   .zach-process {
     grid-template-columns: 1fr 1fr;
     gap: 1.25rem 1.5rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .zach-hero-layout {
+    align-content: end;
+    justify-items: stretch;
+    min-height: calc(5.5rem + 46vw);
+    height: auto;
+    padding: 5.5rem 4.5vw 2.5rem;
+    gap: 0;
+  }
+
+  .zach-hero-copy {
+    align-items: stretch;
+    justify-self: stretch;
+    width: 100%;
+    max-width: none;
+    padding-bottom: 0;
+  }
+
+  .zach-hero-copy::before {
+    display: none;
+  }
+
+  .zach-hero-copy > :first-child {
+    order: 2;
+    width: 100%;
+    margin-top: 1.35rem;
+  }
+
+  .zach-hero-names {
+    position: relative;
+    isolation: isolate;
+    order: 1;
+    align-self: start;
+    max-width: min(46%, 22rem);
+  }
+
+  .zach-hero-names::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -1.75rem -1.25rem -0.8rem -1.5rem;
+    background: radial-gradient(
+      ellipse at 28% 42%,
+      rgba(24, 8, 6, 0.72) 0%,
+      rgba(24, 8, 6, 0.38) 52%,
+      transparent 78%
+    );
+  }
+
+  .zach-hero-copy > :first-child .zach-tags {
+    justify-content: center;
+    margin: 0;
+  }
+
+  .zach-title {
+    font-size: clamp(2.45rem, 5vw, 4rem);
+  }
+
+  .zach-title-sub {
+    font-size: clamp(1.4rem, 2vw, 1.85rem);
+  }
+
+  .salif-vinyl {
+    width: 84%;
+    left: auto;
+    right: 0;
   }
 }
 

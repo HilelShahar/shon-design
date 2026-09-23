@@ -37,10 +37,7 @@ export default function SalifVinylVideo({
   }, [basePath, hevcAlphaSrc]);
 
   return (
-    <div className="salif-vinyl" aria-hidden="true" style={{
-      position: 'absolute', left: 0, width: '100%',
-      aspectRatio: '1600 / 720', pointerEvents: 'none',
-    }}>
+    <div className="salif-vinyl" aria-hidden="true">
       <SalifContactShadow />
       <img src={`${basePath}/salif-end.png`} alt="" style={{
         display: 'block', width: '100%', height: '100%',

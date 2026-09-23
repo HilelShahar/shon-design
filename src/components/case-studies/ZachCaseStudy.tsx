@@ -195,12 +195,14 @@ export default function ZachCaseStudy({ project }: { project: Project }) {
                 ))}
               </ul>
             </Reveal>
-            <MaskedReveal as="h1" className="zach-title">
-              Salif Keita
-            </MaskedReveal>
-            <Reveal delay={70}>
-              <p className="zach-title-sub">Zach</p>
-            </Reveal>
+            <div className="zach-hero-names">
+              <MaskedReveal as="h1" className="zach-title">
+                Salif Keita
+              </MaskedReveal>
+              <Reveal delay={70}>
+                <p className="zach-title-sub">Zach</p>
+              </Reveal>
+            </div>
           </div>
         </div>
       </section>
