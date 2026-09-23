@@ -202,30 +202,30 @@
     line-height: 1.1;
   }
 
-  /* ~1.06s total, sequenced name -> subtitle -> chips -> copy -> CTAs */
+  /* ~1.52s total, after a 160ms pause. Same order as before. */
   [data-hero-entrance="run"] .hero-name {
-    animation: hero-line-in 720ms var(--hero-ease) both;
+    animation: hero-line-in 920ms var(--hero-ease) 160ms both;
   }
   [data-hero-entrance="run"] .hero-sub {
-    animation: hero-line-in-sub 700ms var(--hero-ease) 130ms both;
+    animation: hero-line-in-sub 880ms var(--hero-ease) 330ms both;
   }
   [data-hero-entrance="run"] .hero-chips > * {
-    animation: hero-soft-in 450ms var(--hero-ease) both;
+    animation: hero-soft-in 560ms var(--hero-ease) both;
   }
-  [data-hero-entrance="run"] .hero-chips > *:nth-child(1) { animation-delay: 150ms; }
-  [data-hero-entrance="run"] .hero-chips > *:nth-child(2) { animation-delay: 220ms; }
-  [data-hero-entrance="run"] .hero-chips > *:nth-child(3) { animation-delay: 290ms; }
+  [data-hero-entrance="run"] .hero-chips > *:nth-child(1) { animation-delay: 360ms; }
+  [data-hero-entrance="run"] .hero-chips > *:nth-child(2) { animation-delay: 450ms; }
+  [data-hero-entrance="run"] .hero-chips > *:nth-child(3) { animation-delay: 540ms; }
   [data-hero-entrance="run"] .hero-para {
-    animation: hero-soft-in 520ms var(--hero-ease) 330ms both;
+    animation: hero-soft-in 640ms var(--hero-ease) 580ms both;
   }
   [data-hero-entrance="run"] .hero-cta {
-    animation: hero-cta-in 520ms var(--hero-ease) 420ms both;
+    animation: hero-cta-in 640ms var(--hero-ease) 700ms both;
   }
   [data-hero-entrance="run"] .hero-portrait {
-    animation: hero-portrait-in 760ms var(--hero-ease) 300ms both;
+    animation: hero-portrait-in 960ms var(--hero-ease) 560ms both;
   }
   [data-hero-entrance="run"] .pill-nav {
-    animation: hero-nav-in 520ms var(--hero-ease) 120ms both;
+    animation: hero-nav-in 640ms var(--hero-ease) 310ms both;
   }
 
   @keyframes hero-line-in {
