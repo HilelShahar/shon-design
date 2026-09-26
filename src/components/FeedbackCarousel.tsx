@@ -49,25 +49,6 @@ function TestimonialAvatar({
   );
 }
 
-function Stars({ count }: { count: number }) {
-  return (
-    <div className="mb-4 flex gap-0.5" aria-hidden="true">
-      {[...Array(count)].map((_, idx) => (
-        <svg
-          key={idx}
-          width="15"
-          height="15"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          className="text-amber-400/90"
-        >
-          <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
-        </svg>
-      ))}
-    </div>
-  );
-}
-
 function FeedbackCard({
   item,
   offset,
@@ -121,10 +102,9 @@ function FeedbackCard({
           isCenter ? "feedback-card-panel--active" : ""
         }`}
       >
-        <span className="feedback-quote-mark mb-1 block text-right font-serif text-3xl leading-none text-white/20" aria-hidden="true">
+        <span className="feedback-quote-mark" aria-hidden="true">
           ”
         </span>
-        <Stars count={item.stars} />
         {entrance ? (
           <Stagger className="flex min-h-0 flex-1 flex-col">
             <blockquote dir="rtl" className="mb-auto text-right text-[0.9375rem] leading-relaxed text-foreground/92">

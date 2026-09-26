@@ -13,7 +13,10 @@ import ProjectView from "@/components/ProjectView";
 import { useHeroPortraitReveal } from "@/hooks/useHeroPortraitReveal";
 import RecentWorkShowcase from "@/components/RecentWorkShowcase";
 import FeedbackCarousel from "@/components/FeedbackCarousel";
+import SiteFooter from "@/components/SiteFooter";
+import SocialIconLinks from "@/components/SocialIconLinks";
 import { MaskedReveal, Reveal, Stagger } from "@/components/motion/Motion";
+import { WHATSAPP_HREF } from "@/lib/social";
 
 /* ---------- Overlay driven by ?project=... (wrapped in Suspense) ---------- */
 function RecentProjectOverlay() {
@@ -172,6 +175,12 @@ export default function HomePage() {
           className="h-14 w-auto md:h-16"
         />
       </Link>
+
+      <SocialIconLinks
+        iconSize={20}
+        className="absolute top-4 right-10 z-40 hidden h-14 items-center gap-[18px] md:flex md:h-16"
+        linkClassName="inline-flex items-center justify-center text-muted-foreground opacity-80 transition-[color,opacity,transform] duration-200 ease-out hover:text-foreground hover:opacity-100 hover:-translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25 focus-visible:ring-offset-2 focus-visible:ring-offset-background [&_svg]:stroke-current"
+      />
 
       {/* Frosted pill nav */}
       <PillNav onJump={scrollToSection} activeSection={activeSection} />
@@ -356,7 +365,7 @@ export default function HomePage() {
             {/* WhatsApp (no prefilled message) */}
             <Button size="lg" variant="accent" className="rounded-full px-8" asChild>
               <a
-                href="https://wa.me/972502739221"
+                href={WHATSAPP_HREF}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -375,17 +384,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Minimal Footer */}
-      <footer className="border-t border-border px-4 py-10">
-        <Reveal className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 text-sm text-muted-foreground md:flex-row">
-          <div>© {new Date().getFullYear()} Shon Simhon</div>
-          <div className="flex items-center gap-4">
-            <button onClick={() => scrollToSection("work")} className="hover:text-foreground">Work</button>
-            <button onClick={() => scrollToSection("about")} className="hover:text-foreground">About</button>
-            <button onClick={() => scrollToSection("contact")} className="hover:text-foreground">Contact</button>
-          </div>
-        </Reveal>
-      </footer>
+      <SiteFooter />
 
       {/* URL-driven overlay must be inside Suspense */}
       <Suspense fallback={null}>

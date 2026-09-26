@@ -5,8 +5,11 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowUp } from "lucide-react";
 import PillNav from "@/components/PillNav";
 import SalifVinylVideo from "@/components/SalifVinylVideo";
+import SiteFooter from "@/components/SiteFooter";
+import { Button } from "@/components/ui/button";
 import { MaskedReveal, Reveal } from "@/components/motion/Motion";
 import type { Project } from "@/lib/projects";
+import { WHATSAPP_HREF } from "@/lib/social";
 
 const TAGS = ["Cover art", "Music", "Artwork"];
 const HERO_TAGS = ["Cover art", "Music", "Artwork", "Branding", "Merchandise"];
@@ -82,20 +85,20 @@ function ZachBackToTop() {
 
 const PROCESS = [
   {
-    label: "Sketches",
-    note: "Add early drawings of the figure, the ridge, and the title.",
+    label: "Exploration",
+    note: "Early ideas, references, sketches, and visual experiments.",
   },
   {
     label: "Composition",
-    note: "Add studies for how the portrait, sunset, and type share the square.",
+    note: "Layout studies and decisions around hierarchy, balance, and focal points.",
   },
   {
-    label: "Color",
-    note: "Add the red, clay, and gold trials.",
+    label: "Color & Typography",
+    note: "Color and type choices that helped define the visual language.",
   },
   {
-    label: "Notes",
-    note: "Add short notes on what the cover had to protect at a small size.",
+    label: "Refinement",
+    note: "Final adjustments and decisions that brought the direction together.",
   },
 ];
 
@@ -211,7 +214,7 @@ export default function ZachCaseStudy({ project }: { project: Project }) {
         <div className="zach-overview">
           <div>
             <MaskedReveal as="h2" className="zach-heading">
-              {project.title}
+              Overview
             </MaskedReveal>
             <Reveal delay={80}>
               <p className="zach-prose mt-5">{TRACK_DESIGN_INTRO}</p>
@@ -220,11 +223,11 @@ export default function ZachCaseStudy({ project }: { project: Project }) {
           <Reveal delay={100}>
             <dl className="zach-meta">
               <div>
-                <dt>Tags</dt>
-                <dd>{TAGS.join(" · ")}</dd>
+                <dt>Role</dt>
+                <dd className="zach-draft">Your role on the project.</dd>
               </div>
               <div>
-                <dt>Year</dt>
+                <dt>Timeline</dt>
                 <dd>{project.year}</dd>
               </div>
               <div>
@@ -232,8 +235,8 @@ export default function ZachCaseStudy({ project }: { project: Project }) {
                 <dd>Track cover</dd>
               </div>
               <div>
-                <dt>Role</dt>
-                <dd className="zach-draft">Add your role on this project.</dd>
+                <dt>Deliverables</dt>
+                <dd>{TAGS.join(" · ")}</dd>
               </div>
             </dl>
           </Reveal>
@@ -244,7 +247,7 @@ export default function ZachCaseStudy({ project }: { project: Project }) {
         <MaskedReveal as="h2" className="zach-heading">Goal</MaskedReveal>
         <Reveal delay={80}>
           <p className="zach-draft zach-prose mt-5">
-            Write the aim of the cover here. What the track needed listeners to feel, and what the artwork had to carry.
+            Describe what the project needed to achieve and the main objective behind the work.
           </p>
         </Reveal>
       </section>
@@ -253,22 +256,13 @@ export default function ZachCaseStudy({ project }: { project: Project }) {
         <MaskedReveal as="h2" className="zach-heading">Constraints</MaskedReveal>
         <Reveal delay={80}>
           <p className="zach-draft zach-prose mt-5">
-            Write the limits here. Format, deadline, what had to stay readable, and anything the cover was not allowed to lose.
-          </p>
-        </Reveal>
-      </section>
-
-      <section className="zach-block">
-        <MaskedReveal as="h2" className="zach-heading">Role</MaskedReveal>
-        <Reveal delay={80}>
-          <p className="zach-draft zach-prose mt-5">
-            Write what you owned on this project. Design, art direction, type, or collaboration with the producer.
+            Highlight the key limitations or requirements that influenced the project, such as format, timeline, audience, technical needs, or existing brand elements.
           </p>
         </Reveal>
       </section>
 
       <section className="zach-block zach-block-wide">
-        <MaskedReveal as="h2" className="zach-heading">Visual direction</MaskedReveal>
+        <MaskedReveal as="h2" className="zach-heading">Creative Direction</MaskedReveal>
         <Reveal delay={80}>
           <div className="zach-split mt-6">
             <p className="zach-prose">
@@ -285,7 +279,7 @@ export default function ZachCaseStudy({ project }: { project: Project }) {
         <MaskedReveal as="h2" className="zach-heading">Process</MaskedReveal>
         <Reveal delay={80}>
           <p className="zach-draft zach-prose mt-5 max-w-2xl">
-            This row is ready for the exploration. Replace each frame with a sketch, a composition study, a color trial, or a short note.
+            Show the key stages that shaped the final result, from early exploration through refinement.
           </p>
         </Reveal>
         <div className="zach-process">
@@ -304,10 +298,10 @@ export default function ZachCaseStudy({ project }: { project: Project }) {
       </section>
 
       <section className="zach-block zach-block-wide">
-        <MaskedReveal as="h2" className="zach-heading">Final outcome</MaskedReveal>
+        <MaskedReveal as="h2" className="zach-heading">Final Work</MaskedReveal>
         <Reveal delay={80}>
-          <p className="zach-prose mt-5 max-w-2xl">
-            The finished cover, presented as one continuous piece.
+          <p className="zach-draft zach-prose mt-5 max-w-2xl">
+            The final design presented across its key applications and deliverables.
           </p>
         </Reveal>
         <Reveal media className="zach-outcome">
@@ -315,11 +309,29 @@ export default function ZachCaseStudy({ project }: { project: Project }) {
         </Reveal>
       </section>
 
+      <section className="zach-block">
+        <MaskedReveal as="h2" className="zach-heading">Outcome</MaskedReveal>
+        <Reveal delay={80}>
+          <p className="zach-draft zach-prose mt-5">
+            Summarize what the project achieved, how the final work was used, and any qualitative or measurable result that followed.
+          </p>
+        </Reveal>
+      </section>
+
+      <section className="zach-block">
+        <MaskedReveal as="h2" className="zach-heading">Client Feedback</MaskedReveal>
+        <Reveal delay={80}>
+          <p className="zach-draft zach-prose mt-5">
+            Add an authentic client or collaborator quote that reflects the experience or result of the project.
+          </p>
+        </Reveal>
+      </section>
+
       <section className="zach-block zach-end">
         <MaskedReveal as="h2" className="zach-heading">Reflection</MaskedReveal>
         <Reveal delay={80}>
           <p className="zach-draft zach-prose mt-5">
-            Write what held the concept together, what you would refine, and why this cover feels like the track.
+            Share what you learned from the project, what worked well, and what you would refine if you approached it again.
           </p>
         </Reveal>
         <Reveal delay={120}>
@@ -328,6 +340,33 @@ export default function ZachCaseStudy({ project }: { project: Project }) {
           </Link>
         </Reveal>
       </section>
+
+      <section id="contact" className="px-4 py-20 text-center">
+        <div className="mx-auto max-w-4xl">
+          <MaskedReveal as="h2" className="mb-6 text-4xl md:text-5xl font-serif">Ready to start?</MaskedReveal>
+          <Reveal delay={90}>
+            <p className="mx-auto mb-10 max-w-2xl text-lg text-muted-foreground">
+              Tell me about your project and timelines — I’ll reply quickly with next steps.
+            </p>
+          </Reveal>
+          <Reveal delay={170}>
+            <div className="flex justify-center gap-3">
+              <Button size="lg" variant="accent" className="rounded-full px-8" asChild>
+                <a href={WHATSAPP_HREF} target="_blank" rel="noopener noreferrer">
+                  Let’s talk
+                </a>
+              </Button>
+              <Button size="lg" variant="outline" className="rounded-full px-8" asChild>
+                <a href="mailto:shonsimhon@gmail.com?subject=Project%20Inquiry">
+                  Email me
+                </a>
+              </Button>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <SiteFooter />
       <ZachBackToTop />
     </div>
   );
