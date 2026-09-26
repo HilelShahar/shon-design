@@ -20,8 +20,9 @@ const BLUR =
   "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAn/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBEQACEQAD8QAf/9k=";
 
 const DRAG_CLICK_THRESHOLD = 8;
-const ZACH_CASE_SLUG = "zach-track-design";
-const ZACH_CASE_HREF = "/work/zach-track-design";
+
+/** Routes that already exist under /work/[slug]. */
+const CASE_HREFS = new Map(projects.map((project) => [project.slug, `/work/${project.slug}`]));
 
 function pad(n: number) {
   return String(n).padStart(2, "0");
@@ -369,13 +370,14 @@ export default function RecentWorkShowcase() {
     return element?.getAttribute("data-slug") ?? null;
   };
 
-  const openZachFromPress = (pointerId: number, moved: number) => {
+  const openCaseFromPress = (pointerId: number, moved: number) => {
     if (dragRef.current.pointerId !== pointerId) return;
     const slug = pressSlugRef.current;
     pressSlugRef.current = null;
-    if (slug !== ZACH_CASE_SLUG || moved > DRAG_CLICK_THRESHOLD) return;
+    const href = slug ? CASE_HREFS.get(slug) : undefined;
+    if (!href || moved > DRAG_CLICK_THRESHOLD) return;
     suppressClickRef.current = true;
-    router.push(ZACH_CASE_HREF);
+    router.push(href);
   };
 
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -439,14 +441,14 @@ export default function RecentWorkShowcase() {
       if (event.pointerId === drag.pointerId && drag.moved > DRAG_CLICK_THRESHOLD) {
         suppressClickRef.current = true;
       }
-      openZachFromPress(event.pointerId, drag.moved);
+      openCaseFromPress(event.pointerId, drag.moved);
       return;
     }
     if (!drag.active || event.pointerId !== drag.pointerId) return;
     drag.active = false;
     scroller?.classList.remove("is-grabbing");
     if (drag.moved > DRAG_CLICK_THRESHOLD) suppressClickRef.current = true;
-    openZachFromPress(event.pointerId, drag.moved);
+    openCaseFromPress(event.pointerId, drag.moved);
     release();
   };
 
@@ -455,8 +457,9 @@ export default function RecentWorkShowcase() {
       suppressClickRef.current = false;
       return;
     }
-    if (slug !== ZACH_CASE_SLUG) return;
-    router.push(ZACH_CASE_HREF);
+    const href = CASE_HREFS.get(slug);
+    if (!href) return;
+    router.push(href);
   };
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -502,7 +505,7 @@ export default function RecentWorkShowcase() {
           <Link href="/work">
             <Button
               variant="outline"
-              className="h-9 rounded-full border-white/30 px-4 text-foreground hover:border-white/50 hover:bg-white/10"
+              className="h-9 rounded-full border-white/30 px-4 text-foreground hover:border-[var(--accent-hover)] hover:bg-[var(--accent-hover)] hover:text-foreground active:border-[var(--accent-active)] active:bg-[var(--accent-active)] active:text-foreground"
             >
               See all
               <ArrowRight className="ml-2 h-4 w-4" />
@@ -528,22 +531,21 @@ export default function RecentWorkShowcase() {
         <div className="work-track" style={frame ? { width: frame.track } : undefined}>
           {recentProjects.map((canvas, index) => {
             const focused = index === active;
-            const linked = canvas.slug === ZACH_CASE_SLUG;
-            const CanvasTag = linked ? "button" : "div";
+            const href = CASE_HREFS.get(canvas.slug);
             return (
-              <CanvasTag
+              <button
                 key={canvas.slug}
-                ref={(node: HTMLElement | null) => {
+                ref={(node) => {
                   itemRefs.current[index] = node;
                 }}
-                type={linked ? "button" : undefined}
-                className={linked ? "work-canvas is-case" : "work-canvas"}
+                type="button"
+                className={href ? "work-canvas is-case" : "work-canvas"}
                 data-slug={canvas.slug}
                 data-active={focused ? "true" : "false"}
                 aria-current={focused ? "true" : undefined}
-                aria-label={linked ? `Open ${canvas.title}` : canvas.title}
+                aria-label={href ? `Open ${canvas.title}` : canvas.title}
                 style={{ left: frame ? frame.lefts[index] : 0 }}
-                onClick={linked ? () => onCanvasClick(canvas.slug) : undefined}
+                onClick={href ? () => onCanvasClick(canvas.slug) : undefined}
                 onMouseEnter={() => preload(canvas.longImage)}
                 onDragStart={(event) => event.preventDefault()}
               >
@@ -559,7 +561,7 @@ export default function RecentWorkShowcase() {
                   blurDataURL={isMobile ? undefined : BLUR}
                   priority={index === 0}
                 />
-              </CanvasTag>
+              </button>
             );
           })}
         </div>
@@ -572,10 +574,13 @@ export default function RecentWorkShowcase() {
             {pad(active + 1)} / {pad(total)}
           </p>
           <h3 className="work-info-title mt-2 text-foreground">
-            {item.slug === ZACH_CASE_SLUG ? (
+            {CASE_HREFS.get(item.slug) ? (
               <button
                 type="button"
-                onClick={() => router.push(ZACH_CASE_HREF)}
+                onClick={() => {
+                  const href = CASE_HREFS.get(item.slug);
+                  if (href) router.push(href);
+                }}
                 onMouseEnter={() => preload(item.longImage)}
                 className="bg-transparent p-0 text-left font-[inherit] text-inherit transition-opacity duration-300 hover:opacity-80"
               >

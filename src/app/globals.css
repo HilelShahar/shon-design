@@ -1164,6 +1164,82 @@
   }
 }
 
+/* Template hero visual. Same box as .salif-vinyl, without Salif media. */
+.case-study-hero-visual {
+  position: absolute;
+  top: 5.5rem;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  aspect-ratio: 1600 / 720;
+  pointer-events: none;
+  background: #3a3a3a;
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .case-study-hero .case-study-hero-visual {
+    width: 84%;
+    left: auto;
+    right: 0;
+  }
+
+  .case-study-hero .zach-hero-copy > .zach-hero-names:first-child {
+    order: 1;
+    width: auto;
+    margin-top: 0;
+  }
+}
+
+/* Shared hero type. Same face as Salif; the block grows with the copy. */
+.case-study-hero .zach-hero-names,
+.case-study-hero .zach-title,
+.case-study-hero .zach-title-sub {
+  height: auto;
+  max-height: none;
+  overflow: visible;
+}
+
+.case-study-hero .motion-mask {
+  height: auto;
+  max-height: none;
+  overflow: hidden;
+  padding: 18px 4px 22px;
+  margin: -18px 0 -22px;
+}
+
+.case-study-hero .zach-title {
+  line-height: 1.14;
+  text-wrap: balance;
+}
+
+.case-study-hero .zach-title.is-medium {
+  font-size: clamp(2.15rem, 4.6vw, 4.35rem);
+}
+
+.case-study-hero .zach-title.is-long {
+  font-size: clamp(1.85rem, 3.15vw, 3.15rem);
+}
+
+.case-study-hero .zach-title-sub {
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+@media (min-width: 1024px) {
+  .case-study-hero.zach-hero {
+    height: auto;
+    min-height: 100svh;
+  }
+
+  .case-study-hero .zach-hero-layout {
+    align-content: end;
+    height: auto;
+    min-height: 100svh;
+    padding-top: 5.5rem;
+    padding-bottom: clamp(6.5rem, 18vh, 11rem);
+  }
+}
+
 .zach-to-top {
   position: fixed;
   right: 1.75rem;

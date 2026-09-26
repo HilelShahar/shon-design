@@ -1,7 +1,7 @@
 // Server Component (no "use client")
 import { notFound } from "next/navigation";
 import { projects } from "@/lib/projects";
-import ProjectView from "@/components/ProjectView";
+import PortfolioCaseStudy from "@/components/case-studies/PortfolioCaseStudy";
 import ZachCaseStudy from "@/components/case-studies/ZachCaseStudy";
 
 type Params = { slug: string };
@@ -19,18 +19,7 @@ export default async function ProjectPage({ params }: Props) {
     return <ZachCaseStudy project={project} />;
   }
 
-  // Same look as before; just adds the X and outside-click to close.
-  return (
-    <ProjectView
-      title={project.title}
-      year={project.year}
-      description={project.description}
-      descriptionRtl={project.descriptionRtl}
-      descriptionFooter={project.descriptionFooter}
-      longImage={project.longImage}
-      closeHref="/work"
-    />
-  );
+  return <PortfolioCaseStudy project={project} />;
 }
 
 export async function generateStaticParams() {
