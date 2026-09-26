@@ -59,6 +59,11 @@ export const TESTIMONIALS: Testimonial[] = [
   },
 ];
 
+/** Same object as the Feedback carousel entry for the Salif Keita / Zach cover. */
+export const ZACH_CLIENT_FEEDBACK = TESTIMONIALS.find(
+  (item) => item.name === "מיסטיקן.",
+);
+
 export function testimonialInitials(name: string) {
   const parts = name
     .replace(/[^\p{L}\p{N}\s]/gu, "")

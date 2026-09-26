@@ -6,13 +6,14 @@ import { ArrowUp } from "lucide-react";
 import PillNav from "@/components/PillNav";
 import SalifVinylVideo from "@/components/SalifVinylVideo";
 import SiteFooter from "@/components/SiteFooter";
+import TestimonialCard from "@/components/TestimonialCard";
 import { Button } from "@/components/ui/button";
 import { MaskedReveal, Reveal } from "@/components/motion/Motion";
 import type { Project } from "@/lib/projects";
 import { WHATSAPP_HREF } from "@/lib/social";
+import { ZACH_CLIENT_FEEDBACK } from "@/lib/testimonials";
 
-const TAGS = ["Cover art", "Music", "Artwork"];
-const HERO_TAGS = ["Cover art", "Music", "Artwork", "Branding", "Merchandise"];
+const HERO_TAGS = ["Cover art", "Art direction", "Visual identity", "Merchandise"];
 const TRACK_DESIGN_INTRO =
   "After listening to the track, I built the visual direction around the feeling it gave me: an African sunset, warm colors, and a deep atmosphere. From there, I connected the music, the African-inspired visual language, and the landscape into one cohesive world.";
 
@@ -86,19 +87,19 @@ function ZachBackToTop() {
 const PROCESS = [
   {
     label: "Exploration",
-    note: "Early ideas, references, sketches, and visual experiments.",
+    note: "I researched African safari landscapes, red sunsets, and visual references that matched the feeling of the track.",
   },
   {
     label: "Composition",
-    note: "Layout studies and decisions around hierarchy, balance, and focal points.",
+    note: "I tested several layouts until the character, landscape, and sunset felt balanced and focused.",
   },
   {
     label: "Color & Typography",
-    note: "Color and type choices that helped define the visual language.",
+    note: "The palette came directly from the deep red African sunset, paired with typography that supported the African atmosphere.",
   },
   {
     label: "Refinement",
-    note: "Final adjustments and decisions that brought the direction together.",
+    note: "I refined the character, hierarchy, and small details until the cover felt clear, atmospheric, and cohesive.",
   },
 ];
 
@@ -224,19 +225,19 @@ export default function ZachCaseStudy({ project }: { project: Project }) {
             <dl className="zach-meta">
               <div>
                 <dt>Role</dt>
-                <dd className="zach-draft">Your role on the project.</dd>
+                <dd>Art Direction &amp; Cover Design</dd>
               </div>
               <div>
-                <dt>Timeline</dt>
+                <dt>Year</dt>
                 <dd>{project.year}</dd>
               </div>
               <div>
                 <dt>Category</dt>
-                <dd>Track cover</dd>
+                <dd>Music Visual Identity</dd>
               </div>
               <div>
                 <dt>Deliverables</dt>
-                <dd>{TAGS.join(" · ")}</dd>
+                <dd>Cover Art / Poster / Social Media / Merch / Spotify Assets</dd>
               </div>
             </dl>
           </Reveal>
@@ -247,7 +248,7 @@ export default function ZachCaseStudy({ project }: { project: Project }) {
         <MaskedReveal as="h2" className="zach-heading">Goal</MaskedReveal>
         <Reveal delay={80}>
           <p className="zach-draft zach-prose mt-5">
-            Describe what the project needed to achieve and the main objective behind the work.
+            The goal was to translate the feeling of the track into a visual experience that feels like a natural extension of the music.
           </p>
         </Reveal>
       </section>
@@ -256,7 +257,7 @@ export default function ZachCaseStudy({ project }: { project: Project }) {
         <MaskedReveal as="h2" className="zach-heading">Constraints</MaskedReveal>
         <Reveal delay={80}>
           <p className="zach-draft zach-prose mt-5">
-            Highlight the key limitations or requirements that influenced the project, such as format, timeline, audience, technical needs, or existing brand elements.
+            Keep the African influence clear while making sure the key details still work at small sizes, such as Spotify and in-car displays.
           </p>
         </Reveal>
       </section>
@@ -266,10 +267,7 @@ export default function ZachCaseStudy({ project }: { project: Project }) {
         <Reveal delay={80}>
           <div className="zach-split mt-6">
             <p className="zach-prose">
-              The cover treats the remix as a passage through a red sunset. Warm sky, haze, and a quiet strip of land carry the place the music points toward, while the portrait is held in the same light so the producer and the landscape feel like one image.
-            </p>
-            <p className="zach-prose">
-              The color stays inside ember, clay, and gold. A tree, animals, and a figure on the ridge keep the scene readable at cover size, without turning the land into a postcard.
+              The direction came from the track&apos;s African sound. I imagined a woman overlooking the safari at a deep red sunset, and built the visual world around that feeling.
             </p>
           </div>
         </Reveal>
@@ -279,7 +277,7 @@ export default function ZachCaseStudy({ project }: { project: Project }) {
         <MaskedReveal as="h2" className="zach-heading">Process</MaskedReveal>
         <Reveal delay={80}>
           <p className="zach-draft zach-prose mt-5 max-w-2xl">
-            Show the key stages that shaped the final result, from early exploration through refinement.
+            I started by listening to the track several times and letting the music shape the visual direction. From there, I researched African safari imagery, explored compositions, and refined the color, typography, and character.
           </p>
         </Reveal>
         <div className="zach-process">
@@ -301,7 +299,7 @@ export default function ZachCaseStudy({ project }: { project: Project }) {
         <MaskedReveal as="h2" className="zach-heading">Final Work</MaskedReveal>
         <Reveal delay={80}>
           <p className="zach-draft zach-prose mt-5 max-w-2xl">
-            The final design presented across its key applications and deliverables.
+            The final direction expanded beyond the cover into a wider visual identity, including merchandise, artist posters, vinyl and CD mockups, stickers, tags, and Spotify applications.
           </p>
         </Reveal>
         <Reveal media className="zach-outcome">
@@ -313,25 +311,25 @@ export default function ZachCaseStudy({ project }: { project: Project }) {
         <MaskedReveal as="h2" className="zach-heading">Outcome</MaskedReveal>
         <Reveal delay={80}>
           <p className="zach-draft zach-prose mt-5">
-            Summarize what the project achieved, how the final work was used, and any qualitative or measurable result that followed.
+            The client was very happy with the result and released the track on SoundCloud. The visual direction also received positive feedback from his colleagues, some of whom reached out to me directly after seeing the work. He especially liked how the project expanded beyond the cover into a complete visual world.
           </p>
         </Reveal>
       </section>
 
       <section className="zach-block">
         <MaskedReveal as="h2" className="zach-heading">Client Feedback</MaskedReveal>
-        <Reveal delay={80}>
-          <p className="zach-draft zach-prose mt-5">
-            Add an authentic client or collaborator quote that reflects the experience or result of the project.
-          </p>
-        </Reveal>
+        {ZACH_CLIENT_FEEDBACK ? (
+          <Reveal delay={80}>
+            <TestimonialCard item={ZACH_CLIENT_FEEDBACK} className="mt-5 w-full max-w-[400px]" />
+          </Reveal>
+        ) : null}
       </section>
 
       <section className="zach-block zach-end">
         <MaskedReveal as="h2" className="zach-heading">Reflection</MaskedReveal>
         <Reveal delay={80}>
           <p className="zach-draft zach-prose mt-5">
-            Share what you learned from the project, what worked well, and what you would refine if you approached it again.
+            This project showed me how music can be translated into a visual experience that carries the same emotion. Following the client&apos;s request to listen first helped me trust the feeling of the track and turn it into a strong visual direction, especially through color.
           </p>
         </Reveal>
         <Reveal delay={120}>
