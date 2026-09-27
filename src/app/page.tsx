@@ -1,5 +1,4 @@
 'use client'
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -12,6 +11,7 @@ import { projects } from "@/lib/projects";
 import ProjectView from "@/components/ProjectView";
 import { useHeroPortraitReveal } from "@/hooks/useHeroPortraitReveal";
 import RecentWorkShowcase from "@/components/RecentWorkShowcase";
+import FaqSection from "@/components/FaqSection";
 import FeedbackCarousel from "@/components/FeedbackCarousel";
 import SiteFooter from "@/components/SiteFooter";
 import SocialIconLinks from "@/components/SocialIconLinks";
@@ -96,7 +96,7 @@ function LogoMarquee({
             <img
               src={src}
               alt={src.split("/").pop() || "Tool logo"}
-              className="logo-img logo-dim"
+              className={src.endsWith("openai.png") ? "logo-img logo-dim logo-img-match" : "logo-img logo-dim"}
               onError={(e) => ((e.target as HTMLImageElement).style.display = "none")}
             />
           </div>
@@ -109,7 +109,7 @@ function LogoMarquee({
             <img
               src={src}
               alt=""
-              className="logo-img logo-dim"
+              className={src.endsWith("openai.png") ? "logo-img logo-dim logo-img-match" : "logo-img logo-dim"}
               onError={(e) => ((e.target as HTMLImageElement).style.display = "none")}
             />
           </div>
@@ -249,52 +249,7 @@ export default function HomePage() {
 
       <FeedbackCarousel />
 
-      {/* FAQ */}
-      <section id="faq" className="px-4 py-20" dir="rtl">
-        <div className="mx-auto max-w-4xl">
-          <Stagger nested className="mx-auto max-w-4xl">
-          <Accordion type="multiple" className="space-y-4">
-            {[
-              {
-                q: "מה זמן העבודה הממוצע על פרויקט?",
-                a: "זה משתנה מפרויקט לפרויקט, אבל בדרך כלל אני עובד בטווח של שבוע עד שלושה.\nאני שואף לעבוד בצורה יעילה, בלי לוותר על איכות.\n\nבמקרים של פרויקטים מורכבים או מיתוגים רחבים, לוח הזמנים יכול להתארך – בהתאם לצורך ולתיאום מראש."
-              },
-              {
-                q: "איך מתבצע התהליך מולך? איך מעבירים הערות?",
-                a: "במה שנוח לך – וואטסאפ, מייל, שיחת טלפון.\nאני זמין, מקשיב, משתף אותך בשלבים, והכי חשוב – גורם לך להרגיש חלק מהתהליך."
-              },
-              {
-                q: "אילו קבצים אני מקבל בסיום העבודה?",
-                a: "כל מה שצריך: לוגואים בפורמטים שונים (SVG, PNG, PDF), קבצים לרשתות חברתיות, חומרים להדפסה וכל מה שסוכם מראש.\nמסודר, מוכן, ונוח לשימוש."
-              },
-              {
-                q: "אתה נותן גם ליווי אחרי שהפרויקט נגמר?",
-                a: "כן, לגמרי.\nגם אחרי שהפרויקט מסתיים אני כאן אם צריך התאמה, שינוי קטן, או סתם עוד עין מקצועית."
-              },
-              {
-                q: "כמה סבבי תיקונים כלולים?",
-                a: "בדרך כלל 2–3 סבבים, אבל אני פחות סופר ויותר דואג שיצא מדויק.\nהמטרה היא שזה ירגיש טוב ונכון לשני הצדדים."
-              },
-              {
-                q: "אתה גם עוזר בהכנה להדפסה או לאתר?",
-                a: "כן.\nאם צריך – אני עובד מול בתי דפוס או מתכנתים כדי לוודא שהתוצאה יוצאת כמו שצריך – גם בדיגיטל וגם בדפוס."
-              },
-            ].map((item, i) => (
-              <AccordionItem
-                key={i}
-                value={`item-${i}`}
-                data-motion-item=""
-                style={{ animationDelay: `${Math.min(i, 5) * 85}ms` }}
-                className="bg-card border border-border rounded-2xl px-6"
-              >
-                <AccordionTrigger>{item.q}</AccordionTrigger>
-                <AccordionContent className="whitespace-pre-line">{item.a}</AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-          </Stagger>
-        </div>
-      </section>
+      <FaqSection />
 
       {/* ABOUT */}
       <section id="about" className="px-4 py-20">
@@ -342,6 +297,8 @@ export default function HomePage() {
               "/logos/ai.svg",
               "/logos/ae.svg",
               "/logos/indesign.svg",
+              "/logos/cursor.svg",
+              "/logos/openai.png",
             ]}
             speed={60}
             gap={56}

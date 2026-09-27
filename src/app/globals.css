@@ -79,6 +79,73 @@
     background-color: var(--accent-active);
   }
 
+  /* FAQ audience toggle — liquid pill between Employer and Client.
+     Direction is physical LTR so an RTL ancestor cannot flip the pill. */
+  .faq-mode-switch {
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
+  .faq-mode-thumb {
+    right: auto;
+    background-color: var(--accent-primary);
+    transform: translateX(0) scale(1);
+  }
+  .faq-mode-thumb.is-client {
+    transform: translateX(100%) scale(1);
+  }
+  .faq-mode-thumb::before {
+    content: "";
+    position: absolute;
+    inset: 22% -3%;
+    border-radius: inherit;
+    background: var(--accent-hover);
+    opacity: 0;
+  }
+  .faq-mode-thumb.is-right {
+    animation: faq-blob-right 380ms cubic-bezier(0.22, 0.78, 0.24, 1) both;
+  }
+  .faq-mode-thumb.is-left {
+    animation: faq-blob-left 380ms cubic-bezier(0.22, 0.78, 0.24, 1) both;
+  }
+  .faq-mode-thumb.is-right::before,
+  .faq-mode-thumb.is-left::before {
+    animation: faq-blob-lead 380ms cubic-bezier(0.22, 0.78, 0.24, 1) both;
+  }
+  .faq-mode-thumb.is-left::before {
+    animation-name: faq-blob-lead-left;
+  }
+  @keyframes faq-blob-right {
+    0%   { transform: translateX(0) scaleX(1) scaleY(1); background-color: var(--accent-primary); }
+    40%  { transform: translateX(42%) scaleX(1.14) scaleY(0.9); background-color: var(--accent-hover); }
+    76%  { transform: translateX(103.5%) scaleX(0.97) scaleY(1.035); background-color: var(--accent-active); }
+    100% { transform: translateX(100%) scaleX(1) scaleY(1); background-color: var(--accent-primary); }
+  }
+  @keyframes faq-blob-left {
+    0%   { transform: translateX(100%) scaleX(1) scaleY(1); background-color: var(--accent-primary); }
+    40%  { transform: translateX(58%) scaleX(1.14) scaleY(0.9); background-color: var(--accent-hover); }
+    76%  { transform: translateX(-3.5%) scaleX(0.97) scaleY(1.035); background-color: var(--accent-active); }
+    100% { transform: translateX(0) scaleX(1) scaleY(1); background-color: var(--accent-primary); }
+  }
+  @keyframes faq-blob-lead {
+    0%, 100% { opacity: 0; transform: translateX(0) scaleX(1); }
+    40%      { opacity: 0.4; transform: translateX(16%) scaleX(1.16); }
+  }
+  @keyframes faq-blob-lead-left {
+    0%, 100% { opacity: 0; transform: translateX(0) scaleX(1); }
+    40%      { opacity: 0.4; transform: translateX(-16%) scaleX(1.16); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .faq-mode-thumb.is-right,
+    .faq-mode-thumb.is-left,
+    .faq-mode-thumb.is-right::before,
+    .faq-mode-thumb.is-left::before {
+      animation: none;
+    }
+    .faq-mode-switch [role="tab"] {
+      transition: none;
+    }
+  }
+
   /* Hero reveals */
   @keyframes reveal-up {
     0%   { opacity: 0; transform: translateY(8px) scale(.98); }
@@ -167,6 +234,14 @@
   .logo-dim:hover {
     opacity: 1;
     filter: saturate(1.15) brightness(1.15) drop-shadow(0 0 12px rgba(255,255,255,.12));
+  }
+
+  /* OpenAI blossom is centered in a large transparent canvas. Scale only that image. */
+  .logo-item:has(.logo-img-match) {
+    overflow: hidden;
+  }
+  .logo-img-match {
+    transform: scale(2);
   }
 
   /* ===== Hero first-view entrance (plays once on load) ===== */
