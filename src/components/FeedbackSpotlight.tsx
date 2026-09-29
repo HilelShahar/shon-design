@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, type AnimationEvent, type KeyboardEvent, type TouchEvent, type WheelEvent } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from "lucide-react";
 import { TESTIMONIALS } from "@/lib/testimonials";
 import {
   TestimonialAvatar,
@@ -17,7 +17,8 @@ const ARROW_BTN =
 const WHEEL_THRESHOLD = 48; // accumulated px of vertical wheel delta
 const GESTURE_QUIET_MS = 160; // silence that ends a wheel/trackpad gesture (momentum tails stay locked)
 const GESTURE_COOLDOWN_MS = 520; // minimum time between steps (longer than the 420ms animation)
-const SWIPE_THRESHOLD = 36; // px of vertical touch travel
+const SWIPE_THRESHOLD = 36; // px of touch travel along the selector's axis
+const MOBILE_QUERY = "(max-width: 767px)"; // below md the selector is a horizontal row
 
 /**
  * Feedback as a spotlight: one testimonial in a fixed card, a compact vertical
@@ -50,7 +51,11 @@ export default function FeedbackSpotlight() {
   };
 
   const onWheel = (event: WheelEvent<HTMLDivElement>) => {
-    if (event.ctrlKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return; // pinch-zoom / horizontal
+    if (event.ctrlKey) return; // pinch-zoom
+    // On mobile the selector is a horizontal strip, so sideways wheel movement
+    // drives it; everywhere else only vertical movement counts.
+    const sideways = window.matchMedia(MOBILE_QUERY).matches && Math.abs(event.deltaX) > Math.abs(event.deltaY);
+    if (!sideways && Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
     const g = gesture.current;
     const now = performance.now();
     // A pause (after the cooldown) marks the end of one gesture; momentum tails
@@ -62,7 +67,7 @@ export default function FeedbackSpotlight() {
     g.lastEvent = now;
     if (g.locked) return;
     const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1;
-    g.accum += event.deltaY * unit;
+    g.accum += (sideways ? event.deltaX : event.deltaY) * unit;
     if (Math.abs(g.accum) >= WHEEL_THRESHOLD) tryStep(g.accum > 0 ? 1 : -1, now);
   };
 
@@ -77,12 +82,23 @@ export default function FeedbackSpotlight() {
     const dy = touch.clientY - g.touchY;
     const dx = touch.clientX - g.touchX;
     const now = performance.now();
-    if (Math.abs(dy) < SWIPE_THRESHOLD || Math.abs(dy) < Math.abs(dx) * 1.5 || now < g.cooldownEnd) return;
+    if (now < g.cooldownEnd) return;
+    if (window.matchMedia(MOBILE_QUERY).matches) {
+      // Horizontal row: swipe left = next, swipe right = previous.
+      if (Math.abs(dx) < SWIPE_THRESHOLD || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+      tryStep(dx < 0 ? 1 : -1, now);
+      return;
+    }
+    if (Math.abs(dy) < SWIPE_THRESHOLD || Math.abs(dy) < Math.abs(dx) * 1.5) return;
     tryStep(dy < 0 ? 1 : -1, now); // finger up = scroll down = next
   };
 
   const onWheelKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === "ArrowDown") {
+    const horizontal = window.matchMedia(MOBILE_QUERY).matches;
+    if (horizontal && (event.key === "ArrowRight" || event.key === "ArrowLeft")) {
+      event.preventDefault();
+      step(event.key === "ArrowRight" ? 1 : -1);
+    } else if (event.key === "ArrowDown") {
       event.preventDefault();
       step(1);
     } else if (event.key === "ArrowUp") {
@@ -133,7 +149,7 @@ export default function FeedbackSpotlight() {
             </div>
 
             <div
-              className="flex min-w-0 flex-col items-center justify-center gap-1"
+              className="feedback-selector hidden min-w-0 flex-col items-center justify-center gap-1 md:flex"
               onWheel={onWheel}
               onTouchStart={onTouchStart}
               onTouchEnd={onTouchEnd}
@@ -177,6 +193,48 @@ export default function FeedbackSpotlight() {
               </div>
               <button type="button" className={ARROW_BTN} aria-label="Next feedback" aria-controls="feedback-card" onClick={() => step(1)}>
                 <ChevronDown size={16} strokeWidth={1.8} />
+              </button>
+            </div>
+
+            <div
+              className="feedback-strip"
+              onWheel={onWheel}
+              onTouchStart={onTouchStart}
+              onTouchEnd={onTouchEnd}
+              onKeyDown={onWheelKeyDown}
+            >
+              <button type="button" className={ARROW_BTN} aria-label="Previous feedback" aria-controls="feedback-card" onClick={() => step(-1)}>
+                <ChevronLeft size={16} strokeWidth={1.8} />
+              </button>
+              <div role="group" aria-label="Choose whose feedback to read" className="feedback-strip-row">
+                {TESTIMONIALS.map((item, index) => {
+                  const offset = offsetOf(index);
+                  if (Math.abs(offset) > 2) return null;
+                  const isActive = offset === 0;
+                  const isVisible = Math.abs(offset) <= 1;
+                  return (
+                    <button
+                      key={`${item.name}-${index}`}
+                      type="button"
+                      data-pos={offset}
+                      aria-pressed={isActive}
+                      aria-current={isActive ? "true" : undefined}
+                      aria-controls="feedback-card"
+                      aria-label={`${item.name}, ${item.title}`}
+                      aria-hidden={isVisible ? undefined : true}
+                      tabIndex={isVisible ? 0 : -1}
+                      className="feedback-strip-item"
+                      onClick={() => setActive(index)}
+                    >
+                      <span className="feedback-strip-avatar" aria-hidden="true">
+                        <TestimonialAvatar name={item.name} image={item.image} initials={item.initials} size="size-14" />
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+              <button type="button" className={ARROW_BTN} aria-label="Next feedback" aria-controls="feedback-card" onClick={() => step(1)}>
+                <ChevronRight size={16} strokeWidth={1.8} />
               </button>
             </div>
           </div>

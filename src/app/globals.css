@@ -1610,6 +1610,128 @@
   font-size: 0.9375rem;
 }
 
+/* Mobile only: three avatars in a horizontal step (previous / active / next)
+   under the card. The vertical wheel is hidden here; this strip is hidden from md up.
+   Off-stage slots exist only so a step can slide in and out; they are not visible. */
+@media (max-width: 767px) {
+  .feedback-selector {
+    display: none;
+  }
+}
+
+.feedback-strip {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  height: 4.25rem;
+}
+
+@media (max-width: 767px) {
+  .feedback-strip {
+    display: flex;
+  }
+}
+
+.feedback-strip-row {
+  --strip-step: 4.5rem;
+  position: relative;
+  width: calc(var(--strip-step) * 2 + 3.5rem);
+  height: 100%;
+  overflow: hidden;
+  /* Vertical panning stays with the page. */
+  touch-action: pan-y;
+}
+
+.feedback-strip-item {
+  --pos: 0;
+  --s: 0.72;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 9999px;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0.5;
+  transform: translate(-50%, -50%) translateX(calc(var(--pos) * var(--strip-step))) scale(var(--s));
+  visibility: visible;
+  transition:
+    transform 420ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 420ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.feedback-strip-item[data-pos="-1"] {
+  --pos: -1;
+}
+
+.feedback-strip-item[data-pos="1"] {
+  --pos: 1;
+}
+
+.feedback-strip-item[data-pos="0"] {
+  --pos: 0;
+  --s: 1;
+  z-index: 1;
+  opacity: 1;
+}
+
+.feedback-strip-item[data-pos="-2"],
+.feedback-strip-item[data-pos="2"] {
+  --s: 0.55;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition:
+    transform 420ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 420ms cubic-bezier(0.4, 0, 0.2, 1),
+    visibility 0s linear 420ms;
+}
+
+.feedback-strip-item[data-pos="-2"] {
+  --pos: -2;
+}
+
+.feedback-strip-item[data-pos="2"] {
+  --pos: 2;
+}
+
+.feedback-strip-item[data-pos="-1"]:hover,
+.feedback-strip-item[data-pos="1"]:hover {
+  opacity: 0.85;
+}
+
+.feedback-strip-item::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 1.5px solid color-mix(in srgb, var(--accent-primary) 85%, transparent);
+  border-radius: 9999px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 420ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.feedback-strip-item[data-pos="0"]::before {
+  opacity: 1;
+}
+
+.feedback-strip-item:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.35);
+  outline-offset: 3px;
+}
+
+.feedback-strip-avatar {
+  display: inline-flex;
+  border-radius: 9999px;
+}
+
 .feedback-nav-btn:active {
   transform: scale(0.94);
 }
@@ -1704,6 +1826,8 @@
   .feedback-wheel-item,
   .feedback-wheel-item::before,
   .feedback-wheel-avatar,
+  .feedback-strip-item,
+  .feedback-strip-item::before,
   .feedback-nav-btn {
     transition: none;
   }
