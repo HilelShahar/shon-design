@@ -1468,29 +1468,150 @@
   }
 }
 
-/* Homepage — Feedback carousel */
+/* Homepage — Feedback spotlight. One fixed card; content cross-fades in place. */
 .feedback-section {
   position: relative;
 }
 
-.feedback-viewport {
-  overflow: hidden;
-  width: 100%;
-  margin-inline: auto;
-  cursor: grab;
-  user-select: none;
-  -webkit-user-select: none;
+.feedback-stack {
+  display: grid;
 }
 
-.feedback-viewport:active {
-  cursor: grabbing;
-}
-
-.feedback-card {
+.feedback-slide {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
   transition:
-    transform 0.58s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.58s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.58s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 320ms cubic-bezier(0.4, 0, 0.2, 1),
+    transform 320ms cubic-bezier(0.4, 0, 0.2, 1),
+    visibility 0s linear 320ms;
+}
+
+.feedback-slide.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity 320ms cubic-bezier(0.4, 0, 0.2, 1) 60ms,
+    transform 320ms cubic-bezier(0.4, 0, 0.2, 1) 60ms,
+    visibility 0s;
+}
+
+/* Profile wheel: three avatars on a vertical axis (previous / active / next).
+   Each item is absolutely placed by its data-pos, so a step is just a transform
+   + opacity change and the wheel loops without any DOM reordering. */
+.feedback-wheel {
+  --wheel-step: 3.75rem;
+  position: relative;
+  width: 100%;
+  max-width: 21rem;
+  height: calc(var(--wheel-step) * 3);
+  /* Let the page scroll normally, including when a touch starts on the wheel. */
+  touch-action: pan-y;
+}
+
+.feedback-wheel-item {
+  --pos: 0;
+  --s: 1;
+  position: absolute;
+  top: calc(50% - 1.75rem);
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-inline: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 9999px;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0.5;
+  transform: translateY(calc(var(--pos) * var(--wheel-step))) scale(var(--s));
+  visibility: visible;
+  transition:
+    transform 420ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 420ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.feedback-wheel-item[data-pos="-1"] {
+  --pos: -1;
+  --s: 0.72;
+}
+
+.feedback-wheel-item[data-pos="1"] {
+  --pos: 1;
+  --s: 0.72;
+}
+
+.feedback-wheel-item[data-pos="0"] {
+  --pos: 0;
+  --s: 1;
+  opacity: 1;
+}
+
+/* Off-stage slots: the item that is about to enter or has just left. */
+.feedback-wheel-item[data-pos="-2"],
+.feedback-wheel-item[data-pos="2"] {
+  --s: 0.55;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition:
+    transform 420ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 420ms cubic-bezier(0.4, 0, 0.2, 1),
+    visibility 0s linear 420ms;
+}
+
+.feedback-wheel-item[data-pos="-2"] {
+  --pos: -2;
+}
+
+.feedback-wheel-item[data-pos="2"] {
+  --pos: 2;
+}
+
+.feedback-wheel-item[data-pos="-1"]:hover,
+.feedback-wheel-item[data-pos="1"]:hover {
+  opacity: 0.85;
+}
+
+/* Active indicator: one thin purple ring around the centred avatar. */
+.feedback-wheel-item::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 1.5px solid color-mix(in srgb, var(--accent-primary) 85%, transparent);
+  border-radius: 9999px;
+  opacity: 0;
+  transition: opacity 420ms cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.feedback-wheel-item[data-pos="0"]::before {
+  opacity: 1;
+}
+
+.feedback-wheel-item:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.35);
+  outline-offset: 5px;
+}
+
+.feedback-wheel-avatar {
+  display: inline-flex;
+  flex-shrink: 0;
+  border-radius: 9999px;
+}
+
+.feedback-wheel-avatar > span {
+  font-size: 0.9375rem;
+}
+
+.feedback-nav-btn:active {
+  transform: scale(0.94);
 }
 
 .feedback-card-panel {
@@ -1531,108 +1652,59 @@
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.feedback-nav-btn {
-  box-shadow:
-    0 -8px 24px rgba(255, 255, 255, 0.04),
-    0 8px 24px rgba(0, 0, 0, 0.45);
-}
-
-.feedback-nav-btn:active {
-  transform: scale(0.96);
-}
-
-.feedback-dot {
-  width: 0.45rem;
-  height: 0.45rem;
-  border-radius: 999px;
-  border: 0;
-  padding: 0;
-  background: rgba(255, 255, 255, 0.18);
-  transition: transform 0.25s ease, background-color 0.25s ease;
-  cursor: pointer;
-}
-
-.feedback-dot.is-active {
-  background: color-mix(in srgb, var(--accent-primary) 55%, rgba(255, 255, 255, 0.35));
-  transform: scale(1.15);
-}
-
-.feedback-dot:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.35);
-  outline-offset: 3px;
-}
-
-.feedback-carousel:focus {
-  outline: none;
-}
-
-.feedback-carousel:focus-visible {
-  outline: none;
-}
-
 @media (max-width: 639px) {
-  .feedback-carousel-row {
-    position: relative;
-    gap: 0;
-  }
-
-  .feedback-nav-prev,
-  .feedback-nav-next {
-    position: absolute;
-    top: 50%;
-    z-index: 50;
-    transform: translateY(-50%);
-    width: 1.75rem;
-    height: 1.75rem;
-  }
-
-  .feedback-nav-prev svg,
-  .feedback-nav-next svg {
-    width: 1rem;
-    height: 1rem;
-  }
-
-  .feedback-nav-prev {
-    left: calc(-1rem + 6px);
-  }
-
-  .feedback-nav-next {
-    right: calc(-1rem + 6px);
-  }
-
-  .feedback-nav-btn:active {
-    transform: translateY(-50%) scale(0.96);
-  }
-
-  .feedback-viewport {
-    width: 100%;
-    min-height: 19.5rem;
-  }
-
   .feedback-card-panel {
     min-height: 16.25rem;
     padding: 1rem 0.9rem;
   }
 }
 
-@media (max-width: 420px) {
-  .feedback-carousel {
-    width: calc(100% + 2rem);
-    margin-inline: -1rem;
-  }
+/* Spotlight card: same chrome, tighter composition. Scoped so the case-study card is untouched. */
+.feedback-spot-card.feedback-card-panel {
+  min-height: 13.5rem;
+}
 
-  .feedback-nav-prev,
-  .feedback-nav-next {
-    display: none;
+@media (min-width: 768px) {
+  .feedback-spot-card.feedback-card-panel {
+    min-height: 14.5rem;
   }
 }
 
+.feedback-spot-quote {
+  display: block;
+  height: 1.75rem;
+  text-align: right;
+  font-family: var(--font-playfair), ui-serif, Georgia, serif;
+  font-size: 3.5rem;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.09);
+  user-select: none;
+}
+
+.feedback-spot-card .feedback-card-divider {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+}
+
+.feedback-spot-card .feedback-card-divider .text-sm {
+  font-weight: 600;
+}
+
+.feedback-spot-card .feedback-card-divider .text-xs {
+  color: hsl(var(--muted-foreground) / 0.85);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .feedback-card {
+  .feedback-slide,
+  .feedback-slide.is-active {
+    transform: none;
     transition: none;
   }
 
-  .feedback-dot {
+  .feedback-wheel-item,
+  .feedback-wheel-item::before,
+  .feedback-wheel-avatar,
+  .feedback-nav-btn {
     transition: none;
   }
 }

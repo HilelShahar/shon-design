@@ -3,21 +3,23 @@ import {
   type Testimonial,
 } from "@/lib/testimonials";
 
-function TestimonialAvatar({
+export function TestimonialAvatar({
   name,
   image,
   initials,
+  size = "size-10",
 }: {
   name: string;
   image?: string;
   initials?: string;
+  size?: string;
 }) {
   if (image) {
     return (
       <img
         src={image}
         alt={name}
-        className="size-10 shrink-0 rounded-full object-cover ring-1 ring-white/10"
+        className={`${size} shrink-0 rounded-full object-cover ring-1 ring-white/10`}
       />
     );
   }
@@ -26,7 +28,7 @@ function TestimonialAvatar({
   return (
     <span
       aria-hidden="true"
-      className={`inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-[11px] font-medium tracking-wide text-foreground/85 ring-1 ring-white/10${custom ? "" : " uppercase"}`}
+      className={`inline-flex ${size} shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-[11px] font-medium tracking-wide text-foreground/85 ring-1 ring-white/10${custom ? "" : " uppercase"}`}
     >
       {label}
     </span>

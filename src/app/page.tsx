@@ -11,7 +11,7 @@ import ProjectView from "@/components/ProjectView";
 import { useHeroPortraitReveal } from "@/hooks/useHeroPortraitReveal";
 import RecentWorkShowcase from "@/components/RecentWorkShowcase";
 import FaqSection from "@/components/FaqSection";
-import FeedbackCarousel from "@/components/FeedbackCarousel";
+import FeedbackSpotlight from "@/components/FeedbackSpotlight";
 import SiteFooter from "@/components/SiteFooter";
 import SiteMark from "@/components/SiteMark";
 import SocialIconLinks from "@/components/SocialIconLinks";
@@ -236,7 +236,7 @@ export default function HomePage() {
         <RecentWorkShowcase />
       </section>
 
-      <FeedbackCarousel />
+      <FeedbackSpotlight />
 
       <FaqSection />
 
