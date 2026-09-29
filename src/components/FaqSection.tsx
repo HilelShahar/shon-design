@@ -2,13 +2,18 @@
 
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Stagger } from "@/components/motion/Motion";
+import { MaskedReveal, Reveal, Stagger } from "@/components/motion/Motion";
 import { FAQ_SETS, type FaqMode } from "@/lib/faq";
 
 const MODES: { id: FaqMode; label: string }[] = [
   { id: "employer", label: "Employer" },
   { id: "client", label: "Client" },
 ];
+
+const SUPPORT: Record<FaqMode, string> = {
+  employer: "A few things about how I work, collaborate, and approach challenges.",
+  client: "Everything you might want to know before starting a project.",
+};
 
 export default function FaqSection() {
   const [mode, setMode] = useState<FaqMode>("employer");
@@ -74,6 +79,23 @@ export default function FaqSection() {
   return (
     <section id="faq" className="px-4 py-20" dir="ltr">
       <div className="mx-auto max-w-4xl">
+        <header className="mb-8 max-w-2xl">
+          <Reveal as="p" className="font-sans text-[10px] font-medium uppercase tracking-[0.16em] text-white/70">
+            Ask me
+          </Reveal>
+          <MaskedReveal className="mt-3 font-serif text-3xl md:text-4xl">
+            Questions About Working Together
+          </MaskedReveal>
+          <Reveal delay={80} className="mt-3">
+            <p
+              className={`font-sans text-base leading-relaxed text-muted-foreground transition-opacity duration-[120ms] ease-out ${
+                fading ? "opacity-0" : "opacity-100"
+              }`}
+            >
+              {SUPPORT[mode]}
+            </p>
+          </Reveal>
+        </header>
         <div
           role="tablist"
           aria-label="FAQ audience"

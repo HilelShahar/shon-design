@@ -5,7 +5,6 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState, useMemo, useRef, Suspense } from "react";
 import PillNav from "@/components/PillNav";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { projects } from "@/lib/projects";
 import ProjectView from "@/components/ProjectView";
@@ -14,6 +13,7 @@ import RecentWorkShowcase from "@/components/RecentWorkShowcase";
 import FaqSection from "@/components/FaqSection";
 import FeedbackCarousel from "@/components/FeedbackCarousel";
 import SiteFooter from "@/components/SiteFooter";
+import SiteMark from "@/components/SiteMark";
 import SocialIconLinks from "@/components/SocialIconLinks";
 import { MaskedReveal, Reveal, Stagger } from "@/components/motion/Motion";
 import { WHATSAPP_HREF } from "@/lib/social";
@@ -163,18 +163,7 @@ export default function HomePage() {
   return (
     <div className="relative min-h-screen bg-background text-foreground" data-hero-entrance="run">
 
-      {/* Opening mark. It lives at the top of the page and scrolls away. */}
-      <Link
-        href="/"
-        aria-label="Home"
-        className="absolute top-4 left-6 z-40 hidden items-center md:flex"
-      >
-        <img
-          src="/icon.png"
-          alt="Shon Simhon"
-          className="h-14 w-auto md:h-16"
-        />
-      </Link>
+      <SiteMark />
 
       <SocialIconLinks
         iconSize={20}
