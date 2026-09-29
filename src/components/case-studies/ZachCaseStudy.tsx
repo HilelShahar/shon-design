@@ -24,18 +24,14 @@ const PROCESS = [
   {
     label: "Exploration",
     note: "I researched African safari landscapes, red sunsets, and visual references that matched the feeling of the track.",
-  },
-  {
-    label: "Composition",
-    note: "I tested several layouts until the character, landscape, and sunset felt balanced and focused.",
+    image: "/media/salif/exploration-moodboard.jpg",
+    alt: "Exploration moodboard for Salif Keita track cover",
   },
   {
     label: "Color & Typography",
     note: "The palette came directly from the deep red African sunset, paired with typography that supported the African atmosphere.",
-  },
-  {
-    label: "Refinement",
-    note: "I refined the character, hierarchy, and small details until the cover felt clear, atmospheric, and cohesive.",
+    image: "/media/salif/color-typography.jpg",
+    alt: "Color and typography board for Salif Keita project",
   },
 ];
 

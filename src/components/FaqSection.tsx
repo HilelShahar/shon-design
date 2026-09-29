@@ -22,11 +22,13 @@ export default function FaqSection() {
     client: null,
   });
   const timer = useRef(0);
+  const fadeTimer = useRef(0);
   const travelTimer = useRef(0);
 
   useEffect(
     () => () => {
       window.clearTimeout(timer.current);
+      window.clearTimeout(fadeTimer.current);
       window.clearTimeout(travelTimer.current);
     },
     [],
@@ -37,19 +39,25 @@ export default function FaqSection() {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     setHighlight(next);
     setSettled(true);
-    setFading(true);
-    if (!reduce) {
-      setTravel(next === "client" ? "right" : "left");
-      window.clearTimeout(travelTimer.current);
-      travelTimer.current = window.setTimeout(() => setTravel(null), 420);
-    }
     window.clearTimeout(timer.current);
+    window.clearTimeout(fadeTimer.current);
+    if (reduce) {
+      setMode(next);
+      setOpen([]);
+      setFading(false);
+      if (focus) tabs.current[next]?.focus();
+      return;
+    }
+    setTravel(next === "client" ? "right" : "left");
+    window.clearTimeout(travelTimer.current);
+    travelTimer.current = window.setTimeout(() => setTravel(null), 440);
+    fadeTimer.current = window.setTimeout(() => setFading(true), 100);
     timer.current = window.setTimeout(() => {
       setMode(next);
       setOpen([]);
       setFading(false);
       if (focus) tabs.current[next]?.focus();
-    }, 160);
+    }, 220);
   };
 
   const onTabsKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
@@ -114,7 +122,7 @@ export default function FaqSection() {
             id="faq-panel"
             role="tabpanel"
             aria-labelledby={`faq-tab-${mode}`}
-            className={`transition-opacity duration-200 ease-out ${fading ? "opacity-0" : "opacity-100"}`}
+            className={`transition-opacity duration-[120ms] ease-out ${fading ? "opacity-0" : "opacity-100"}`}
           >
             <Accordion type="multiple" value={open} onValueChange={setOpen} className="space-y-4">
               {items.map((item, i) => (

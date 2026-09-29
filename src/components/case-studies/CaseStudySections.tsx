@@ -240,6 +240,8 @@ export function CaseStudyCreativeDirection({ children }: { children?: ReactNode 
 export type CaseStudyProcessStep = {
   label: string;
   note: string;
+  image?: string;
+  alt?: string;
 };
 
 export function CaseStudyProcess({
@@ -264,7 +266,11 @@ export function CaseStudyProcess({
           {visible.map((slot) => (
             <Reveal key={slot.label}>
               <figure className="zach-slot">
-                <div className="zach-slot-frame" aria-hidden="true" />
+                <div className={slot.image ? "zach-slot-frame has-media" : "zach-slot-frame"} aria-hidden={slot.image ? undefined : true}>
+                  {slot.image ? (
+                    <img src={slot.image} alt={slot.alt ?? ""} />
+                  ) : null}
+                </div>
                 <figcaption>
                   <span>{slot.label}</span>
                   <p className="zach-draft">{slot.note}</p>
