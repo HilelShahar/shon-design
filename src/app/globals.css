@@ -585,6 +585,33 @@
   }
 }
 
+.pill-nav-tip {
+  position: absolute;
+  top: calc(100% + 0.55rem);
+  left: 50%;
+  translate: -50% 0;
+  pointer-events: none;
+  opacity: 0;
+  white-space: nowrap;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.82);
+  background: rgba(12, 12, 12, 0.86);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  padding: 0.28rem 0.55rem;
+  transition: opacity 160ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pill-nav a:hover .pill-nav-tip,
+  .pill-nav button:hover .pill-nav-tip,
+  .pill-nav a:focus-visible .pill-nav-tip,
+  .pill-nav button:focus-visible .pill-nav-tip {
+    opacity: 1;
+  }
+}
+
 /* Recent work — overlapping collection. Native horizontal pan, no page-scroll link. */
 .work-section {
   position: relative;
