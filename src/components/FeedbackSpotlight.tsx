@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type AnimationEvent, type KeyboardEvent, type TouchEvent, type WheelEvent } from "react";
+import { useRef, useState, type AnimationEvent, type KeyboardEvent, type TouchEvent } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from "lucide-react";
 import { TESTIMONIALS } from "@/lib/testimonials";
 import {
@@ -13,12 +13,10 @@ import { MaskedReveal, Reveal } from "@/components/motion/Motion";
 const ARROW_BTN =
   "feedback-nav-btn inline-flex size-8 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-white/70 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25";
 
-// Gesture tuning: one deliberate gesture moves the wheel by exactly one step.
-const WHEEL_THRESHOLD = 48; // accumulated px of vertical wheel delta
-const GESTURE_QUIET_MS = 160; // silence that ends a wheel/trackpad gesture (momentum tails stay locked)
-const GESTURE_COOLDOWN_MS = 520; // minimum time between steps (longer than the 420ms animation)
-const SWIPE_THRESHOLD = 36; // px of touch travel along the selector's axis
-const MOBILE_QUERY = "(max-width: 767px)"; // below md the selector is a horizontal row
+// One horizontal swipe on the mobile selector moves exactly one step.
+const GESTURE_COOLDOWN_MS = 520;
+const SWIPE_THRESHOLD = 36;
+const MOBILE_QUERY = "(max-width: 767px)";
 
 /**
  * Feedback as a spotlight: one testimonial in a fixed card, a compact vertical
@@ -39,37 +37,10 @@ export default function FeedbackSpotlight() {
 
   const step = (direction: 1 | -1) => setActive((current) => (current + direction + count) % count);
 
-  // Gesture handling. Nothing here ever calls preventDefault or locks scrolling:
-  // the page keeps scrolling while the wheel merely reacts to the same gesture.
-  const gesture = useRef({ accum: 0, lastEvent: 0, locked: false, cooldownEnd: 0, touchY: 0, touchX: 0 });
-
-  const tryStep = (direction: 1 | -1, now: number) => {
-    step(direction);
-    gesture.current.locked = true;
-    gesture.current.cooldownEnd = now + GESTURE_COOLDOWN_MS;
-    gesture.current.accum = 0;
-  };
-
-  const onWheel = (event: WheelEvent<HTMLDivElement>) => {
-    if (event.ctrlKey) return; // pinch-zoom
-    // On mobile the selector is a horizontal strip, so sideways wheel movement
-    // drives it; everywhere else only vertical movement counts.
-    const sideways = window.matchMedia(MOBILE_QUERY).matches && Math.abs(event.deltaX) > Math.abs(event.deltaY);
-    if (!sideways && Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
-    const g = gesture.current;
-    const now = performance.now();
-    // A pause (after the cooldown) marks the end of one gesture; momentum tails
-    // keep arriving without a pause, so they stay locked.
-    if (now - g.lastEvent > GESTURE_QUIET_MS && now >= g.cooldownEnd) {
-      g.locked = false;
-      g.accum = 0;
-    }
-    g.lastEvent = now;
-    if (g.locked) return;
-    const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1;
-    g.accum += (sideways ? event.deltaX : event.deltaY) * unit;
-    if (Math.abs(g.accum) >= WHEEL_THRESHOLD) tryStep(g.accum > 0 ? 1 : -1, now);
-  };
+  // Mobile only. A horizontal swipe on the strip steps one profile. Vertical
+  // movement is ignored, and nothing here calls preventDefault, so the page
+  // keeps scrolling. Desktop and tablet have no wheel or swipe listener.
+  const gesture = useRef({ cooldownEnd: 0, touchY: 0, touchX: 0 });
 
   const onTouchStart = (event: TouchEvent<HTMLDivElement>) => {
     gesture.current.touchY = event.touches[0].clientY;
@@ -77,20 +48,16 @@ export default function FeedbackSpotlight() {
   };
 
   const onTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
+    if (!window.matchMedia(MOBILE_QUERY).matches) return;
     const g = gesture.current;
     const touch = event.changedTouches[0];
     const dy = touch.clientY - g.touchY;
     const dx = touch.clientX - g.touchX;
     const now = performance.now();
     if (now < g.cooldownEnd) return;
-    if (window.matchMedia(MOBILE_QUERY).matches) {
-      // Horizontal row: swipe left = next, swipe right = previous.
-      if (Math.abs(dx) < SWIPE_THRESHOLD || Math.abs(dx) < Math.abs(dy) * 1.5) return;
-      tryStep(dx < 0 ? 1 : -1, now);
-      return;
-    }
-    if (Math.abs(dy) < SWIPE_THRESHOLD || Math.abs(dy) < Math.abs(dx) * 1.5) return;
-    tryStep(dy < 0 ? 1 : -1, now); // finger up = scroll down = next
+    if (Math.abs(dx) < SWIPE_THRESHOLD || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    step(dx < 0 ? 1 : -1); // finger left = next
+    g.cooldownEnd = now + GESTURE_COOLDOWN_MS;
   };
 
   const onWheelKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
@@ -150,9 +117,6 @@ export default function FeedbackSpotlight() {
 
             <div
               className="feedback-selector hidden min-w-0 flex-col items-center justify-center gap-1 md:flex"
-              onWheel={onWheel}
-              onTouchStart={onTouchStart}
-              onTouchEnd={onTouchEnd}
             >
               <button type="button" className={ARROW_BTN} aria-label="Previous feedback" aria-controls="feedback-card" onClick={() => step(-1)}>
                 <ChevronUp size={16} strokeWidth={1.8} />
@@ -198,7 +162,6 @@ export default function FeedbackSpotlight() {
 
             <div
               className="feedback-strip"
-              onWheel={onWheel}
               onTouchStart={onTouchStart}
               onTouchEnd={onTouchEnd}
               onKeyDown={onWheelKeyDown}

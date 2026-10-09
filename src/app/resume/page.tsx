@@ -9,10 +9,9 @@ import { Button } from "@/components/ui/button";
 import { WHATSAPP_HREF } from "@/lib/social";
 
 // Final resume file: /public/shon-simhon-resume.pdf
-// It is served at /shon-simhon-resume.pdf. Until that file is in public/,
-// the control stays inactive so the browser does not download this page as HTML.
+// Served at /shon-simhon-resume.pdf. Checked per request so adding the file
+// turns the download on without a stale module-level result.
 const RESUME_HREF = "/shon-simhon-resume.pdf";
-const resumePdfReady = existsSync(join(process.cwd(), "public", "shon-simhon-resume.pdf"));
 
 const EXPERIENCE = [
   {
@@ -153,6 +152,8 @@ function ProfileCard({
 }
 
 export default function ResumePage() {
+  const resumePdfReady = existsSync(join(process.cwd(), "public", "shon-simhon-resume.pdf"));
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <PillNav />

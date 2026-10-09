@@ -50,7 +50,7 @@ const PROCESS_PLACEHOLDERS = [
 ];
 
 export default function PortfolioCaseStudy({ project }: { project: Project }) {
-  const hasDescription = Boolean(project.description?.trim());
+  const hasDescription = Boolean(project.shortDescription?.trim());
   const feedbackName = CLIENT_FEEDBACK_BY_SLUG[project.slug];
   const feedback = feedbackName
     ? TESTIMONIALS.find((item) => item.name === feedbackName)
@@ -59,8 +59,8 @@ export default function PortfolioCaseStudy({ project }: { project: Project }) {
     <CaseStudyFrame>
       <CaseStudyTitleHero title={project.title} tags={project.tags} />
       <CaseStudyOverview
-        intro={hasDescription ? project.description : PLACEHOLDER.overview}
-        introRtl={hasDescription ? project.descriptionRtl : false}
+        intro={hasDescription ? project.shortDescription : PLACEHOLDER.overview}
+        introRtl={hasDescription ? project.shortDescriptionRtl : false}
         preserveBreaks={hasDescription}
         note={project.descriptionFooter}
         meta={[

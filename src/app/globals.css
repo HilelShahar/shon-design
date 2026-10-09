@@ -543,11 +543,19 @@
     [data-hero-entrance] .hero-portrait,
     [data-hero-entrance] .hero-portrait-reveal,
     [data-hero-entrance] .hero-title,
-    [data-hero-entrance] .hero-phrase,
-    [data-hero-entrance] .pill-nav {
+    [data-hero-entrance] .hero-phrase {
       animation: none !important;
       opacity: 1 !important;
       transform: none !important;
+      filter: none !important;
+    }
+    /* The pill is centered with translateX(-50%). Clearing transform here
+       slides it to the right edge on a phone, which puts Resume (and Contact)
+       off-screen. The entrance animation only fades opacity, so leave the
+       translate in place. */
+    [data-hero-entrance] .pill-nav {
+      animation: none !important;
+      opacity: 1 !important;
       filter: none !important;
     }
     [data-motion],
@@ -1088,6 +1096,12 @@
   font-size: 1.02rem;
   line-height: 1.65;
   color: hsl(var(--muted-foreground));
+}
+
+/* Salif reflection only: a slightly wider measure so the last word is not stranded. */
+.zach-reflection {
+  max-width: 41.5rem;
+  text-wrap: pretty;
 }
 
 .zach-draft {

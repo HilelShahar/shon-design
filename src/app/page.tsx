@@ -1,7 +1,6 @@
 'use client'
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState, useMemo, useRef, Suspense } from "react";
 import PillNav from "@/components/PillNav";
@@ -15,7 +14,7 @@ import FeedbackSpotlight from "@/components/FeedbackSpotlight";
 import SiteFooter from "@/components/SiteFooter";
 import SiteMark from "@/components/SiteMark";
 import SocialIconLinks from "@/components/SocialIconLinks";
-import { MaskedReveal, Reveal, Stagger } from "@/components/motion/Motion";
+import { MaskedReveal, Reveal } from "@/components/motion/Motion";
 import { WHATSAPP_HREF } from "@/lib/social";
 
 /* ---------- Overlay driven by ?project=... (wrapped in Suspense) ---------- */
@@ -30,8 +29,8 @@ function RecentProjectOverlay() {
       overlay
       title={activeProject.title}
       year={activeProject.year}
-      description={activeProject.description}
-      descriptionRtl={activeProject.descriptionRtl}
+      description={activeProject.shortDescription}
+      descriptionRtl={activeProject.shortDescriptionRtl}
       descriptionFooter={activeProject.descriptionFooter}
       longImage={activeProject.longImage}
       closeHref="/#work"
@@ -125,7 +124,7 @@ export default function HomePage() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ["home", "about", "work", "testimonials", "faq", "contact"];
+      const sections = ["home", "work", "testimonials", "faq", "contact"];
       const y = window.scrollY + 120;
       for (const id of sections) {
         const el = document.getElementById(id);
@@ -239,39 +238,6 @@ export default function HomePage() {
       <FeedbackSpotlight />
 
       <FaqSection />
-
-      {/* ABOUT */}
-      <section id="about" className="px-4 py-20">
-        <div className="mx-auto max-w-6xl">
-          <MaskedReveal className="mb-10 text-3xl md:text-4xl font-serif">About me</MaskedReveal>
-          <Stagger className="grid gap-8 md:grid-cols-2">
-            <Card className="p-6 md:p-8">
-              <h3 className="mb-3 text-xl font-medium">Approach</h3>
-              <div className="space-y-3 text-sm md:text-base text-muted-foreground">
-                <p>
-                  I focus on creating visual identities and designs that feel clear, memorable, and refined.
-                </p>
-                <p>
-                  My work combines clean aesthetics with strong visual thinking, turning ideas into bold and distinctive visual solutions.
-                </p>
-                <p>
-                  From brand identities and logos to posters and creative visuals, I aim to design work that communicates clearly, stands out, and leaves a lasting impression.
-                </p>
-              </div>
-            </Card>
-            <Card className="p-6 md:p-8">
-              <h3 className="mb-3 text-xl font-medium">Capabilities</h3>
-              <ul className="list-disc space-y-2 pl-5 text-sm md:text-base text-muted-foreground">
-                <li>Brand identity design (logos, color palettes, typography)</li>
-                <li>Visual branding systems</li>
-                <li>Poster design & creative campaigns</li>
-                <li>Cover art & promotional visuals</li>
-                <li>Organized, production-ready design files</li>
-              </ul>
-            </Card>
-          </Stagger>
-        </div>
-      </section>
 
       {/* LOGO MARQUEE (tools) */}
       <section aria-label="Design tools" className="px-4 py-16">

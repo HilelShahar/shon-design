@@ -1,15 +1,24 @@
 // src/lib/projects.ts
 export type Project = {
   slug: string;
+  /** Project-facing name. Recent Work and the case study hero both read this. */
   title: string;
+  /** Second hero line, when the case study shows one. Recent Work shows `title` only. */
+  subtitle?: string;
   year: string | number;
   cover: string;     // small/regular card image
   longImage: string; // long scrollable image
-  description: string;
-  descriptionRtl?: boolean; // true for Hebrew/RTL descriptions
+  /**
+   * Teaser shared by Recent Work and the case study overview.
+   * Existing text stays until an approved short description is written.
+   */
+  shortDescription: string;
+  shortDescriptionRtl?: boolean;
+  /** True when this project still needs an approved short description. */
+  shortDescriptionPending?: boolean;
   descriptionFooter?: string; // smaller watermark text at end (e.g. "עבודה סטודנטיאלית")
   /**
-   * Discipline labels for Recent Work.
+   * Discipline labels shared by Recent Work and the case study hero.
    * Fill with real disciplines only, for example "Branding" or "Print".
    */
   tags?: string[];
@@ -23,9 +32,10 @@ export const projects: Project[] = [
     year: 2025,
     cover: "/single.jpg",
     longImage: "/single_long.jpg",
-    description:
+    shortDescription:
       "עיצוב עטיפת סינגל המבטא את המסר הרומנטי והעוצמתי של השיר, המטרה הייתה ליצור דימוי שמחבר בין אהבה לנצחיות, תוך שמירה על אווירה חמה ומרגשת.",
-    descriptionRtl: true,
+    shortDescriptionRtl: true,
+    shortDescriptionPending: true,
     tags: [],
   },
   {
@@ -34,19 +44,20 @@ export const projects: Project[] = [
     year: 2025,
     cover: "/studio.jpg",
     longImage: "/studio_long.jpg",
-    description: "",
+    shortDescription: "",
+    shortDescriptionPending: true,
     tags: ["Branding"],
   },
   {
     slug: "zach-track-design",
-    title: "ZACH — Track Design",
+    title: "Salif Keita",
+    subtitle: "Zach",
     year: 2025,
     cover: "/zach.jpg",
     longImage: "/zach_long.jpg",
-    description:
-      "בעבודה זו יצרתי עטיפת טראק הלוקחת את המאזינים למסע מרגש באפריקה, דרך צלילים שעוטפים את שקיעותיה האדומות. העיצוב משלב את הסגנון האפריקאי עם תווי המוזיקה בצורה הרמונית, כך שהתחושה היא של שקיעה מרהיבה במקום שבו המוזיקה והטבע מתמזגים. הפרויקט הזה גם חושף את סיפורו של המפיק המוזיקלי ומעורר סקרנות לעוד מוזיקה שתגיע...",
-    descriptionRtl: true,
-    tags: [],
+    shortDescription:
+      "After listening to the track, I built the visual direction around the feeling it gave me: an African sunset, warm colors, and a deep atmosphere. From there, I connected the music, the African-inspired visual language, and the landscape into one cohesive world.",
+    tags: ["Cover art", "Art direction", "Visual identity", "Merchandise"],
   },
   {
     slug: "ice-cream-branding-selek",
@@ -54,9 +65,10 @@ export const projects: Project[] = [
     year: 2025,
     cover: "/selek.png",
     longImage: "/selek_long.jpg",
-    description:
+    shortDescription:
       "בפרויקט זה, עסקתי במיתוג כולל לגלידת בוטיק צרפתית, שכולל את כל האלמנטים החזותיים מהאריזות ועד לשלטי החנות והפרסום. המטרה הייתה ליצור מיתוג ייחודי שמחבר את הקהל עם חוויית הגלידה בצורה מרהיבה. בנוסף יצרתי קמפיין פרסומי שיעביר את התחושה של התמכרות לטעם הייחודי של הגלידה.",
-    descriptionRtl: true,
+    shortDescriptionRtl: true,
+    shortDescriptionPending: true,
     descriptionFooter: "עבודה סטודנטיאלית",
     tags: ["Branding", "Packaging"],
   },
@@ -66,9 +78,10 @@ export const projects: Project[] = [
     year: 2025,
     cover: "/human.png",
     longImage: "/human_long.jpg",
-    description:
+    shortDescription:
       "פוסטר המעוצב מנקודת המבט האישית שלי, המשלב גוונים עמוקים של שחור ואדום כהה, נוצר בהשראת שיר המתמקד בצדדים המורכבים והאפלים של נפש האדם. העבודה מתבוננת במראה פנימית ומזכירה לנו שלפעמים, במעמקי הנשמה, אנו מגלים חלקים פחות טובים בעצמנו. כי בסופו של דבר, כולנו בני אדם, ולעיתים המורכבות הזו דורשת חשבון נפש.\n\nעיצבתי וסידרתי את הטיפוגרפיה של מילות השיר בצורה הפוכה, כמו השתקפות במראה. כדי להעביר את המסר והמשמעות והדבר מדגיש את המסר שאנו לפעמים רואים את עצמנו בצורה הפוכה מהמציאות, במיוחד כאשר אנו מתעמקים במבט פנימי ועמוק.",
-    descriptionRtl: true,
+    shortDescriptionRtl: true,
+    shortDescriptionPending: true,
     descriptionFooter: "עבודה סטודנטיאלית",
     tags: ["Print"],
   },
@@ -78,9 +91,10 @@ export const projects: Project[] = [
     year: 2025,
     cover: "/valentine.jpg",
     longImage: "/valentine_long.jpg",
-    description:
+    shortDescription:
       "הפוסטר \"אהבה אסורה\" מעביר תחושת ניגודיות עזה, עם דימויים של השטן והמלך מחזיקים ידיים, ובכך מייצגים את השילוב הבלתי אפשרי בין שני הפכים מוחלטים. האלמנט התלת-ממדי, המורכב מהמילים יום האהבה (באנגלית), משדר תחושת עומק ומעורר את התחושה של משהו נעלם וייחודי. הצבעים הכהים של הוורוד והדארק, בשילוב עם הזרקור הלבן שמאיר על הדמויות, יוצרות דינמיקה של משיכה והשלמה, כשהן ממקדות את העין על האהבה שמנצחת את כל המכשולים. הרקע של העננים הוורודים והעדינים מוסיף תחושת קלילות ומרמז על האפשרות שמה שנראה בלתי אפשרי יכול לקרות, וכי אפילו האהבה בין ניגודים יכולה לפרוח.",
-    descriptionRtl: true,
+    shortDescriptionRtl: true,
+    shortDescriptionPending: true,
     tags: ["Print"],
   },
   {
@@ -89,9 +103,10 @@ export const projects: Project[] = [
     year: 2025,
     cover: "/eyewear.jpg",
     longImage: "/eyewear_long.jpg",
-    description:
+    shortDescription:
       "האייקון עוצב עבור מותג משקפי שמש ונבנה מתוך ראשי התיבות של המותג – FV. בתהליך העיצוב חיפשתי ליצור סמל שיהיה זכיר, יוקרתי וייחודי, אך יחד עם זאת ישדר וייב צעיר ורענן. הצורניות שנבחרה משלבת בין האותיות לבין אלמנטים מעולם האופטיקה – צורה המרמזת לעין עם ריסים, לצד קרניים המזכירות אור שמש, המתחברות באופן טבעי לעולם משקפי השמש. כך נוצר אייקון מינימליסטי בעל אופי ברור, המשלב אלגנטיות עם תחושת חופש ואור.",
-    descriptionRtl: true,
+    shortDescriptionRtl: true,
+    shortDescriptionPending: true,
     tags: [],
   },
   {
@@ -100,9 +115,10 @@ export const projects: Project[] = [
     year: 2025,
     cover: "/wedding_cover.png",
     longImage: "/wedding_long.jpg",
-    description:
+    shortDescription:
       "בעבודות האלו בחרתי לשלב בין אלגנטיות, טיפוגרפיה מדויקת וחומרים ויזואליים שמעבירים תחושת יוקרה ורוך – תוך התאמה אישית לסיפור ולרוח של כל זוג ואירוע.\n\nההזמנות עוצבו מתוך הקשבה אמיתית לצרכים של כל לקוח, במטרה ליצור חוויה שמתחילה עוד לפני שהאירוע עצמו מתחיל.\n\nכל הזמנה מביאה איתה עולם אחר – רומנטי, מסורתי, טבעי או מודרני – ומעוצבת בקפידה תוך שימת דגש על איזון, קומפוזיציה וסטייל.",
-    descriptionRtl: true,
+    shortDescriptionRtl: true,
+    shortDescriptionPending: true,
   },
   {
     slug: "barbershop-design",
@@ -110,9 +126,10 @@ export const projects: Project[] = [
     year: 2024, 
     cover: "/barbershop.jpg",
     longImage: "/barbershop_long.jpg",
-    description:
+    shortDescription:
       "לוגו יוקרתי וחדשני שעוצב עבור מעצב שיער, תוך שילוב יצירתי בין אותיות שמו של הלקוח. העיצוב משלב אלמנטים צעירים ואסתטיקה יוקרתית, המשקפים את חזון הלקוח ואת הערכים של המותג שלו. צורניות האותיות נבנתה בקפידה כדי לשדר סטייל, רעננות וייחודיות, ומתאימה לשימוש הן במיתוג המספרה והן במוצרים שהלקוח מתכנן לשווק.",
-    descriptionRtl: true,
+    shortDescriptionRtl: true,
+    shortDescriptionPending: true,
   },
   {
     slug: "clothing-brand-design",
@@ -120,9 +137,10 @@ export const projects: Project[] = [
     year: 2024,
     cover: "/valorea.jpg",
     longImage: "/valorea_long.jpg",
-    description:
+    shortDescription:
       "מותג אופנה מודרני המשלב אלגנטיות על-זמנית עם לבישות יומיומית. המותג משדר יוקרה שקטה, קווים נקיים ומינימליזם מוקפד, ומציע פריטים ורסטיליים שנוצרו לחיים האמיתיים.\n\nהאייקון שואב השראה מצורות טבעיות וסימטריות, המזכירות גם עלה עדין וגם רקמה יוקרתית, והופך למרקם עשיר המעצים את חוויית המותג.\n\nפלטת הצבעים, בהשראת ניואנסים טבעיים של אדמה, יוצרת מראה אחיד ומתוחכם בכל יישומי המותג – מתוויות בד ועד אריזות.",
-    descriptionRtl: true,
+    shortDescriptionRtl: true,
+    shortDescriptionPending: true,
   },
 
   // === Extra placeholders — swap titles/years/images when ready ===
@@ -134,7 +152,7 @@ export const projects: Project[] = [
     year: 2024,
     cover: "/work/brand-b/cover.jpg",
     longImage: "/projects/brand-b-long.jpg",
-    description:
+    shortDescription:
       "Compact identity system: logo suite, color tokens, typography, and usage rules.",
   },
   {
@@ -143,7 +161,7 @@ export const projects: Project[] = [
     year: 2022,
     cover: "/work/editorial-e/cover.jpg",
     longImage: "/projects/editorial-e-long.jpg",
-    description:
+    shortDescription:
       "Grid-first editorial exploration balancing dense copy with strong typography.",
   },
   {
@@ -152,7 +170,7 @@ export const projects: Project[] = [
     year: 2022,
     cover: "/work/logo-f/cover.jpg",
     longImage: "/projects/logo-f-long.jpg",
-    description:
+    shortDescription:
       "Series of marks/monograms with alternates and black/white lockups.",
   },
   {
@@ -161,7 +179,7 @@ export const projects: Project[] = [
     year: 2021,
     cover: "/work/packaging-g/cover.jpg",
     longImage: "/projects/packaging-g-long.jpg",
-    description:
+    shortDescription:
       "Shelf presence study, dielines, and print-ready exports.",
   },
   {
@@ -170,7 +188,7 @@ export const projects: Project[] = [
     year: 2021,
     cover: "/work/motion-h/cover.jpg",
     longImage: "/projects/motion-h-long.jpg",
-    description:
+    shortDescription:
       "Short loops for reels/stories with simple kinetic type.",
   },
   {
@@ -179,7 +197,7 @@ export const projects: Project[] = [
     year: 2020,
     cover: "/work/identity-i/cover.jpg",
     longImage: "/projects/identity-i-long.jpg",
-    description:
+    shortDescription:
       "Lean identity package built for small-biz speed and clarity.",
   },
 ];

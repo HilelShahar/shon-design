@@ -106,7 +106,7 @@ export default function RecentWorkShowcase() {
 
   const total = recentProjects.length;
   const item = recentProjects[active];
-  const description = item.description.trim();
+  const description = item.shortDescription.trim();
   const tags = item.tags ?? [];
   const infoSlug = useRef<string | null>(null);
   const [infoSwitch, setInfoSwitch] = useState(false);
@@ -590,14 +590,6 @@ export default function RecentWorkShowcase() {
               item.title
             )}
           </h3>
-          {description ? (
-            <p
-              className="work-info-desc mt-2 line-clamp-2 text-muted-foreground"
-              dir={item.descriptionRtl ? "rtl" : undefined}
-            >
-              {description}
-            </p>
-          ) : null}
           {tags.length > 0 ? (
             <ul className="mt-3 flex flex-wrap gap-1.5">
               {tags.map((tag) => (
@@ -606,6 +598,14 @@ export default function RecentWorkShowcase() {
                 </li>
               ))}
             </ul>
+          ) : null}
+          {description ? (
+            <p
+              className="work-info-desc mt-2 line-clamp-2 text-muted-foreground"
+              dir={item.shortDescriptionRtl ? "rtl" : undefined}
+            >
+              {description}
+            </p>
           ) : null}
         </Stagger>
       </div>

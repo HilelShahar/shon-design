@@ -338,9 +338,11 @@ export function CaseStudyClientFeedback({
 export function CaseStudyClose({
   reflection,
   showAllWork = true,
+  proseClassName,
 }: {
   reflection?: ReactNode;
   showAllWork?: boolean;
+  proseClassName?: string;
 }) {
   const body = typeof reflection === "string" ? reflection.trim() : reflection;
   if ((body == null || body === "") && !showAllWork) return null;
@@ -351,7 +353,7 @@ export function CaseStudyClose({
           <MaskedReveal as="h2" className="zach-heading">Reflection</MaskedReveal>
           <Reveal delay={80}>
             {typeof body === "string" ? (
-              <p className="zach-draft zach-prose mt-5">{body}</p>
+              <p className={`zach-draft zach-prose mt-5${proseClassName ? ` ${proseClassName}` : ""}`}>{body}</p>
             ) : (
               body
             )}

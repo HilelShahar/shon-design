@@ -16,10 +16,6 @@ import { MaskedReveal, Reveal } from "@/components/motion/Motion";
 import type { Project } from "@/lib/projects";
 import { ZACH_CLIENT_FEEDBACK } from "@/lib/testimonials";
 
-const HERO_TAGS = ["Cover art", "Art direction", "Visual identity", "Merchandise"];
-const TRACK_DESIGN_INTRO =
-  "After listening to the track, I built the visual direction around the feeling it gave me: an African sunset, warm colors, and a deep atmosphere. From there, I connected the music, the African-inspired visual language, and the landscape into one cohesive world.";
-
 const PROCESS = [
   {
     label: "Exploration",
@@ -102,7 +98,7 @@ function ZachSkyVideo() {
 export default function ZachCaseStudy({ project }: { project: Project }) {
   return (
     <CaseStudyFrame>
-      <section className="zach-hero" aria-label="Salif Keita, Zach">
+      <section className="zach-hero" aria-label={project.subtitle ? `${project.title}, ${project.subtitle}` : project.title}>
         <div className="zach-sky" aria-hidden="true">
           <img
             className="zach-sky-photo"
@@ -124,25 +120,27 @@ export default function ZachCaseStudy({ project }: { project: Project }) {
           <div className="zach-hero-copy">
             <Reveal>
               <ul className="zach-tags">
-                {HERO_TAGS.map((tag) => (
+                {(project.tags ?? []).map((tag) => (
                   <li key={tag}>{tag}</li>
                 ))}
               </ul>
             </Reveal>
             <div className="zach-hero-names">
               <MaskedReveal as="h1" className="zach-title">
-                Salif Keita
+                {project.title}
               </MaskedReveal>
-              <Reveal delay={70}>
-                <p className="zach-title-sub">Zach</p>
-              </Reveal>
+              {project.subtitle ? (
+                <Reveal delay={70}>
+                  <p className="zach-title-sub">{project.subtitle}</p>
+                </Reveal>
+              ) : null}
             </div>
           </div>
         </div>
       </section>
 
       <CaseStudyOverview
-        intro={TRACK_DESIGN_INTRO}
+        intro={project.shortDescription}
         meta={[
           { label: "Role", value: "Art Direction & Cover Design" },
           { label: "Year", value: project.year },
@@ -172,7 +170,10 @@ export default function ZachCaseStudy({ project }: { project: Project }) {
         The client was very happy with the result and released the track on SoundCloud. The visual direction also received positive feedback from his colleagues, some of whom reached out to me directly after seeing the work. He especially liked how the project expanded beyond the cover into a complete visual world.
       </CaseStudyText>
       <CaseStudyClientFeedback testimonial={ZACH_CLIENT_FEEDBACK} />
-      <CaseStudyClose reflection="This project showed me how music can be translated into a visual experience that carries the same emotion. Following the client's request to listen first helped me trust the feeling of the track and turn it into a strong visual direction, especially through color." />
+      <CaseStudyClose
+        proseClassName="zach-reflection"
+        reflection="This project showed me how music can be translated into a visual experience that carries the same emotion. Following the client's request to listen first helped me trust the feeling of the track and turn it into a strong visual direction, especially through color."
+      />
     </CaseStudyFrame>
   );
 }
