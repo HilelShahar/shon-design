@@ -1846,3 +1846,211 @@
     transition: none;
   }
 }
+
+/* =====================================================================
+   About hero (/about)
+   A transparent cutout standing directly on the site's own black. Everything
+   is scoped to .about-* and reuses the portfolio's ease and motion primitives.
+   ===================================================================== */
+.about-hero {
+  --about-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.about-hero-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 7rem 1.25rem 0;
+}
+
+.about-name {
+  position: relative;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* One clip per line so SHON can rise first and SIMHON follow it. */
+.about-name-text {
+  margin: 0;
+  font-weight: 400;
+  font-size: clamp(3.25rem, 19.4vw, 6.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: hsl(var(--foreground));
+}
+
+.about-name-text .motion-mask {
+  padding: 0.08em 0.12em 0.14em;
+  margin: -0.08em -0.12em -0.14em;
+}
+
+.about-name-text .motion-mask > * {
+  animation-duration: 1000ms;
+  animation-timing-function: var(--about-ease);
+}
+
+.about-name-text > :nth-child(1) > * { animation-delay: 160ms; }
+.about-name-text > :nth-child(2) > * { animation-delay: 340ms; }
+
+.about-name-line {
+  display: block;
+}
+
+.about-name-line-2 {
+  padding-left: 0.3em;
+}
+
+.about-role {
+  position: relative;
+  z-index: 3;
+  margin: 1.25rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: hsl(var(--foreground) / 0.82);
+}
+
+/* Mobile: the cutout is scaled past the column so the figure, not the empty
+   canvas around it, fills the width. The hero clips the transparent overflow. */
+.about-portrait {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 28rem;
+  margin: -3.75rem auto 0;
+}
+
+.about-portrait-drift {
+  width: 100%;
+  height: 100%;
+}
+
+.about-portrait-media {
+  width: 128%;
+  margin-left: -14%;
+  aspect-ratio: 682 / 1024;
+  transform-origin: 50% 100%;
+  animation: about-portrait-in 1000ms var(--about-ease) 120ms backwards;
+}
+
+.about-portrait-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: scale 900ms var(--about-ease);
+}
+
+@keyframes about-portrait-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0) scale(1.035);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* Scroll-linked drift: the portrait trails the page by at most 26px. Pure CSS,
+   no listener; browsers without scroll timelines keep it still. */
+@keyframes about-portrait-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(0, 26px, 0); }
+}
+
+@supports (animation-timeline: scroll()) {
+  .about-portrait-drift {
+    /* Longhands on purpose: the CSS minifier would fold them into a shorthand
+       that current browsers don't parse. */
+    animation-name: about-portrait-drift;
+    animation-duration: 1ms;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 75vh;
+  }
+}
+
+/* ---------- Tablet and up: one shared stage, name in front of the portrait ---------- */
+@media (min-width: 768px) {
+  .about-hero {
+    height: clamp(34rem, 70svh, 48rem);
+  }
+
+  .about-hero-inner {
+    display: block;
+    height: 100%;
+    max-width: 100rem;
+    margin-inline: auto;
+    padding: 0 clamp(1.5rem, 4vw, 4rem);
+  }
+
+  .about-name {
+    position: absolute;
+    left: clamp(1.5rem, 4vw, 4rem);
+    bottom: 5.25rem;
+    width: max-content;
+  }
+
+  .about-name-text {
+    font-size: clamp(5rem, 13.2vw, 15rem);
+    line-height: 0.88;
+  }
+
+  .about-role {
+    position: absolute;
+    left: clamp(1.5rem, 4vw, 4rem);
+    bottom: 2.75rem;
+    margin: 0;
+    /* Extra top padding keeps this box inside the shared reveal observer's zone
+       on tall viewports; it is invisible and never intercepts the pointer. */
+    padding-top: 14svh;
+    pointer-events: none;
+    font-size: 1rem;
+  }
+
+  .about-portrait {
+    position: absolute;
+    bottom: 0;
+    left: 41%;
+    margin: 0;
+    width: auto;
+    max-width: none;
+    height: calc(100% - 6rem);
+    max-height: 58rem;
+    aspect-ratio: 682 / 1024;
+  }
+
+  .about-portrait-media {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .about-hero {
+    height: clamp(40rem, 100svh, 62rem);
+  }
+}
+
+/* Hover: barely there, only for fine pointers. */
+@media (hover: hover) and (pointer: fine) and (min-width: 1024px) {
+  .about-portrait-media:hover .about-portrait-img {
+    scale: 1.01;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-portrait-media,
+  .about-portrait-drift {
+    animation: none;
+  }
+  .about-portrait-img {
+    transition: none;
+  }
+}
