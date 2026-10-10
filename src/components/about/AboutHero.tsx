@@ -26,7 +26,7 @@ export default function AboutHero() {
           </div>
         </div>
 
-        <Reveal as="p" className="about-role" delay={420}>
+        <Reveal as="p" className="about-role" delay={460}>
           {ROLE}
         </Reveal>
 
