@@ -2064,12 +2064,137 @@
     transition: none;
   }
 }
+/* =====================================================================
+   About page: story typography
+   One small scale shared by every section under the hero.
+   ===================================================================== */
+.about-eyebrow {
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: hsl(var(--foreground) / 0.5);
+}
+
+.about-heading {
+  font-family: var(--font-playfair), ui-serif, Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(2.5rem, 6vw, 4.25rem);
+  line-height: 1.06;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+  color: hsl(var(--foreground));
+}
+
+.about-heading-xl {
+  font-size: clamp(2.75rem, 7.4vw, 6rem);
+  line-height: 1.02;
+}
+
+.about-lead {
+  font-family: var(--font-playfair), ui-serif, Georgia, serif;
+  font-size: clamp(1.5rem, 2.9vw, 2.25rem);
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+  color: hsl(var(--foreground));
+}
+
+.about-lead-muted {
+  color: hsl(var(--muted-foreground));
+}
+
+.about-body {
+  max-width: 60ch;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.75;
+  text-wrap: pretty;
+  color: hsl(var(--muted-foreground));
+}
+
+.about-numeral {
+  font-family: var(--font-playfair), ui-serif, Georgia, serif;
+  font-style: italic;
+  font-size: 1.125rem;
+  line-height: 1.2;
+  color: hsl(var(--foreground) / 0.4);
+}
+
+.about-principle {
+  font-family: var(--font-playfair), ui-serif, Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+  line-height: 1.14;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  color: hsl(var(--foreground));
+}
+
+.about-story-title {
+  font-family: var(--font-playfair), ui-serif, Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.875rem, 3.6vw, 2.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  color: hsl(var(--foreground));
+}
+
+.about-story-title-lg {
+  font-size: clamp(2.25rem, 4.6vw, 3.25rem);
+}
+
+/* Headings: room for descenders (g, y) inside the reveal clip. */
+.about-story-head .motion-mask,
+.about-cta-title .motion-mask {
+  padding: 0.04em 0.04em 0.24em;
+  margin: -0.04em -0.04em -0.24em;
+}
+
+/* Photographs: plain crops straight on the black page. */
+.about-photo {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: hsl(var(--foreground) / 0.03);
+}
+
+/* Photo slots: quiet, labelled, waiting for the real image. */
+.about-photo-slot {
+  display: grid;
+  place-items: center;
+  border: 1px dashed hsl(var(--foreground) / 0.16);
+  background: transparent;
+}
+
+.about-photo-slot-text {
+  display: grid;
+  gap: 0.35rem;
+  justify-items: center;
+  padding: 0.75rem;
+  text-align: center;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(var(--foreground) / 0.4);
+}
+
+.about-photo-slot-text code {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0;
+  text-transform: none;
+  overflow-wrap: anywhere;
+  color: hsl(var(--foreground) / 0.3);
+}
 
 /* =====================================================================
-   About: personal world (Poké Ball hub)
-   Closed ball with a quiet idle presence; opens to reveal four interests.
-   Mobile stacks them in a column that grows out of the ball; tablet and
-   desktop spread them around it.
+   About: Beyond Design (Poké Ball)
+   One click: tremble, seam brightens, lid lifts, the three stories travel
+   out of the ball and settle into their editorial layout.
    ===================================================================== */
 .pw-stage {
   --pw-ease: cubic-bezier(0.16, 1, 0.3, 1);
@@ -2077,7 +2202,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 1rem;
+  overflow-x: clip;
+  touch-action: pan-y;
+}
+
+.pw-ball-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3.5rem 0 4rem;
 }
 
 .pw-ball-wrap {
@@ -2085,30 +2218,26 @@
   z-index: 2;
   display: grid;
   place-items: center;
-  width: 8.5rem;
-  height: 8.5rem;
+  width: 9rem;
+  height: 9rem;
 }
 
 .pw-glow {
   position: absolute;
-  inset: -60%;
+  inset: -55%;
   border-radius: 9999px;
-  background: radial-gradient(
-    circle,
-    rgb(91 63 140 / 0.5) 0,
-    rgb(91 63 140 / 0.2) 36%,
-    transparent 66%
-  );
-  opacity: 0.4;
+  background: radial-gradient(circle, rgb(91 63 140 / 0.38) 0, rgb(91 63 140 / 0.14) 36%, transparent 64%);
+  opacity: 0.35;
   pointer-events: none;
   animation: pw-glow 4.4s ease-in-out infinite;
-  transition: opacity 700ms ease, transform 900ms var(--pw-ease);
+  transition: opacity 600ms ease, transform 900ms var(--pw-ease);
 }
 
+.pw-stage.is-charging .pw-glow,
 .pw-stage.is-open .pw-glow {
   animation: none;
-  opacity: 0.8;
-  transform: scale(1.12);
+  opacity: 0.65;
+  transform: scale(1.08);
 }
 
 .pw-ball {
@@ -2120,6 +2249,7 @@
   border-radius: 9999px;
   background: none;
   cursor: pointer;
+  touch-action: pan-y;
   -webkit-tap-highlight-color: transparent;
   transition: transform 500ms var(--pw-ease);
 }
@@ -2129,21 +2259,43 @@
   outline-offset: 6px;
 }
 
-.pw-ball:active {
-  transform: scale(0.97);
-}
-
 .pw-svg {
   display: block;
   width: 100%;
   height: 100%;
   overflow: visible;
   transform-origin: 50% 50%;
-  animation: pw-idle 5.4s ease-in-out infinite;
+  animation: pw-idle 4.8s ease-in-out infinite;
 }
 
-.pw-stage.is-open .pw-svg {
+.pw-stage.is-charging .pw-svg {
+  animation: pw-charge 560ms ease-in-out both;
+}
+
+.pw-stage.is-open .pw-svg,
+.pw-stage.is-closing .pw-svg {
   animation: none;
+}
+
+/* Seam light: a hairline leak that hints something is inside. */
+.pw-seam {
+  opacity: 0.32;
+  animation: pw-seam 3.6s ease-in-out infinite;
+  transition: opacity 400ms ease;
+}
+
+.pw-seam-soft {
+  filter: blur(2.5px);
+}
+
+.pw-stage.is-charging .pw-seam {
+  animation: none;
+  opacity: 1;
+}
+
+.pw-stage.is-open .pw-seam {
+  animation: none;
+  opacity: 0;
 }
 
 .pw-lid {
@@ -2166,8 +2318,6 @@
 }
 
 .pw-hint {
-  position: relative;
-  z-index: 2;
   margin-top: 1.5rem;
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   font-size: 0.625rem;
@@ -2177,187 +2327,83 @@
   color: hsl(var(--muted-foreground));
 }
 
-/* Mobile: items stack and grow out of the ball. */
-.pw-items {
-  display: grid;
-  grid-template-rows: 0fr;
+/* Released content: calm, structured, immediately readable. */
+.pw-content {
   width: 100%;
-  max-width: 28rem;
-  transition: grid-template-rows 700ms var(--pw-ease);
-}
-
-.pw-stage.is-open .pw-items {
-  grid-template-rows: 1fr;
-}
-
-.pw-items-inner {
   display: grid;
-  gap: 0.75rem;
-  min-height: 0;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  list-style: none;
+  gap: 6rem;
+  padding-top: 1rem;
 }
 
-.pw-stage.is-open .pw-items-inner {
-  padding-top: 1.5rem;
+.pw-content[hidden] {
+  display: none;
 }
 
-.pw-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.9rem;
-  padding: 1rem 1.1rem;
-  border: 1px solid hsl(var(--foreground) / 0.09);
-  border-radius: 1rem;
-  background: hsl(var(--foreground) / 0.03);
+.pw-stage.is-closing .pw-content {
   opacity: 0;
-  visibility: hidden;
-  transform: translate3d(0, -14px, 0) scale(0.97);
-  transition:
-    opacity 300ms ease,
-    transform 300ms ease,
-    visibility 0s linear 300ms;
+  transition: opacity 240ms ease;
 }
 
-.pw-stage.is-open .pw-item {
-  opacity: 1;
-  visibility: visible;
-  transform: translate3d(0, 0, 0) scale(1);
-  transition:
-    opacity 600ms ease calc(180ms + var(--pw-order) * 90ms),
-    transform 800ms var(--pw-ease) calc(180ms + var(--pw-order) * 90ms),
-    visibility 0s;
+.pw-story {
+  position: relative;
+  z-index: 3;
+  animation: pw-throw 1000ms cubic-bezier(0.22, 1.18, 0.36, 1) calc(var(--pw-i, 0) * 130ms) both;
 }
 
-.pw-item-icon {
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 9999px;
-  background: hsl(var(--foreground) / 0.06);
-  color: hsl(var(--foreground) / 0.9);
-}
-
-.pw-item-text {
-  display: grid;
-  gap: 0.25rem;
-}
-
-.pw-item-label {
-  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: hsl(var(--foreground));
-}
-
-.pw-item-line {
-  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  font-size: 0.8125rem;
-  line-height: 1.5;
-  color: hsl(var(--muted-foreground));
-}
-
-/* Pokémon: the emotional anchor, a little larger and tinted with the accent. */
-.pw-item[data-item="pokemon"] {
-  border-color: rgb(91 63 140 / 0.6);
-  background: rgb(91 63 140 / 0.12);
-}
-.pw-item[data-item="pokemon"] .pw-item-icon {
-  background: rgb(91 63 140 / 0.35);
-}
-.pw-item[data-item="pokemon"] .pw-item-label {
-  font-family: var(--font-playfair), ui-serif, Georgia, serif;
-  font-size: 1.25rem;
-  font-weight: 400;
-}
-
-/* Boxing: present, but quieter. */
-.pw-stage.is-open .pw-item[data-item="boxing"] {
-  opacity: 0.72;
+.pw-stage.is-closing .pw-story {
+  animation: none;
 }
 
 @keyframes pw-glow {
-  0%, 100% { opacity: 0.3; transform: scale(0.96); }
-  50%      { opacity: 0.55; transform: scale(1.04); }
+  0%, 100% { opacity: 0.26; transform: scale(0.97); }
+  50%      { opacity: 0.46; transform: scale(1.03); }
 }
 
-/* A small, occasional tremble, then rest. */
+@keyframes pw-seam {
+  0%, 100% { opacity: 0.22; }
+  50%      { opacity: 0.6; }
+}
+
+/* A short, controlled tremble every few seconds, then rest. */
 @keyframes pw-idle {
-  0%, 82%, 100% { transform: rotate(0deg) scale(1); }
-  84% { transform: rotate(-2.2deg) scale(1.01); }
-  86% { transform: rotate(2deg) scale(1.01); }
-  88% { transform: rotate(-1.4deg) scale(1.005); }
-  90% { transform: rotate(1deg); }
-  92% { transform: rotate(0deg); }
+  0%, 80%, 100% { transform: translateX(0) rotate(0deg); }
+  82% { transform: translateX(-2px) rotate(-3.4deg); }
+  84% { transform: translateX(2px) rotate(3.2deg); }
+  86% { transform: translateX(-1.5px) rotate(-2.4deg); }
+  88% { transform: translateX(1.5px) rotate(1.8deg); }
+  90% { transform: translateX(-0.5px) rotate(-0.8deg); }
+  92% { transform: translateX(0) rotate(0deg); }
 }
 
-/* Tablet and up: spread around the ball. */
+/* The click: a quick, tighter shake while the seam lights up. */
+@keyframes pw-charge {
+  0%, 100% { transform: translateX(0) rotate(0deg) scale(1); }
+  10% { transform: translateX(-2.5px) rotate(-5deg) scale(1.02); }
+  25% { transform: translateX(2.5px) rotate(4.5deg) scale(1.03); }
+  40% { transform: translateX(-2px) rotate(-4deg) scale(1.03); }
+  55% { transform: translateX(2px) rotate(3.5deg) scale(1.03); }
+  70% { transform: translateX(-1px) rotate(-2deg) scale(1.02); }
+  85% { transform: translateX(0.5px) rotate(1deg) scale(1.01); }
+}
+
+/* Each story leaves the ball (--fx/--fy aim it there) and settles in place. */
+@keyframes pw-throw {
+  0% {
+    opacity: 0;
+    transform: translate3d(var(--fx, 0px), var(--fy, 0px), 0) rotate(var(--fr, 0deg)) scale(0.12);
+  }
+  24% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+}
+
 @media (min-width: 768px) {
-  .pw-stage {
-    height: 33rem;
-    justify-content: center;
-    padding-top: 0;
-  }
-
-  .pw-ball-wrap {
-    width: 10rem;
-    height: 10rem;
-  }
-
-  .pw-hint {
-    position: absolute;
-    top: calc(50% + 6.75rem);
-    margin: 0;
-  }
-
-  .pw-items {
-    position: absolute;
-    inset: 0;
-    display: block;
-    max-width: none;
-    pointer-events: none;
-  }
-
-  .pw-items-inner {
-    display: block;
-    position: absolute;
-    inset: 0;
-    overflow: visible;
-  }
-
-  .pw-stage.is-open .pw-items-inner {
-    padding-top: 0;
-  }
-
-  .pw-item {
-    --pw-w: 13rem;
-    --pw-x: 0rem;
-    --pw-y: 0rem;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: var(--pw-w);
-    pointer-events: auto;
-    transform: translate3d(-50%, -50%, 0) scale(0.6);
-  }
-
-  .pw-stage.is-open .pw-item {
-    transform: translate3d(calc(-50% + var(--pw-x)), calc(-50% + var(--pw-y)), 0) scale(1);
-  }
-
-  .pw-item[data-item="pokemon"] { --pw-w: 14.5rem; --pw-x: -14.5rem; --pw-y: -7.5rem; }
-  .pw-item[data-item="gaming"]  { --pw-x: 14.5rem;  --pw-y: -9rem; }
-  .pw-item[data-item="poker"]   { --pw-x: -13.5rem; --pw-y: 8.5rem; }
-  .pw-item[data-item="boxing"]  { --pw-x: 14.5rem;  --pw-y: 7.5rem; }
-}
-
-@media (min-width: 1024px) {
-  .pw-stage {
-    height: 35rem;
+  .pw-ball-zone {
+    padding: 4.5rem 0 5.5rem;
   }
 
   .pw-ball-wrap {
@@ -2365,18 +2411,10 @@
     height: 11rem;
   }
 
-  .pw-hint {
-    top: calc(50% + 7.5rem);
+  .pw-content {
+    gap: 9rem;
+    padding-top: 2rem;
   }
-
-  .pw-item {
-    --pw-w: 15rem;
-  }
-
-  .pw-item[data-item="pokemon"] { --pw-w: 17.5rem; --pw-x: -21rem; --pw-y: -8rem; }
-  .pw-item[data-item="gaming"]  { --pw-x: 20rem;  --pw-y: -9.5rem; }
-  .pw-item[data-item="poker"]   { --pw-x: -19rem; --pw-y: 9rem; }
-  .pw-item[data-item="boxing"]  { --pw-x: 21rem;  --pw-y: 8rem; }
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -2390,23 +2428,18 @@
 
 @media (prefers-reduced-motion: reduce) {
   .pw-glow,
-  .pw-svg {
+  .pw-svg,
+  .pw-seam,
+  .pw-story,
+  .pw-stage.is-charging .pw-svg {
     animation: none;
   }
   .pw-glow,
   .pw-ball,
   .pw-lid,
   .pw-light,
-  .pw-items,
-  .pw-item,
-  .pw-stage.is-open .pw-item {
+  .pw-seam,
+  .pw-stage.is-closing .pw-content {
     transition: none;
   }
-}
-
-/* Story headings: room for descenders (g, y) inside the reveal clip. */
-.about-story-head .motion-mask,
-.about-cta-title .motion-mask {
-  padding: 0.04em 0.04em 0.24em;
-  margin: -0.04em -0.04em -0.24em;
 }

@@ -4,17 +4,17 @@ import AboutHero from "@/components/about/AboutHero";
 import {
   AboutCta,
   BeyondDesign,
-  HowIGotHere,
+  LittleAboutMe,
   HowIThinkAndWork,
   WhereImHeading,
 } from "@/components/about/AboutSections";
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground" lang="en" dir="ltr">
       <PillNav />
       <AboutHero />
-      <HowIGotHere />
+      <LittleAboutMe />
       <BeyondDesign />
       <HowIThinkAndWork />
       <WhereImHeading />

@@ -1,31 +1,26 @@
-import { MaskedReveal, Reveal, Stagger } from "@/components/motion/Motion";
+import Link from "next/link";
+import AboutImage from "@/components/about/AboutImage";
+import PersonalWorld from "@/components/about/PersonalWorld";
+import { MaskedReveal, Reveal } from "@/components/motion/Motion";
 import { Button } from "@/components/ui/button";
 import { WHATSAPP_HREF } from "@/lib/social";
-import PersonalWorld from "@/components/about/PersonalWorld";
 
 /*
- * Story sections that continue under the About hero.
- * All copy below is PLACEHOLDER and meant to be rewritten in Shon's own voice.
+ * Story sections under the About hero. Typography scale used throughout:
+ *   eyebrow  -> .about-eyebrow
+ *   heading  -> .about-heading (serif, balanced)
+ *   lead     -> .about-lead (serif)
+ *   body     -> .about-body (sans, ~60ch, pretty wrap)
+ * Section spacing is whitespace; hairlines are used only where they carry meaning.
  */
 
-function SectionHead({
-  index,
-  title,
-  className = "",
-}: {
-  index: string;
-  title: string;
-  className?: string;
-}) {
+function SectionHead({ index, title, className = "" }: { index: string; title: string; className?: string }) {
   return (
     <header className={`about-story-head ${className}`}>
-      <Reveal
-        as="p"
-        className="font-sans text-[10px] font-medium uppercase tracking-[0.2em] text-white/50"
-      >
+      <Reveal as="p" className="about-eyebrow">
         {index}
       </Reveal>
-      <MaskedReveal as="h2" className="mt-4 font-serif text-3xl leading-[1.08] md:text-5xl">
+      <MaskedReveal as="h2" className="about-heading mt-5">
         {title}
       </MaskedReveal>
     </header>
@@ -33,71 +28,36 @@ function SectionHead({
 }
 
 /* ------------------------------------------------------------------ */
-/* 1. How I got here                                                   */
+/* 01 · A Little About Me                                              */
 /* ------------------------------------------------------------------ */
 
-const STORY_BEATS = [
-  {
-    title: "Starting with visuals",
-    body: "Graphic design taught me to see: spacing, rhythm, contrast, and the quiet decisions that make a layout feel intentional.",
-  },
-  {
-    title: "Growing into UX/UI",
-    body: "I moved into digital products because I like how things work as much as how they look. I find the friction, then fix it.",
-  },
-  {
-    title: "Designing with new tools",
-    body: "I bring design thinking together with AI and vibe coding, so I can test ideas faster and stay close to what actually ships.",
-  },
-];
-
-export function HowIGotHere() {
+export function LittleAboutMe() {
   return (
-    <section className="border-t border-border px-4 py-24 md:py-32">
-      <div className="mx-auto grid max-w-6xl gap-12 md:grid-cols-12 md:gap-10">
-        <SectionHead index="01" title="How I got here" className="md:col-span-5" />
-
-        <div className="md:col-span-7">
-          <Reveal as="p" className="font-serif text-2xl leading-snug text-foreground md:text-[2rem]">
-            I started as a graphic designer, pulled in by color, typography, and the small details that
-            make something feel right.
-          </Reveal>
-
-          <Stagger className="mt-12 divide-y divide-white/10 border-y border-white/10">
-            {STORY_BEATS.map((beat) => (
-              <div key={beat.title} className="grid gap-2 py-6 sm:grid-cols-[13rem_1fr] sm:gap-8">
-                <h3 className="font-sans text-sm font-medium text-foreground">{beat.title}</h3>
-                <p className="font-sans text-[0.9375rem] leading-relaxed text-muted-foreground">
-                  {beat.body}
-                </p>
-              </div>
-            ))}
-          </Stagger>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* 2. Beyond design                                                    */
-/* ------------------------------------------------------------------ */
-
-export function BeyondDesign() {
-  return (
-    <section className="px-4 py-24 md:py-32">
-      <div className="mx-auto max-w-6xl">
-        <div className="grid gap-6 md:grid-cols-12 md:gap-10">
-          <SectionHead index="02" title="Beyond design" className="md:col-span-5" />
-          <Reveal delay={80} className="md:col-span-7 md:pt-10">
-            <p className="max-w-md font-sans text-base leading-relaxed text-muted-foreground">
-              The things outside the work that shape how I see it. Open the Poké Ball to take a look.
-            </p>
-          </Reveal>
+    <section className="border-t border-border px-5 py-24 md:px-8 md:py-36">
+      <div className="mx-auto grid max-w-6xl items-center gap-14 md:grid-cols-12 md:gap-x-12">
+        <div className="md:col-span-5">
+          <SectionHead index="01" title="A Little About Me" />
+          <div className="mt-9 space-y-6">
+            <Reveal as="p" className="about-body" delay={80}>
+              I actually found design through a dropshipping business I started. I needed ads, opened
+              Canva, started experimenting, and the positive response made me curious enough to learn the
+              craft properly.
+            </Reveal>
+            <Reveal as="p" className="about-body" delay={140}>
+              Since then, my focus has grown from visual design into UI, digital products, AI and vibe
+              coding. I&apos;m especially interested in understanding what a design needs to communicate,
+              not just how it should look, and turning ideas into clear, useful experiences.
+            </Reveal>
+          </div>
         </div>
 
-        <Reveal media className="mt-10 md:mt-6">
-          <PersonalWorld />
+        <Reveal media className="md:col-span-6 md:col-start-7">
+          <AboutImage
+            src="/about/shon-about-personal.jpg"
+            alt="Shon Simhon, relaxed and candid"
+            ratio="4 / 5"
+            sizes="(min-width: 768px) 46vw, 100vw"
+          />
         </Reveal>
       </div>
     </section>
@@ -105,95 +65,152 @@ export function BeyondDesign() {
 }
 
 /* ------------------------------------------------------------------ */
-/* 3. How I think & work                                               */
+/* 02 · Beyond Design                                                  */
+/* ------------------------------------------------------------------ */
+
+export function BeyondDesign() {
+  return (
+    <section className="px-5 py-24 md:px-8 md:py-36">
+      <div className="mx-auto max-w-6xl">
+        <div className="grid gap-8 md:grid-cols-12 md:gap-x-12">
+          <SectionHead index="02" title="Beyond Design" className="md:col-span-5" />
+          <Reveal as="p" delay={90} className="about-body md:col-span-6 md:col-start-7 md:pt-12">
+            Design follows me outside of work too. I notice it in the things I collect, the games I play,
+            and even the way I think at a poker table.
+          </Reveal>
+        </div>
+
+        <Reveal media className="mt-6 md:mt-4">
+          <PersonalWorld
+            pokemonShelf={
+              <AboutImage
+                src="/about/pokemon-shelf.jpg"
+                alt="My Pokémon collection on its shelf"
+                ratio="4 / 3"
+                sizes="(min-width: 768px) 58vw, 100vw"
+              />
+            }
+            pokemonCards={
+              <AboutImage
+                src="/about/pokemon-cards.jpg"
+                alt="A few favourite Pokémon cards, up close"
+                ratio="1 / 1"
+                sizes="(min-width: 768px) 22vw, 60vw"
+              />
+            }
+            pokemonApp={
+              <AboutImage
+                src="/about/pokemon-collection-app.jpg"
+                alt="Screenshot of my Pokémon collection app"
+                ratio="9 / 19"
+                sizes="(min-width: 768px) 12vw, 32vw"
+              />
+            }
+            gaming={
+              <AboutImage
+                src="/about/gaming-shon.jpg"
+                alt="Me playing"
+                ratio="5 / 4"
+                sizes="(min-width: 768px) 50vw, 100vw"
+              />
+            }
+            pokerTable={
+              <AboutImage
+                src="/about/poker-table.jpg"
+                alt="A poker table"
+                ratio="4 / 5"
+                sizes="(min-width: 768px) 40vw, 100vw"
+              />
+            }
+            pokerChips={
+              <AboutImage
+                src="/about/poker-chips.jpg"
+                alt="Poker chips, close up"
+                ratio="4 / 3"
+                sizes="(min-width: 768px) 24vw, 60vw"
+              />
+            }
+            pokerStudy={
+              <AboutImage
+                src="/about/poker-study.jpg"
+                alt="Poker strategy study on a solver screen"
+                ratio="4 / 3"
+                sizes="(min-width: 768px) 24vw, 60vw"
+              />
+            }
+          />
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* 03 · How I Think & Work                                             */
 /* ------------------------------------------------------------------ */
 
 const PRINCIPLES = [
   {
-    title: "Easy to work with",
-    body: "I communicate early, stay open, and make collaboration feel simple for designers, developers, and clients.",
+    n: "01",
+    title: "Think Before Making",
+    body: "I care about what the design needs to say, not just how it looks. I like to understand the message first, simplify the information, and then turn it into something clear and visual.",
   },
   {
-    title: "Feedback makes it better",
-    body: "I take feedback seriously, ask the right follow-ups, and turn it into a clearly stronger next version.",
+    n: "02",
+    title: "Learn From People",
+    body: "I'm curious, open to feedback, and always looking to improve. I enjoy working with people who challenge me, teach me something new, and push the work forward.",
   },
   {
-    title: "A step ahead",
-    body: "I like thinking ahead, spotting what could go wrong, and taking initiative before I'm asked.",
-  },
-  {
-    title: "Design plus AI",
-    body: "Design thinking, problem solving, and AI tools sit in one workflow, so ideas move faster without losing care.",
+    n: "03",
+    title: "Use Technology With Purpose",
+    body: "AI and vibe coding are a natural part of how I work. I use them to explore faster, test ideas, and solve small problems that can save real time in everyday work.",
   },
 ];
 
 export function HowIThinkAndWork() {
   return (
-    <section className="border-t border-border px-4 py-24 md:py-32">
+    <section className="px-5 py-24 md:px-8 md:py-36">
       <div className="mx-auto max-w-6xl">
-        <SectionHead index="03" title="How I think & work" />
+        <SectionHead index="03" title="How I Think & Work" />
 
-        <Stagger className="mt-12 grid gap-4 sm:grid-cols-2 md:mt-16">
-          {PRINCIPLES.map((item, i) => (
-            <article
-              key={item.title}
-              className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8"
-            >
-              <p className="font-sans text-[10px] font-medium tracking-[0.2em] text-white/40">
-                {String(i + 1).padStart(2, "0")}
-              </p>
-              <h3 className="mt-6 font-serif text-xl md:text-2xl">{item.title}</h3>
-              <p className="mt-3 font-sans text-[0.9375rem] leading-relaxed text-muted-foreground">
-                {item.body}
-              </p>
-            </article>
+        <ol className="mt-14 md:mt-20">
+          {PRINCIPLES.map((item) => (
+            <li key={item.n} className="border-t border-white/10 first:border-t-0">
+              <Reveal className="grid gap-4 py-10 md:grid-cols-12 md:gap-x-12 md:py-14">
+                <p className="about-numeral md:col-span-2" aria-hidden="true">
+                  {item.n}
+                </p>
+                <h3 className="about-principle md:col-span-5">{item.title}</h3>
+                <p className="about-body md:col-span-5">{item.body}</p>
+              </Reveal>
+            </li>
           ))}
-        </Stagger>
+        </ol>
       </div>
     </section>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* 4. Where I'm heading                                                */
+/* 04 · Where I'm Heading                                              */
 /* ------------------------------------------------------------------ */
-
-const DIRECTIONS = [
-  "Growing as a UX/UI designer",
-  "Learning inside a strong team",
-  "Building meaningful digital work",
-];
 
 export function WhereImHeading() {
   return (
-    <section className="border-t border-border px-4 py-24 md:py-32">
-      <div className="mx-auto grid max-w-6xl gap-12 md:grid-cols-12 md:gap-10">
-        <SectionHead index="04" title="Where I'm heading" className="md:col-span-5" />
+    <section className="px-5 py-24 md:px-8 md:py-36">
+      <div className="mx-auto grid max-w-6xl gap-12 md:grid-cols-12 md:gap-x-12">
+        <SectionHead index="04" title="Where I'm Heading" className="md:col-span-5" />
 
         <div className="md:col-span-7">
-          <Reveal
-            as="p"
-            className="font-serif text-2xl leading-snug text-foreground md:text-[2rem] md:leading-[1.25]"
-          >
-            I want to keep growing as a UX/UI designer, inside a team that pushes me, building digital
-            products that matter. Games and interactive worlds are a direction I&apos;m quietly drawn
-            to.
+          <Reveal as="p" className="about-lead" delay={80}>
+            I&apos;m looking for a place where I can contribute, learn from strong people around me, and
+            keep becoming a better designer.
           </Reveal>
-
-          <Stagger className="mt-10 flex flex-col gap-3">
-            {DIRECTIONS.map((item) => (
-              <p
-                key={item}
-                className="flex items-center gap-3 font-sans text-sm text-muted-foreground"
-              >
-                <span
-                  aria-hidden="true"
-                  className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent-primary)]"
-                />
-                {item}
-              </p>
-            ))}
-          </Stagger>
+          <Reveal as="p" className="about-body mt-8 md:mt-10" delay={150}>
+            I&apos;m especially drawn to teams that care about good work, honest feedback, and constant
+            improvement. If that happens to be in gaming or another world I genuinely connect with, even
+            better.
+          </Reveal>
         </div>
       </div>
     </section>
@@ -201,34 +218,37 @@ export function WhereImHeading() {
 }
 
 /* ------------------------------------------------------------------ */
-/* 5. Final CTA                                                        */
+/* 05 · Final CTA                                                      */
 /* ------------------------------------------------------------------ */
 
 export function AboutCta() {
   return (
-    <section className="border-t border-border px-4 py-24 text-center md:py-32">
-      <div className="mx-auto max-w-3xl">
+    <section className="border-t border-border px-5 py-24 md:px-8 md:py-36">
+      <div className="mx-auto max-w-6xl">
         <div className="about-cta-title">
-          <MaskedReveal as="h2" className="font-serif text-4xl leading-[1.08] md:text-6xl">
-            Let&apos;s make something good.
+          <MaskedReveal as="h2" className="about-heading about-heading-xl">
+            That&apos;s a little about me.
           </MaskedReveal>
         </div>
-        <Reveal delay={90}>
-          <p className="mx-auto mt-6 max-w-xl text-base text-muted-foreground md:text-lg">
-            If something here resonated, I&apos;d love to hear from you.
-          </p>
+        <Reveal as="p" className="about-lead about-lead-muted mt-6" delay={90}>
+          Now you can see what I make.
         </Reveal>
-        <Reveal delay={170}>
-          <div className="mt-10 flex flex-wrap justify-center gap-3">
-            <Button size="lg" variant="accent" className="rounded-full px-8" asChild>
-              <a href={WHATSAPP_HREF} target="_blank" rel="noopener noreferrer">
-                Let&apos;s talk
-              </a>
-            </Button>
-            <Button size="lg" variant="outline" className="rounded-full px-8" asChild>
-              <a href="mailto:shonsimhon@gmail.com?subject=Hello%20Shon">Email me</a>
-            </Button>
-          </div>
+
+        <Reveal delay={170} className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-5">
+          <Button size="lg" variant="accent" className="rounded-full px-8" asChild>
+            <Link href="/work">View My Work</Link>
+          </Button>
+          <Button size="lg" variant="outline" className="rounded-full px-8" asChild>
+            <a href={WHATSAPP_HREF} target="_blank" rel="noopener noreferrer">
+              Let&apos;s Talk
+            </a>
+          </Button>
+          <Link
+            href="/resume"
+            className="font-sans text-sm text-muted-foreground underline decoration-white/20 underline-offset-[6px] transition-colors hover:text-foreground hover:decoration-white/60"
+          >
+            Resume
+          </Link>
         </Reveal>
       </div>
     </section>
