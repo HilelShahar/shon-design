@@ -192,15 +192,15 @@ export default function PersonalWorld({
           className="pw-story grid gap-8 md:grid-cols-12 md:gap-x-12 md:gap-y-10"
           style={{ "--pw-i": 0 } as CSSProperties}
         >
-          <div className="md:col-span-7 md:row-span-2">{pokemonShelf}</div>
+          <div className="max-md:order-2 md:col-span-7 md:row-span-2">{pokemonShelf}</div>
           <StoryCopy
-            className="md:col-span-5"
+            className="max-md:order-1 md:col-span-5"
             eyebrow="Collecting"
             title="Pokémon & Collecting"
             large
             body="I started collecting because I loved Pokémon as a kid. Today, I'm just as drawn to the cards themselves - the artwork, color, composition and tiny details that make each one feel unique."
           />
-          <div className="flex items-end gap-4 md:col-span-5 md:gap-5">
+          <div className="flex max-md:order-3 items-end gap-4 md:col-span-5 md:gap-5">
             <div className="w-[56%]">{pokemonCards}</div>
             <div className="w-[30%]">{pokemonApp}</div>
           </div>
@@ -211,9 +211,9 @@ export default function PersonalWorld({
           className="pw-story grid gap-8 md:grid-cols-12 md:items-center md:gap-x-12"
           style={{ "--pw-i": 1 } as CSSProperties}
         >
-          <div className="md:order-2 md:col-span-6 md:col-start-7">{gaming}</div>
+          <div className="order-2 md:col-span-6 md:col-start-7">{gaming}</div>
           <StoryCopy
-            className="md:order-1 md:col-span-5"
+            className="order-1 md:col-span-5"
             eyebrow="Playing"
             title="Gaming"
             body="I play everything from FC and online games to story-driven RPGs. I often catch myself looking beyond the gameplay at menus, interfaces, environments and the visual details that shape the experience."
@@ -222,17 +222,18 @@ export default function PersonalWorld({
 
         <article
           data-story
-          className="pw-story grid gap-8 md:grid-cols-12 md:items-center md:gap-x-12"
+          className="pw-story pw-poker grid gap-8 md:grid-cols-12 md:items-center md:gap-x-12"
           style={{ "--pw-i": 2 } as CSSProperties}
         >
-          <div className="md:col-span-5">{pokerTable}</div>
-          <div className="md:col-span-6 md:col-start-7">
+          <div className="pw-poker-table md:col-span-5">{pokerTable}</div>
+          <div className="pw-poker-copy md:col-span-6 md:col-start-7">
             <StoryCopy
+              className="pw-poker-text"
               eyebrow="Thinking"
               title="Poker"
               body="I like poker for the strategy behind it - patience, reading situations and knowing when not to act. The mix of intuition, probability and decision-making is what keeps me interested."
             />
-            <div className="mt-8 grid grid-cols-1 gap-4 min-[420px]:grid-cols-2 md:mt-10 md:w-[92%]">
+            <div className="pw-poker-support mt-8 grid grid-cols-2 gap-4 md:mt-10 md:w-[92%]">
               <div className="min-w-0">{pokerChips}</div>
               <div className="min-w-0">{pokerStudy}</div>
             </div>

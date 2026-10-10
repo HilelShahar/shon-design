@@ -35,7 +35,7 @@ export function LittleAboutMe() {
   return (
     <section className="border-t border-border px-5 py-24 md:px-8 md:py-36">
       <div className="mx-auto grid max-w-6xl items-center gap-14 md:grid-cols-12 md:gap-x-12">
-        <div className="md:col-span-5">
+        <div className="max-md:order-1 md:col-span-5">
           <SectionHead index="01" title="A Little About Me" />
           <div className="mt-9 space-y-6">
             <Reveal as="p" className="about-body" delay={80}>
@@ -51,7 +51,7 @@ export function LittleAboutMe() {
           </div>
         </div>
 
-        <Reveal media className="md:col-span-6 md:col-start-7">
+        <Reveal media className="max-md:order-2 md:col-span-6 md:col-start-7">
           <AboutImage
             src="/about/shon-about-personal.jpg"
             alt="Shon Simhon, relaxed and candid"
@@ -151,17 +151,17 @@ export function BeyondDesign() {
 
 const PRINCIPLES = [
   {
-    n: "01",
+    n: "A",
     title: "Think Before Making",
     body: "I care about what the design needs to say, not just how it looks. I like to understand the message first, simplify the information, and then turn it into something clear and visual.",
   },
   {
-    n: "02",
+    n: "B",
     title: "Learn From People",
     body: "I'm curious, open to feedback, and always looking to improve. I enjoy working with people who challenge me, teach me something new, and push the work forward.",
   },
   {
-    n: "03",
+    n: "C",
     title: "Use Technology With Purpose",
     body: "AI and vibe coding are a natural part of how I work. I use them to explore faster, test ideas, and solve small problems that can save real time in everyday work.",
   },
