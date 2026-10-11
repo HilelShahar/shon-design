@@ -58,8 +58,55 @@ const HERO_MEDIA_BY_SLUG: Record<string, { still: string; video: string }> = {
   },
 };
 
+type CaseStudyCopy = Partial<
+  Pick<
+    typeof PLACEHOLDER,
+    "goal" | "direction" | "outcome" | "reflection" | "constraints" | "process" | "finalWork"
+  >
+> & {
+  processSteps?: { label: string; note: string }[];
+};
+
+const COPY_BY_SLUG: Record<string, CaseStudyCopy> = {
+  "dolev-dadon-single-cover": {
+    goal:
+      "The goal was to translate the song’s romantic and powerful emotion into a warm, intimate visual that connects love with a sense of eternity.",
+    constraints:
+      "Dolev came to me with an existing cover that felt dated and didn’t express what he wanted. The new artwork needed to work in a square format for YouTube and Instagram while communicating romance, warmth, and a wedding atmosphere.",
+    direction:
+      "The direction grew from my conversation with Dolev and the feeling he wanted the song to communicate. A silhouetted couple, floral framing, and warm sunset tones shaped the romantic atmosphere.",
+    process:
+      "After speaking with Dolev and reviewing the previous cover, I had a clear sense of what needed to change. I used that as the starting point for a warmer, more emotional direction.",
+    processSteps: [
+      {
+        label: "Exploration",
+        note: "I looked at a focused set of wedding, sunset, and floral references. Since the direction was already clear, the exploration was mainly about refining the right mood.",
+      },
+      {
+        label: "Composition",
+        note: "Because the song is about a couple, I made them the clear focal point. The flowers, canopy, and sunset support the story and emotion around them.",
+      },
+      {
+        label: "Color & Typography",
+        note: "Warm sunset tones helped communicate romance and the feeling of a special moment. I paired them with delicate typography and refined its placement together with Dolev.",
+      },
+      {
+        label: "Refinement",
+        note: "The first version evolved through changes to the colors, characters, typography, and placement until the composition felt more cohesive.",
+      },
+    ],
+    finalWork:
+      "The cover was presented across mobile streaming, vinyl, CD, and poster mockups while keeping a consistent visual identity.",
+    outcome:
+      "The final artwork became the official visual for the single and was used across YouTube, Instagram, and Facebook.",
+    reflection:
+      "This project reinforced how much stronger a visual can feel when it starts from emotion and message, not just style.",
+  },
+};
+
 export default function PortfolioCaseStudy({ project }: { project: Project }) {
   const heroMedia = HERO_MEDIA_BY_SLUG[project.slug];
+  const copy = COPY_BY_SLUG[project.slug];
   const hasDescription = Boolean(project.shortDescription?.trim());
   const feedbackName = CLIENT_FEEDBACK_BY_SLUG[project.slug];
   const feedback = feedbackName
@@ -82,27 +129,30 @@ export default function PortfolioCaseStudy({ project }: { project: Project }) {
         preserveBreaks={hasDescription}
         note={project.descriptionFooter}
         meta={[
-          { label: "Role", value: PLACEHOLDER.role },
+          { label: "Role", value: project.role ?? PLACEHOLDER.role },
           { label: "Year", value: project.year },
-          { label: "Category", value: PLACEHOLDER.category },
-          { label: "Deliverables", value: PLACEHOLDER.deliverables },
+          { label: "Category", value: project.category ?? PLACEHOLDER.category },
+          { label: "Deliverables", value: project.deliverables ?? PLACEHOLDER.deliverables },
         ]}
       />
-      <CaseStudyText title="Goal">{PLACEHOLDER.goal}</CaseStudyText>
-      <CaseStudyText title="Constraints">{PLACEHOLDER.constraints}</CaseStudyText>
-      <CaseStudyCreativeDirection>{PLACEHOLDER.direction}</CaseStudyCreativeDirection>
-      <CaseStudyProcess intro={PLACEHOLDER.process} steps={PROCESS_PLACEHOLDERS} />
+      <CaseStudyText title="Goal">{copy?.goal ?? PLACEHOLDER.goal}</CaseStudyText>
+      <CaseStudyText title="Constraints">{copy?.constraints ?? PLACEHOLDER.constraints}</CaseStudyText>
+      <CaseStudyCreativeDirection>{copy?.direction ?? PLACEHOLDER.direction}</CaseStudyCreativeDirection>
+      <CaseStudyProcess
+        intro={copy?.process ?? PLACEHOLDER.process}
+        steps={copy?.processSteps ?? PROCESS_PLACEHOLDERS}
+      />
       <CaseStudyFinalWork
-        intro={PLACEHOLDER.finalWork}
+        intro={copy?.finalWork ?? PLACEHOLDER.finalWork}
         image={project.longImage}
         alt={project.title}
       />
-      <CaseStudyText title="Outcome">{PLACEHOLDER.outcome}</CaseStudyText>
+      <CaseStudyText title="Outcome">{copy?.outcome ?? PLACEHOLDER.outcome}</CaseStudyText>
       <CaseStudyClientFeedback
         testimonial={feedback}
         note={feedback ? undefined : PLACEHOLDER.feedback}
       />
-      <CaseStudyClose reflection={PLACEHOLDER.reflection} />
+      <CaseStudyClose reflection={copy?.reflection ?? PLACEHOLDER.reflection} />
     </CaseStudyFrame>
   );
 }

@@ -22,6 +22,10 @@ export type Project = {
    * Fill with real disciplines only, for example "Branding" or "Print".
    */
   tags?: string[];
+  /** Case study overview metadata (optional until filled in). */
+  role?: string;
+  category?: string;
+  deliverables?: string;
 };
 
 export const projects: Project[] = [
@@ -35,6 +39,9 @@ export const projects: Project[] = [
     shortDescription:
       "A single cover created to express the song’s romantic and powerful emotion, using a warm, intimate visual language that connects love with a sense of eternity.",
     tags: ["Cover art", "Art direction", "Music visuals", "Visual storytelling"],
+    role: "Art Direction & Cover Design",
+    category: "Music / Single Cover",
+    deliverables: "Single Cover / YouTube & Social Media Artwork",
   },
   {
     slug: "studio-movimiento-branding",
