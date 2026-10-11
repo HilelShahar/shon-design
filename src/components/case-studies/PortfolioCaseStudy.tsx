@@ -11,6 +11,7 @@ import {
   CaseStudyText,
   CaseStudyTitleHero,
 } from "@/components/case-studies/CaseStudySections";
+import CaseStudyHeroMedia from "@/components/case-studies/CaseStudyHeroMedia";
 import type { Project } from "@/lib/projects";
 import { TESTIMONIALS } from "@/lib/testimonials";
 
@@ -49,7 +50,16 @@ const PROCESS_PLACEHOLDERS = [
   { label: "Refinement", note: "Placeholder - Final adjustments that brought the direction together." },
 ];
 
+/** Hero media per project: a still that paints first, and a video that plays over it. */
+const HERO_MEDIA_BY_SLUG: Record<string, { still: string; video: string }> = {
+  "dolev-dadon-single-cover": {
+    still: "/media/dolev/hero-clean-frame.jpg",
+    video: "/media/dolev/wedding-hero-camera.mp4",
+  },
+};
+
 export default function PortfolioCaseStudy({ project }: { project: Project }) {
+  const heroMedia = HERO_MEDIA_BY_SLUG[project.slug];
   const hasDescription = Boolean(project.shortDescription?.trim());
   const feedbackName = CLIENT_FEEDBACK_BY_SLUG[project.slug];
   const feedback = feedbackName
@@ -57,7 +67,15 @@ export default function PortfolioCaseStudy({ project }: { project: Project }) {
     : undefined;
   return (
     <CaseStudyFrame>
-      <CaseStudyTitleHero title={project.title} tags={project.tags} />
+      <CaseStudyTitleHero
+        title={project.title}
+        tags={project.tags}
+        media={
+          heroMedia ? (
+            <CaseStudyHeroMedia still={heroMedia.still} video={heroMedia.video} />
+          ) : undefined
+        }
+      />
       <CaseStudyOverview
         intro={hasDescription ? project.shortDescription : PLACEHOLDER.overview}
         introRtl={hasDescription ? project.shortDescriptionRtl : false}

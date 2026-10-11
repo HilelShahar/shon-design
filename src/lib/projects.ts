@@ -33,10 +33,8 @@ export const projects: Project[] = [
     cover: "/single.jpg",
     longImage: "/single_long.jpg",
     shortDescription:
-      "עיצוב עטיפת סינגל המבטא את המסר הרומנטי והעוצמתי של השיר, המטרה הייתה ליצור דימוי שמחבר בין אהבה לנצחיות, תוך שמירה על אווירה חמה ומרגשת.",
-    shortDescriptionRtl: true,
-    shortDescriptionPending: true,
-    tags: [],
+      "A single cover created to express the song’s romantic and powerful emotion, using a warm, intimate visual language that connects love with a sense of eternity.",
+    tags: ["Cover art", "Art direction", "Music visuals", "Visual storytelling"],
   },
   {
     slug: "studio-movimiento-branding",

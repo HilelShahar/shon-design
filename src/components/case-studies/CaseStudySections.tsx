@@ -107,16 +107,27 @@ function titleScale(heading: string) {
 export function CaseStudyTitleHero({
   title,
   tags,
+  media,
 }: {
   title: string;
   tags?: string[];
+  /** Optional hero media. Fills the existing hero visual slot. */
+  media?: ReactNode;
 }) {
   const visibleTags = tags?.filter(Boolean) ?? [];
   const { heading, subtitle } = splitHeroTitle(title);
   const scale = titleScale(heading);
   return (
-    <section className="zach-hero case-study-hero" aria-label={title}>
-      <div className="case-study-hero-visual" aria-hidden="true" />
+    <section
+      className={media ? "zach-hero case-study-hero has-media" : "zach-hero case-study-hero"}
+      aria-label={title}
+    >
+      <div
+        className={media ? "case-study-hero-visual has-media" : "case-study-hero-visual"}
+        aria-hidden="true"
+      >
+        {media}
+      </div>
       <div className="zach-hero-layout">
         <div className="zach-hero-copy">
           {visibleTags.length > 0 ? (
