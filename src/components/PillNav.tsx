@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Briefcase, FileText, Home, Mail, UserRound } from "lucide-react";
+import { Briefcase, FileText, Home, Mail, MessageCircle, UserRound } from "lucide-react";
 
 type Props = {
   onJump?: (id: string) => void;
@@ -91,6 +91,29 @@ export default function PillNav({ onJump, activeSection }: Props) {
 
         <NavIcon label="About" active={onAboutPage} href="/about">
           <UserRound size={22} strokeWidth={1.8} className={iconClass(onAboutPage)} />
+        </NavIcon>
+
+        <NavIcon
+          label="Feedback"
+          active={onHome && activeSection === "testimonials"}
+          href="/#testimonials"
+          onClick={
+            onHome
+              ? () => {
+                  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+                  document.getElementById("testimonials")?.scrollIntoView({
+                    behavior: reduce ? "auto" : "smooth",
+                    block: "start",
+                  });
+                }
+              : undefined
+          }
+        >
+          <MessageCircle
+            size={22}
+            strokeWidth={1.8}
+            className={iconClass(onHome && activeSection === "testimonials")}
+          />
         </NavIcon>
 
         <NavIcon label="Resume" active={onResumePage} href="/resume">

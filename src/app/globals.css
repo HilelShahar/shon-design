@@ -45,6 +45,9 @@
 @layer base {
   * { @apply border-border; }
   html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
   /* Hide broken image icon / placeholder on mobile */
   img {
     font-size: 0;
@@ -1550,10 +1553,103 @@
 /* Homepage — Feedback spotlight. One fixed card; content cross-fades in place. */
 .feedback-section {
   position: relative;
+  /* Clears the floating pill so the Feedback heading stays visible after a jump. */
+  scroll-margin-top: 1.25rem;
+}
+
+.feedback-layout {
+  display: grid;
+  gap: 0.75rem;
 }
 
 .feedback-stack {
   display: grid;
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.feedback-identity {
+  display: grid;
+  width: 100%;
+  min-height: 2.65rem;
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.feedback-strip {
+  grid-column: 1;
+  grid-row: 3;
+}
+
+/* Desktop: card | identity | fixed-width selector column (mobile grid above unchanged). */
+@media (min-width: 768px) {
+  .feedback-layout {
+    --feedback-selector-col: 4rem;
+    grid-template-columns: minmax(0, 1fr) auto var(--feedback-selector-col);
+    grid-template-rows: auto;
+    column-gap: 1.15rem;
+    row-gap: 0;
+    align-items: center;
+  }
+
+  .feedback-stack {
+    grid-column: 1;
+    grid-row: 1;
+    max-width: 100%;
+  }
+
+  .feedback-identity {
+    grid-column: 2;
+    grid-row: 1;
+    width: auto;
+    min-width: 6.75rem;
+    max-width: 11.5rem;
+    justify-self: end;
+    align-self: center;
+  }
+
+  .feedback-identity-inner {
+    text-align: right;
+  }
+
+  .feedback-selector {
+    grid-column: 3;
+    grid-row: 1;
+    box-sizing: border-box;
+    width: var(--feedback-selector-col);
+    flex-shrink: 0;
+    justify-self: center;
+    align-self: center;
+  }
+
+  .feedback-strip {
+    display: none;
+  }
+
+  .feedback-wheel {
+    width: 3.5rem;
+    max-width: none;
+    margin-inline: auto;
+  }
+
+  .feedback-wheel-item {
+    transform-origin: 50% 50%;
+  }
+}
+
+/* Quote stays secondary to the Feedback heading (text-3xl / 2.65rem).
+   Mobile and tablet use text-xl; desktop is half the 2.65rem heading. */
+.feedback-spot-quote-body blockquote {
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.625;
+}
+
+@media (min-width: 1024px) {
+  .feedback-spot-quote-body blockquote {
+    font-size: calc(2.65rem * 0.5);
+    line-height: 1.6;
+  }
 }
 
 .feedback-slide {
@@ -1586,6 +1682,7 @@
   width: 100%;
   max-width: 21rem;
   height: calc(var(--wheel-step) * 3);
+  margin-inline: auto;
   /* Let the page scroll normally, including when a touch starts on the wheel. */
   touch-action: pan-y;
 }
@@ -1862,22 +1959,47 @@
 
 /* Spotlight card: same chrome, tighter composition. Scoped so the case-study card is untouched. */
 .feedback-spot-card.feedback-card-panel {
-  min-height: 13.5rem;
+  min-height: 10.75rem;
+  padding: 1.25rem 1.375rem;
 }
 
 @media (min-width: 768px) {
   .feedback-spot-card.feedback-card-panel {
-    min-height: 14.5rem;
+    min-height: 11.25rem;
+    padding: 1.375rem 1.5rem;
   }
+}
+
+/* Quote block centered in the card; Hebrew quote stays RTL and right-aligned inside. */
+.feedback-spot-quote-body {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 38rem);
+  margin-inline: auto;
+  margin-block: auto;
+  padding-block: 0.25rem;
+}
+
+@media (min-width: 768px) {
+  .feedback-spot-quote-body {
+    width: min(100%, 44rem);
+    padding-block: 0.2rem 0.35rem;
+  }
+}
+
+.feedback-spot-quote-body blockquote {
+  margin-bottom: 0;
 }
 
 .feedback-spot-quote {
   display: block;
-  height: 1.75rem;
+  flex-shrink: 0;
+  height: 1.15rem;
+  margin: 0 0 -0.2rem;
   text-align: right;
   font-family: var(--font-playfair), ui-serif, Georgia, serif;
   font-size: 3.5rem;
-  line-height: 1;
+  line-height: 0.72;
   color: rgba(255, 255, 255, 0.09);
   user-select: none;
 }

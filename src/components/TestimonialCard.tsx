@@ -57,6 +57,16 @@ export function TestimonialQuoteAuthor({ item }: { item: Testimonial }) {
   );
 }
 
+/** Name + role only (homepage spotlight places this beside the avatar selector). */
+export function TestimonialQuoteIdentity({ item }: { item: Testimonial }) {
+  return (
+    <div className="feedback-identity-inner" dir="rtl">
+      <p className="text-sm font-medium leading-snug text-foreground md:text-base">{item.name}</p>
+      <p className="mt-0.5 text-xs leading-snug text-muted-foreground">{item.title}</p>
+    </div>
+  );
+}
+
 export default function TestimonialCard({
   item,
   active = true,

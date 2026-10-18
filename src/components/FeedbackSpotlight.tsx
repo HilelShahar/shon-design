@@ -5,7 +5,7 @@ import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from "lucide-react"
 import { TESTIMONIALS } from "@/lib/testimonials";
 import {
   TestimonialAvatar,
-  TestimonialQuoteAuthor,
+  TestimonialQuoteIdentity,
   TestimonialQuoteText,
 } from "@/components/TestimonialCard";
 import { MaskedReveal, Reveal } from "@/components/motion/Motion";
@@ -94,7 +94,7 @@ export default function FeedbackSpotlight() {
         </header>
 
         <Reveal media className="feedback-stage">
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,3fr)] lg:gap-10">
+          <div className="feedback-layout">
             <div id="feedback-card" className="feedback-stack" aria-live="polite">
               {TESTIMONIALS.map((item, index) => (
                 <article
@@ -102,22 +102,31 @@ export default function FeedbackSpotlight() {
                   className={index === active ? "feedback-slide is-active" : "feedback-slide"}
                   aria-hidden={index !== active}
                 >
-                  <div className="feedback-spot-card feedback-card-panel feedback-card-panel--active flex h-full flex-col rounded-2xl border p-6 md:p-7">
-                    <span className="feedback-spot-quote" aria-hidden="true">
-                      ”
-                    </span>
-                    <div className="my-auto ml-auto w-full max-w-[38rem] py-3 md:[&_blockquote]:text-base">
+                  <div className="feedback-spot-card feedback-card-panel feedback-card-panel--active flex h-full flex-col rounded-2xl border">
+                    <div className="feedback-spot-quote-body">
+                      <span className="feedback-spot-quote" aria-hidden="true">
+                        ”
+                      </span>
                       <TestimonialQuoteText item={item} />
                     </div>
-                    <TestimonialQuoteAuthor item={item} />
                   </div>
                 </article>
               ))}
             </div>
 
-            <div
-              className="feedback-selector hidden min-w-0 flex-col items-center justify-center gap-1 md:flex"
-            >
+            <div className="feedback-identity" aria-live="polite">
+              {TESTIMONIALS.map((item, index) => (
+                <div
+                  key={`identity-${item.name}-${index}`}
+                  className={index === active ? "feedback-slide is-active" : "feedback-slide"}
+                  aria-hidden={index !== active}
+                >
+                  <TestimonialQuoteIdentity item={item} />
+                </div>
+              ))}
+            </div>
+
+            <div className="feedback-selector hidden min-w-0 flex-col items-center justify-center gap-1 md:flex">
               <button type="button" className={ARROW_BTN} aria-label="Previous feedback" aria-controls="feedback-card" onClick={() => step(-1)}>
                 <ChevronUp size={16} strokeWidth={1.8} />
               </button>
