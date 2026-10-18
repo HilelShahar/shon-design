@@ -258,9 +258,12 @@ export type CaseStudyProcessStep = {
 export function CaseStudyProcess({
   intro,
   steps,
+  mediaFrameClass,
 }: {
   intro?: string;
   steps?: CaseStudyProcessStep[];
+  /** Optional frame modifier when a project needs different media well styling. */
+  mediaFrameClass?: string;
 }) {
   const visible = steps?.filter((step) => step.label || step.note) ?? [];
   if (!intro && visible.length === 0) return null;
@@ -277,7 +280,14 @@ export function CaseStudyProcess({
           {visible.map((slot) => (
             <Reveal key={slot.label}>
               <figure className="zach-slot">
-                <div className={slot.image ? "zach-slot-frame has-media" : "zach-slot-frame"} aria-hidden={slot.image ? undefined : true}>
+                <div
+                  className={
+                    slot.image
+                      ? `zach-slot-frame has-media${mediaFrameClass ? ` ${mediaFrameClass}` : ""}`
+                      : "zach-slot-frame"
+                  }
+                  aria-hidden={slot.image ? undefined : true}
+                >
                   {slot.image ? (
                     <img src={slot.image} alt={slot.alt ?? ""} />
                   ) : null}

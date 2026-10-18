@@ -81,14 +81,20 @@ const COPY_BY_SLUG: Record<string, CaseStudyCopy> = {
       {
         label: "Exploration",
         note: "I looked at a focused set of wedding, sunset, and floral references. Since the direction was already clear, the exploration was mainly about refining the right mood.",
+        image: "/media/dolev/exploration.png",
+        alt: "Wedding at sunset inspiration collage for Dolev Dadon single cover",
       },
       {
         label: "Composition",
         note: "Because the song is about a couple, I made them the clear focal point. The flowers, canopy, and sunset support the story and emotion around them.",
+        image: "/media/dolev/composition.png",
+        alt: "Composition formula combining couple, chuppah, and location for the cover",
       },
       {
         label: "Color & Typography",
         note: "Warm sunset tones helped communicate romance and the feeling of a special moment. I paired them with delicate typography and refined its placement together with Dolev.",
+        image: "/media/dolev/color-typography.png",
+        alt: "Minimalist branding mood board with palette, typography, and texture",
       },
       {
         label: "Refinement",
@@ -141,6 +147,7 @@ export default function PortfolioCaseStudy({ project }: { project: Project }) {
       <CaseStudyProcess
         intro={copy?.process ?? PLACEHOLDER.process}
         steps={copy?.processSteps ?? PROCESS_PLACEHOLDERS}
+        mediaFrameClass={project.slug === "dolev-dadon-single-cover" ? "dolev-process-media" : undefined}
       />
       <CaseStudyFinalWork
         intro={copy?.finalWork ?? PLACEHOLDER.finalWork}

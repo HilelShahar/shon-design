@@ -1172,6 +1172,10 @@
   overflow: hidden;
 }
 
+.zach-slot-frame.dolev-process-media.has-media {
+  background: hsl(var(--background));
+}
+
 .zach-slot-frame.has-media img {
   display: block;
   width: 100%;
