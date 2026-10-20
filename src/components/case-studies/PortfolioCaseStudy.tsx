@@ -96,10 +96,6 @@ const COPY_BY_SLUG: Record<string, CaseStudyCopy> = {
         image: "/media/dolev/color-typography.png",
         alt: "Minimalist branding mood board with palette, typography, and texture",
       },
-      {
-        label: "Refinement",
-        note: "The first version evolved through changes to the colors, characters, typography, and placement until the composition felt more cohesive.",
-      },
     ],
     finalWork:
       "The cover was presented across mobile streaming, vinyl, CD, and poster mockups while keeping a consistent visual identity.",
@@ -148,6 +144,7 @@ export default function PortfolioCaseStudy({ project }: { project: Project }) {
         intro={copy?.process ?? PLACEHOLDER.process}
         steps={copy?.processSteps ?? PROCESS_PLACEHOLDERS}
         mediaFrameClass={project.slug === "dolev-dadon-single-cover" ? "dolev-process-media" : undefined}
+        processClassName={project.slug === "dolev-dadon-single-cover" ? "dolev-process-three" : undefined}
       />
       <CaseStudyFinalWork
         intro={copy?.finalWork ?? PLACEHOLDER.finalWork}

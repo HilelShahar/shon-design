@@ -259,11 +259,14 @@ export function CaseStudyProcess({
   intro,
   steps,
   mediaFrameClass,
+  processClassName,
 }: {
   intro?: string;
   steps?: CaseStudyProcessStep[];
   /** Optional frame modifier when a project needs different media well styling. */
   mediaFrameClass?: string;
+  /** Optional grid modifier when a project renders a different process count. */
+  processClassName?: string;
 }) {
   const visible = steps?.filter((step) => step.label || step.note) ?? [];
   if (!intro && visible.length === 0) return null;
@@ -276,7 +279,7 @@ export function CaseStudyProcess({
         </Reveal>
       ) : null}
       {visible.length > 0 ? (
-        <div className="zach-process">
+        <div className={processClassName ? `zach-process ${processClassName}` : "zach-process"}>
           {visible.map((slot) => (
             <Reveal key={slot.label}>
               <figure className="zach-slot">
