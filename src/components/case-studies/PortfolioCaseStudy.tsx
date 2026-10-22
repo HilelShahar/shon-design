@@ -10,6 +10,7 @@ import {
   CaseStudyProcess,
   CaseStudyText,
   CaseStudyTitleHero,
+  type CaseStudyProcessStep,
 } from "@/components/case-studies/CaseStudySections";
 import CaseStudyHeroMedia from "@/components/case-studies/CaseStudyHeroMedia";
 import type { Project } from "@/lib/projects";
@@ -43,7 +44,7 @@ const CLIENT_FEEDBACK_BY_SLUG: Record<string, string> = {
   "dolev-dadon-single-cover": "דולב דדון",
 };
 
-const PROCESS_PLACEHOLDERS = [
+const PROCESS_PLACEHOLDERS: CaseStudyProcessStep[] = [
   { label: "Exploration", note: "Placeholder - Early ideas, references, and visual experiments." },
   { label: "Composition", note: "Placeholder - Layout studies around hierarchy, balance, and focus." },
   { label: "Color & Typography", note: "Placeholder - Color and type choices for the visual language." },
@@ -64,7 +65,7 @@ type CaseStudyCopy = Partial<
     "goal" | "direction" | "outcome" | "reflection" | "constraints" | "process" | "finalWork"
   >
 > & {
-  processSteps?: { label: string; note: string }[];
+  processSteps?: CaseStudyProcessStep[];
 };
 
 const COPY_BY_SLUG: Record<string, CaseStudyCopy> = {
