@@ -6,10 +6,10 @@ import { SalifContactShadow, SalifDust } from '@/components/SalifVinylAtmosphere
 /** Place inside a position:relative, full-width hero with overflow:hidden. */
 export default function SalifVinylVideo({
   basePath = '/media/salif',
-  hevcAlphaSrc,
+  hevcAlphaSrc = `${basePath}/salif-vinyl-alpha-hevc.mov`,
 }: {
   basePath?: string;
-  /** Optional genuine HEVC-with-alpha source for Safari; a normal MP4 is insufficient. */
+  /** HEVC-with-alpha twin of the WebM, for Safari and every iOS browser. A normal MP4 would lose the alpha. */
   hevcAlphaSrc?: string;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
@@ -23,8 +23,12 @@ export default function SalifVinylVideo({
     const appleMobile = /iPad|iPhone|iPod/.test(ua) ||
       (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     const safari = /Safari/.test(ua) && !/Chrome|Chromium|Edg|OPR/.test(ua);
-    // Conservative static fallback on Apple browsers unless an HEVC-alpha asset is supplied.
-    const selected = appleMobile || safari ? hevcAlphaSrc ?? null : `${basePath}/salif-vinyl-alpha.webm`;
+    // WebKit (Safari, and every iOS browser including in-app ones) cannot decode alpha from VP9 WebM,
+    // so it gets the HEVC-with-alpha twin. If that cannot play, the static end frame stays.
+    const hevc = Boolean(document.createElement('video').canPlayType('video/mp4; codecs="hvc1"'));
+    const selected = appleMobile || safari
+      ? (hevc ? hevcAlphaSrc : null)
+      : `${basePath}/salif-vinyl-alpha.webm`;
     if (!motion.matches) setSource(selected);
     const stop = () => {
       if (motion.matches) {
