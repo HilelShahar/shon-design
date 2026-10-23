@@ -668,6 +668,37 @@
   visibility: hidden;
 }
 
+.work-snap {
+  display: none;
+}
+
+/* Phones and tablets: native swipe and momentum, with the browser centering the nearest card.
+   The 1px snap targets sit on each card's center, so first and last can center too. */
+@media (hover: none) and (pointer: coarse) {
+  .work-scroller {
+    scroll-snap-type: x mandatory;
+  }
+
+  /* Cards far from the focus are thrown well outside the track by their pose transforms. Left
+     alone, that inflates the scrollable range and rewrites it on every frame while swiping, which
+     breaks native snapping. Everything inside the visible window is unchanged. */
+  .work-track {
+    overflow: hidden;
+    overflow: clip;
+  }
+
+  .work-snap {
+    display: block;
+    position: absolute;
+    top: 0;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+    scroll-snap-align: center;
+    scroll-snap-stop: normal;
+  }
+}
+
 .work-track {
   position: relative;
   height: 100%;

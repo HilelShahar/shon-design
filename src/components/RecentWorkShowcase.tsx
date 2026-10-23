@@ -68,8 +68,19 @@ function clamp(value: number, min: number, max: number) {
 
 type Frame = {
   lefts: number[];
+  /** Horizontal center of each card, in track coordinates. Touch scroll-snap targets sit here. */
+  centers: number[];
   track: number;
 };
+
+/** Phones and tablets: native swipe plus CSS scroll-snap. Mouse and trackpad keep the grab/drag path. */
+const TOUCH_QUERY = "(hover: none) and (pointer: coarse)";
+/** On touch, the next card must be this much closer (fraction of a stride) before it becomes active. */
+const ACTIVE_HYSTERESIS = 0.06;
+/** A touch that starts within this many ms of the last scroll movement is stopping momentum, not tapping. */
+const MOMENTUM_GRACE_MS = 120;
+/** If the scroller moved more than this many px during a touch, it was a swipe, not a tap. */
+const SWIPE_SCROLL_PX = 3;
 
 type Metrics = {
   snaps: number[];
@@ -93,6 +104,8 @@ export default function RecentWorkShowcase() {
   const layoutKeyRef = useRef("");
   const suppressClickRef = useRef(false);
   const pressSlugRef = useRef<string | null>(null);
+  const touchModeRef = useRef(false);
+  const lastScrollAtRef = useRef(0);
   const dragRef = useRef({
     active: false,
     pointerId: -1,
@@ -166,7 +179,13 @@ export default function RecentWorkShowcase() {
       canvas.style.zIndex = String(48 - Math.round(distance * 8) + (offset > 0 ? 1 : 0));
     });
 
-    if (best !== activeRef.current) {
+    // Card center minus viewport center is exactly (snap - scroll): cards are laid out so that
+    // scrollLeft === snap puts that card's center on the carousel's center.
+    // On touch, the incoming card must be clearly closer, so the title never flickers at the boundary.
+    const current = activeRef.current;
+    const currentDist = Math.abs(scroll - (snaps[current] ?? 0));
+    const switchWhen = touchModeRef.current ? bestDist + stride * ACTIVE_HYSTERESIS < currentDist : best !== current;
+    if (best !== current && switchWhen) {
       activeRef.current = best;
       setActive(best);
     }
@@ -294,6 +313,7 @@ export default function RecentWorkShowcase() {
     const pad = focusX - width / 2;
     const count = recentProjects.length;
     const lefts = recentProjects.map((_, index) => pad + index * stride);
+    const centers = lefts.map((left) => left + width / 2);
     const track = viewport + Math.max(0, count - 1) * stride;
     const key = `${Math.round(width)}:${Math.round(viewport)}:${Math.round(stride)}:${count}`;
     metricsRef.current = {
@@ -302,17 +322,26 @@ export default function RecentWorkShowcase() {
       maxScroll: Math.max(0, count - 1) * stride,
     };
 
-    if (key === layoutKeyRef.current) return;
+    if (key === layoutKeyRef.current) return false;
     layoutKeyRef.current = key;
-    setFrame({ lefts, track });
+    setFrame({ lefts, centers, track });
+    return true;
   }, []);
 
   useLayoutEffect(() => {
+    const touchQuery = window.matchMedia(TOUCH_QUERY);
+    touchModeRef.current = touchQuery.matches;
+    const onTouchModeChange = () => {
+      touchModeRef.current = touchQuery.matches;
+    };
+    touchQuery.addEventListener("change", onTouchModeChange);
+
     measure();
     const scroller = scrollerRef.current;
-    if (!scroller) return;
+    if (!scroller) return () => touchQuery.removeEventListener("change", onTouchModeChange);
 
     const onScroll = () => {
+      lastScrollAtRef.current = performance.now();
       if (frameIdRef.current) return;
       frameIdRef.current = window.requestAnimationFrame(() => {
         frameIdRef.current = 0;
@@ -321,15 +350,20 @@ export default function RecentWorkShowcase() {
     };
 
     const onScrollEnd = () => {
+      // Touch: CSS scroll-snap settles the carousel natively. Never take over the scroll position.
+      if (touchModeRef.current) return;
       if (dragRef.current.active || settlingRef.current) return;
       settle();
     };
 
     const onResize = () => {
-      measure();
-      const snaps = metricsRef.current.snaps;
-      const next = snaps[activeRef.current];
-      if (scroller && next != null) scroller.scrollLeft = next;
+      const changed = measure();
+      // Touch: browser toolbars resize the window while swiping; only re-center when the layout really changed.
+      if (!touchModeRef.current || changed) {
+        const snaps = metricsRef.current.snaps;
+        const next = snaps[activeRef.current];
+        if (scroller && next != null) scroller.scrollLeft = next;
+      }
       applyPoses();
     };
 
@@ -340,6 +374,7 @@ export default function RecentWorkShowcase() {
     observer.observe(scroller);
 
     return () => {
+      touchQuery.removeEventListener("change", onTouchModeChange);
       window.removeEventListener("resize", onResize);
       scroller.removeEventListener("scroll", onScroll);
       scroller.removeEventListener("scrollend", onScrollEnd);
@@ -383,12 +418,16 @@ export default function RecentWorkShowcase() {
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     pressSlugRef.current = canvasSlugFrom(event.target);
     if (event.pointerType !== "mouse") {
+      const scroller = scrollerRef.current;
+      suppressClickRef.current = false;
+      // A touch that lands on a carousel that is still gliding only stops it; it is not a tap.
+      if (performance.now() - lastScrollAtRef.current < MOMENTUM_GRACE_MS) pressSlugRef.current = null;
       dragRef.current = {
         ...dragRef.current,
         active: false,
         pointerId: event.pointerId,
         startX: event.clientX,
-        startScroll: 0,
+        startScroll: scroller ? scroller.scrollLeft : 0,
         moved: 0,
       };
       return;
@@ -438,10 +477,14 @@ export default function RecentWorkShowcase() {
     const drag = dragRef.current;
     const scroller = scrollerRef.current;
     if (event.pointerType !== "mouse") {
-      if (event.pointerId === drag.pointerId && drag.moved > DRAG_CLICK_THRESHOLD) {
+      // Finger travel or any carousel movement during the touch means swipe: never navigate.
+      const scrolled = scroller ? Math.abs(scroller.scrollLeft - drag.startScroll) : 0;
+      const swiped = drag.moved > DRAG_CLICK_THRESHOLD || scrolled > SWIPE_SCROLL_PX;
+      if (event.pointerId === drag.pointerId && swiped) {
         suppressClickRef.current = true;
+        pressSlugRef.current = null;
       }
-      openCaseFromPress(event.pointerId, drag.moved);
+      openCaseFromPress(event.pointerId, swiped ? Infinity : drag.moved);
       return;
     }
     if (!drag.active || event.pointerId !== drag.pointerId) return;
@@ -529,6 +572,12 @@ export default function RecentWorkShowcase() {
         onKeyDown={onKeyDown}
       >
         <div className="work-track" style={frame ? { width: frame.track } : undefined}>
+          {/* Touch scroll-snap targets, one per card center. Invisible; inert on mouse/desktop. */}
+          {frame
+            ? frame.centers.map((center, index) => (
+                <span key={`snap-${recentProjects[index].slug}`} className="work-snap" aria-hidden="true" style={{ left: center - 0.5 }} />
+              ))
+            : null}
           {recentProjects.map((canvas, index) => {
             const focused = index === active;
             const href = CASE_HREFS.get(canvas.slug);
