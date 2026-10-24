@@ -493,6 +493,11 @@
     padding-bottom: 0.12em;
     margin-bottom: -0.12em;
   }
+  /* Section titles rise through the clip above. Balance a wrap so the last line
+     is not a single stranded word. A heading that fits stays on one line. */
+  .motion-mask > :is(h1, h2, h3) {
+    text-wrap: balance;
+  }
   [data-motion="hidden"][data-motion-kind="mask"] > * {
     transform: translate3d(0, 110%, 0);
   }
@@ -740,6 +745,7 @@
   line-height: 1.12;
   letter-spacing: -0.02em;
   max-width: 22ch;
+  text-wrap: balance;
 }
 
 .work-info-desc {
@@ -2311,6 +2317,20 @@
   letter-spacing: -0.015em;
   text-wrap: balance;
   color: hsl(var(--foreground));
+}
+
+/* Holds a phrase on one line. The heading still sits on one line when the whole
+   title fits; on a narrow screen the break falls between these groups. */
+.about-heading-keep {
+  white-space: nowrap;
+}
+
+/* "How I Think & Work" stays one line. Under the width where 2.5rem fits,
+   the size eases down just enough to clear the edge. 430px and up stays 2.5rem. */
+@media (max-width: 479px) {
+  .about-heading-think {
+    font-size: clamp(2.125rem, 9.4vw, 2.5rem);
+  }
 }
 
 .about-heading-xl {

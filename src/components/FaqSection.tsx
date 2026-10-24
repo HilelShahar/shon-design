@@ -158,7 +158,7 @@ export default function FaqSection() {
                   }}
                   className="bg-card border border-border rounded-2xl px-6"
                 >
-                  <AccordionTrigger>{item.q}</AccordionTrigger>
+                  <AccordionTrigger className="text-pretty">{item.q}</AccordionTrigger>
                   <AccordionContent className="whitespace-pre-line">{item.a}</AccordionContent>
                 </AccordionItem>
               ))}

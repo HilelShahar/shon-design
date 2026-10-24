@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import AboutImage from "@/components/about/AboutImage";
 import PersonalWorld from "@/components/about/PersonalWorld";
@@ -14,13 +15,23 @@ import { WHATSAPP_HREF } from "@/lib/social";
  * Section spacing is whitespace; hairlines are used only where they carry meaning.
  */
 
-function SectionHead({ index, title, className = "" }: { index: string; title: string; className?: string }) {
+function SectionHead({
+  index,
+  title,
+  className = "",
+  headingClassName = "",
+}: {
+  index: string;
+  title: ReactNode;
+  className?: string;
+  headingClassName?: string;
+}) {
   return (
     <header className={`about-story-head ${className}`}>
       <Reveal as="p" className="about-eyebrow">
         {index}
       </Reveal>
-      <MaskedReveal as="h2" className="about-heading mt-5">
+      <MaskedReveal as="h2" className={`about-heading mt-5${headingClassName ? ` ${headingClassName}` : ""}`}>
         {title}
       </MaskedReveal>
     </header>
@@ -149,7 +160,7 @@ export function BeyondDesign() {
 /* 03 · How I Think & Work                                             */
 /* ------------------------------------------------------------------ */
 
-const PRINCIPLES = [
+const PRINCIPLES: { n: string; title: ReactNode; body: string }[] = [
   {
     n: "A",
     title: "Think Before Making",
@@ -162,7 +173,11 @@ const PRINCIPLES = [
   },
   {
     n: "C",
-    title: "Use Technology With Purpose",
+    title: (
+      <>
+        Use Technology <span className="about-heading-keep">With Purpose</span>
+      </>
+    ),
     body: "AI and vibe coding are a natural part of how I work. I use them to explore faster, test ideas, and solve small problems that can save real time in everyday work.",
   },
 ];
@@ -171,7 +186,11 @@ export function HowIThinkAndWork() {
   return (
     <section className="px-5 py-24 md:px-8 md:py-36">
       <div className="mx-auto max-w-6xl">
-        <SectionHead index="03" title="How I Think & Work" />
+        <SectionHead
+          index="03"
+          headingClassName="about-heading-think"
+          title={<span className="about-heading-keep">How I Think &amp; Work</span>}
+        />
 
         <ol className="mt-14 md:mt-20">
           {PRINCIPLES.map((item) => (
