@@ -49,9 +49,12 @@ export const projects: Project[] = [
     year: 2025,
     cover: "/studio.jpg",
     longImage: "/studio_long.jpg",
-    shortDescription: "",
-    shortDescriptionPending: true,
-    tags: ["Branding"],
+    shortDescription:
+      "A visual identity for Movimiento, a Pilates & Fitness studio, built around movement, flow, and a warm sense of professionalism.",
+    tags: ["Branding", "Visual Identity", "Logo Design", "Merchandise"],
+    role: "Brand Identity Designer",
+    category: "Branding / Visual Identity",
+    deliverables: "Logo System / Color Palette / Typography / Graphic Language / Merchandise Design",
   },
   {
     slug: "zach-track-design",

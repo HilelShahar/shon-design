@@ -105,6 +105,39 @@ const COPY_BY_SLUG: Record<string, CaseStudyCopy> = {
     reflection:
       "This project reinforced how much stronger a visual can feel when it starts from emotion and message, not just style.",
   },
+  "studio-movimiento-branding": {
+    goal:
+      "Create an identity that feels light, fresh, and welcoming while maintaining the confidence and professionalism expected from a Pilates studio.",
+    constraints:
+      "The brand needed to feel soft and approachable without becoming too delicate, while connecting naturally with the studio’s primarily female audience.",
+    direction:
+      "The concept began by studying different Pilates positions. One specific pose became the foundation for the logo, translating body movement into a flowing and recognizable symbol.",
+    process:
+      "The identity was developed from the relationship between physical movement and the atmosphere the studio wanted to create.",
+    processSteps: [
+      {
+        label: "Exploration",
+        note: "I explored different Pilates poses and body movements, looking for a form that could represent the studio in a simple and distinctive way.",
+      },
+      {
+        label: "Composition",
+        note: "The selected pose was simplified step by step into a fluid symbol, preserving the feeling of movement while creating a clean and memorable mark.",
+      },
+      {
+        label: "Color & Typography",
+        note: "Deep brown and burgundy bring warmth and stability, while soft pink adds freshness and softness. Clean typography keeps the identity modern and approachable.",
+      },
+      {
+        label: "Refinement",
+        note: "The final stage focused on refining the logo system, proportions, colors, and typography into a consistent identity that could work across different applications.",
+      },
+    ],
+    finalWork: "",
+    outcome:
+      "The result is a cohesive visual identity that combines movement, warmth, and professionalism across the studio’s brand touchpoints.",
+    reflection:
+      "This project showed me how a strong visual idea can come directly from the service itself. Turning a real Pilates movement into the logo gave the identity a clear connection to the studio experience.",
+  },
 };
 
 export default function PortfolioCaseStudy({ project }: { project: Project }) {
@@ -153,10 +186,12 @@ export default function PortfolioCaseStudy({ project }: { project: Project }) {
         alt={project.title}
       />
       <CaseStudyText title="Outcome">{copy?.outcome ?? PLACEHOLDER.outcome}</CaseStudyText>
-      <CaseStudyClientFeedback
-        testimonial={feedback}
-        note={feedback ? undefined : PLACEHOLDER.feedback}
-      />
+      {project.slug === "studio-movimiento-branding" ? null : (
+        <CaseStudyClientFeedback
+          testimonial={feedback}
+          note={feedback ? undefined : PLACEHOLDER.feedback}
+        />
+      )}
       <CaseStudyClose reflection={copy?.reflection ?? PLACEHOLDER.reflection} />
     </CaseStudyFrame>
   );
