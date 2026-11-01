@@ -118,18 +118,26 @@ const COPY_BY_SLUG: Record<string, CaseStudyCopy> = {
       {
         label: "Exploration",
         note: "I explored different Pilates poses and body movements, looking for a form that could represent the studio in a simple and distinctive way.",
+        image: "/media/movimiento/movimiento-exploration.png",
+        alt: "A Pilates pose simplified step by step into the Movimiento symbol",
       },
       {
         label: "Composition",
         note: "The selected pose was simplified step by step into a fluid symbol, preserving the feeling of movement while creating a clean and memorable mark.",
+        image: "/media/movimiento/movimiento-composition.png",
+        alt: "Primary, secondary, and logomark variations of the Movimiento logo",
       },
       {
         label: "Color & Typography",
         note: "Deep brown and burgundy bring warmth and stability, while soft pink adds freshness and softness. Clean typography keeps the identity modern and approachable.",
+        image: "/media/movimiento/movimiento-color-typography.png",
+        alt: "Movimiento palette and Heebo type samples",
       },
       {
-        label: "Refinement",
-        note: "The final stage focused on refining the logo system, proportions, colors, and typography into a consistent identity that could work across different applications.",
+        label: "Graphic Language",
+        note: "The flowing forms of the identity were extended into a repeating pattern, creating a recognizable graphic element that could carry across different brand touchpoints.",
+        image: "/media/movimiento/movimiento-graphic-language.png",
+        alt: "Repeating wave pattern built from the Movimiento mark",
       },
     ],
     finalWork: "",
@@ -182,7 +190,11 @@ export default function PortfolioCaseStudy({ project }: { project: Project }) {
       />
       <CaseStudyFinalWork
         intro={copy?.finalWork ?? PLACEHOLDER.finalWork}
-        image={project.longImage}
+        image={
+          project.slug === "studio-movimiento-branding"
+            ? "/media/movimiento/movimiento-final-work.jpg"
+            : project.longImage
+        }
         alt={project.title}
       />
       <CaseStudyText title="Outcome">{copy?.outcome ?? PLACEHOLDER.outcome}</CaseStudyText>
