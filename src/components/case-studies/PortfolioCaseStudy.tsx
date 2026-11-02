@@ -42,6 +42,7 @@ const PLACEHOLDER = {
 /** Existing carousel entries that belong to a project. Same objects, not copied quotes. */
 const CLIENT_FEEDBACK_BY_SLUG: Record<string, string> = {
   "dolev-dadon-single-cover": "דולב דדון",
+  "studio-movimiento-branding": "יעל ק.",
 };
 
 const PROCESS_PLACEHOLDERS: CaseStudyProcessStep[] = [
@@ -198,12 +199,10 @@ export default function PortfolioCaseStudy({ project }: { project: Project }) {
         alt={project.title}
       />
       <CaseStudyText title="Outcome">{copy?.outcome ?? PLACEHOLDER.outcome}</CaseStudyText>
-      {project.slug === "studio-movimiento-branding" ? null : (
-        <CaseStudyClientFeedback
-          testimonial={feedback}
-          note={feedback ? undefined : PLACEHOLDER.feedback}
-        />
-      )}
+      <CaseStudyClientFeedback
+        testimonial={feedback}
+        note={feedback ? undefined : PLACEHOLDER.feedback}
+      />
       <CaseStudyClose reflection={copy?.reflection ?? PLACEHOLDER.reflection} />
     </CaseStudyFrame>
   );
