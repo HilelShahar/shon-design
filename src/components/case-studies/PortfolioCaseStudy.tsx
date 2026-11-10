@@ -147,6 +147,38 @@ const COPY_BY_SLUG: Record<string, CaseStudyCopy> = {
     reflection:
       "This project showed me how a strong visual idea can come directly from the service itself. Turning a real Pilates movement into the logo gave the identity a clear connection to the studio experience.",
   },
+  "ice-cream-branding-selek": {
+    goal:
+      "Create a distinctive boutique ice cream brand that feels refined and memorable, while building a campaign with enough personality to stand out in the street and connect with the product experience.",
+    constraints:
+      "The identity needed to balance a delicate French-inspired boutique feeling with a more playful and expressive advertising language, without losing consistency across the brand.",
+    direction:
+      "The visual direction combines a soft French boutique atmosphere with bold color-driven advertising. Deep beet tones became the core of the identity, while the campaign exaggerates the experience of the flavor by letting its color take over the people enjoying it.",
+    process:
+      "The project developed from building the boutique identity into a wider visual world that could work across packaging, retail and advertising.",
+    processSteps: [
+      {
+        label: "Exploration",
+        note: "I explored French boutique references, food branding and color-driven campaigns to find the right balance between elegance and personality.",
+        image: "/media/selek/selek-exploration-1448x1086.png",
+        alt: "Selek Cream mood board of a French boutique, beet ice cream, and packaging",
+      },
+      {
+        label: "Composition",
+        note: "The layouts were designed to keep the product and message immediately visible, especially in outdoor advertising where the concept needed to communicate quickly.",
+      },
+      {
+        label: "Color & Typography",
+        note: "Deep beet and pink tones create strong brand recognition, while green accents connect to the beet leaves and reinforce the product’s natural, health-focused character. Refined typography balances the expressive campaign visuals and keeps the identity feeling boutique.",
+        image: "/media/selek/selek-color-typography-1448x1086.png",
+        alt: "Selek Cream wordmarks and beet, pink, and green color swatches",
+      },
+    ],
+    finalWork:
+      "The identity was applied across packaging, store signage and outdoor advertising, creating a cohesive boutique experience with a distinctive campaign language.",
+    outcome: "",
+    reflection: "",
+  },
 };
 
 export default function PortfolioCaseStudy({ project }: { project: Project }) {
@@ -201,7 +233,11 @@ export default function PortfolioCaseStudy({ project }: { project: Project }) {
       <CaseStudyText title="Outcome">{copy?.outcome ?? PLACEHOLDER.outcome}</CaseStudyText>
       <CaseStudyClientFeedback
         testimonial={feedback}
-        note={feedback ? undefined : PLACEHOLDER.feedback}
+        note={
+          feedback || project.slug === "ice-cream-branding-selek"
+            ? undefined
+            : PLACEHOLDER.feedback
+        }
       />
       <CaseStudyClose reflection={copy?.reflection ?? PLACEHOLDER.reflection} />
     </CaseStudyFrame>

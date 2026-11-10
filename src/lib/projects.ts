@@ -74,11 +74,13 @@ export const projects: Project[] = [
     cover: "/selek.png",
     longImage: "/selek_long.jpg",
     shortDescription:
-      "בפרויקט זה, עסקתי במיתוג כולל לגלידת בוטיק צרפתית, שכולל את כל האלמנטים החזותיים מהאריזות ועד לשלטי החנות והפרסום. המטרה הייתה ליצור מיתוג ייחודי שמחבר את הקהל עם חוויית הגלידה בצורה מרהיבה. בנוסף יצרתי קמפיין פרסומי שיעביר את התחושה של התמכרות לטעם הייחודי של הגלידה.",
-    shortDescriptionRtl: true,
-    shortDescriptionPending: true,
+      "A student branding project for Selek Cream, a French-inspired boutique ice cream brand. The identity combines a refined boutique atmosphere with a bold advertising campaign built around the irresistible experience of the flavor.",
     descriptionFooter: "עבודה סטודנטיאלית",
-    tags: ["Branding", "Packaging"],
+    tags: ["Branding", "Packaging", "Advertising", "Campaign Design"],
+    role: "Brand Identity Designer",
+    category: "Branding / Packaging / Advertising",
+    deliverables:
+      "Brand Identity / Packaging / Store Signage / Outdoor Advertising / Campaign Design",
   },
   {
     slug: "album-design-human",
