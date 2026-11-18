@@ -58,6 +58,8 @@ const HERO_MEDIA_BY_SLUG: Record<
     video: string;
     lockup?: { at: number; headline: string; rest: string };
     grain?: boolean;
+    /** Soft crossfade between two copies. Movimiento only. */
+    crossfade?: boolean;
   }
 > = {
   "dolev-dadon-single-cover": {
@@ -77,6 +79,7 @@ const HERO_MEDIA_BY_SLUG: Record<
       rest: "/media/movimiento/movimiento-hero-end.jpg",
     },
     grain: true,
+    crossfade: true,
   },
 };
 
@@ -217,6 +220,7 @@ export default function PortfolioCaseStudy({ project }: { project: Project }) {
               video={heroMedia.video}
               lockup={heroMedia.lockup}
               grain={heroMedia.grain}
+              crossfade={heroMedia.crossfade}
             />
           ) : undefined
         }
