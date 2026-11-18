@@ -74,8 +74,7 @@ export const projects: Project[] = [
     cover: "/selek.png",
     longImage: "/selek_long.jpg",
     shortDescription:
-      "A student branding project for Selek Cream, a French-inspired boutique ice cream brand. The identity combines a refined boutique atmosphere with a bold advertising campaign built around the irresistible experience of the flavor.",
-    descriptionFooter: "עבודה סטודנטיאלית",
+      "A student branding project for Selek Cream, a French-inspired boutique ice cream brand combining a refined identity with a bold, playful advertising campaign.",
     tags: ["Branding", "Packaging", "Advertising", "Campaign Design"],
     role: "Brand Identity Designer",
     category: "Branding / Packaging / Advertising",

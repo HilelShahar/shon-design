@@ -1,5 +1,3 @@
-"use client";
-
 import {
   CaseStudyClientFeedback,
   CaseStudyClose,
@@ -57,6 +55,10 @@ const HERO_MEDIA_BY_SLUG: Record<string, { still: string; video: string }> = {
   "dolev-dadon-single-cover": {
     still: "/media/dolev/hero-clean-frame.jpg",
     video: "/media/dolev/wedding-hero-camera.mp4",
+  },
+  "ice-cream-branding-selek": {
+    still: "/media/selek/selek-hero-start.jpg",
+    video: "/media/selek/selek-hero.mp4",
   },
 };
 
@@ -149,33 +151,29 @@ const COPY_BY_SLUG: Record<string, CaseStudyCopy> = {
   },
   "ice-cream-branding-selek": {
     goal:
-      "Create a distinctive boutique ice cream brand that feels refined and memorable, while building a campaign with enough personality to stand out in the street and connect with the product experience.",
+      "Create a memorable boutique ice cream brand with a distinctive identity and a campaign strong enough to stand out in the street.",
     constraints:
-      "The identity needed to balance a delicate French-inspired boutique feeling with a more playful and expressive advertising language, without losing consistency across the brand.",
+      "Balance a delicate French-inspired boutique feel with a playful advertising language while keeping the brand consistent.",
     direction:
-      "The visual direction combines a soft French boutique atmosphere with bold color-driven advertising. Deep beet tones became the core of the identity, while the campaign exaggerates the experience of the flavor by letting its color take over the people enjoying it.",
+      "French boutique elegance meets bold, color-driven advertising. The campaign exaggerates the flavor experience by letting the beet color take over the people enjoying it.",
     process:
-      "The project developed from building the boutique identity into a wider visual world that could work across packaging, retail and advertising.",
+      "The identity grew from a boutique visual world into a system that works across packaging, retail and advertising.",
     processSteps: [
       {
         label: "Exploration",
-        note: "I explored French boutique references, food branding and color-driven campaigns to find the right balance between elegance and personality.",
+        note: "I explored French boutiques, food branding and color-driven campaigns to balance elegance with personality.",
         image: "/media/selek/selek-exploration-1448x1086.png",
         alt: "Selek Cream mood board of a French boutique, beet ice cream, and packaging",
       },
       {
-        label: "Composition",
-        note: "The layouts were designed to keep the product and message immediately visible, especially in outdoor advertising where the concept needed to communicate quickly.",
-      },
-      {
         label: "Color & Typography",
-        note: "Deep beet and pink tones create strong brand recognition, while green accents connect to the beet leaves and reinforce the product’s natural, health-focused character. Refined typography balances the expressive campaign visuals and keeps the identity feeling boutique.",
+        note: "Beet-inspired pinks create strong recognition, while green connects to the leaves and natural character of the product. Refined typography keeps the identity feeling boutique.",
         image: "/media/selek/selek-color-typography-1448x1086.png",
         alt: "Selek Cream wordmarks and beet, pink, and green color swatches",
       },
     ],
     finalWork:
-      "The identity was applied across packaging, store signage and outdoor advertising, creating a cohesive boutique experience with a distinctive campaign language.",
+      "The identity was applied across packaging, store signage and outdoor advertising, creating a cohesive and distinctive brand experience.",
     outcome: "",
     reflection: "",
   },
@@ -243,3 +241,4 @@ export default function PortfolioCaseStudy({ project }: { project: Project }) {
     </CaseStudyFrame>
   );
 }
+
