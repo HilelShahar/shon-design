@@ -72,7 +72,7 @@ const HERO_MEDIA_BY_SLUG: Record<
   },
   "studio-movimiento-branding": {
     still: "/media/movimiento/movimiento-hero-start.jpg",
-    video: "/media/movimiento/movimiento-hero.mp4",
+    video: "/media/movimiento/movimiento-hero-final.mp4",
     lockup: {
       at: 8.15,
       headline: "Find your flow.",
