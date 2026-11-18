@@ -26,10 +26,13 @@ export default function CaseStudyHeroMedia({
   still,
   video,
   lockup,
+  grain = false,
 }: {
   still: string;
   video: string;
   lockup?: HeroLockup;
+  /** Fine monochrome grain above the picture and below any campaign line. */
+  grain?: boolean;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
   // Starts false so the server render and first paint are the still only. The
@@ -155,6 +158,9 @@ export default function CaseStudyHeroMedia({
           disableRemotePlayback
           tabIndex={-1}
         />
+      ) : null}
+      {grain ? (
+        <div className={motionOk ? "movimiento-grain is-live" : "movimiento-grain"} aria-hidden="true" />
       ) : null}
       {showLockup && lockup ? (
         <div className={motionOk ? "movimiento-lockup is-on" : "movimiento-lockup is-static"}>

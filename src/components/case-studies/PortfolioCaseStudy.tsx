@@ -57,6 +57,7 @@ const HERO_MEDIA_BY_SLUG: Record<
     still: string;
     video: string;
     lockup?: { at: number; headline: string; rest: string };
+    grain?: boolean;
   }
 > = {
   "dolev-dadon-single-cover": {
@@ -75,6 +76,7 @@ const HERO_MEDIA_BY_SLUG: Record<
       headline: "Find your flow.",
       rest: "/media/movimiento/movimiento-hero-end.jpg",
     },
+    grain: true,
   },
 };
 
@@ -214,6 +216,7 @@ export default function PortfolioCaseStudy({ project }: { project: Project }) {
               still={heroMedia.still}
               video={heroMedia.video}
               lockup={heroMedia.lockup}
+              grain={heroMedia.grain}
             />
           ) : undefined
         }

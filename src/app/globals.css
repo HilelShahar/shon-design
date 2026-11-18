@@ -1459,6 +1459,35 @@
   opacity: 1;
 }
 
+/*
+ * Movimiento grain. A tiny tiled fractal, desaturated, at 6% over the picture.
+ * Shifts a few pixels so the texture breathes. The campaign line stays above it.
+ */
+.movimiento-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0.06;
+  background-image: url("/media/movimiento/movimiento-grain.png");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+  mix-blend-mode: overlay;
+}
+
+.movimiento-grain.is-live {
+  animation: movimiento-grain-drift 8s steps(1, end) infinite;
+}
+
+@keyframes movimiento-grain-drift {
+  0% { background-position: 0 0; }
+  25% { background-position: -4px 3px; }
+  50% { background-position: 3px -2px; }
+  75% { background-position: -2px -4px; }
+  100% { background-position: 0 0; }
+}
+
 /* Movimiento end line. Sits in the open left of the final frame. */
 .movimiento-lockup {
   position: absolute;
@@ -1527,6 +1556,10 @@
     animation: none;
     opacity: 1;
     transform: none;
+  }
+
+  .movimiento-grain {
+    animation: none;
   }
 }
 
