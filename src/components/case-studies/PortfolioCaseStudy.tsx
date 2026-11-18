@@ -51,7 +51,14 @@ const PROCESS_PLACEHOLDERS: CaseStudyProcessStep[] = [
 ];
 
 /** Hero media per project: a still that paints first, and a video that plays over it. */
-const HERO_MEDIA_BY_SLUG: Record<string, { still: string; video: string }> = {
+const HERO_MEDIA_BY_SLUG: Record<
+  string,
+  {
+    still: string;
+    video: string;
+    lockup?: { at: number; headline: string; rest: string };
+  }
+> = {
   "dolev-dadon-single-cover": {
     still: "/media/dolev/hero-clean-frame.jpg",
     video: "/media/dolev/wedding-hero-camera.mp4",
@@ -59,6 +66,15 @@ const HERO_MEDIA_BY_SLUG: Record<string, { still: string; video: string }> = {
   "ice-cream-branding-selek": {
     still: "/media/selek/selek-hero-start.jpg",
     video: "/media/selek/selek-hero.mp4",
+  },
+  "studio-movimiento-branding": {
+    still: "/media/movimiento/movimiento-hero-start.jpg",
+    video: "/media/movimiento/movimiento-hero.mp4",
+    lockup: {
+      at: 8.15,
+      headline: "Find your flow.",
+      rest: "/media/movimiento/movimiento-hero-end.jpg",
+    },
   },
 };
 
@@ -194,7 +210,11 @@ export default function PortfolioCaseStudy({ project }: { project: Project }) {
         tags={project.tags}
         media={
           heroMedia ? (
-            <CaseStudyHeroMedia still={heroMedia.still} video={heroMedia.video} />
+            <CaseStudyHeroMedia
+              still={heroMedia.still}
+              video={heroMedia.video}
+              lockup={heroMedia.lockup}
+            />
           ) : undefined
         }
       />

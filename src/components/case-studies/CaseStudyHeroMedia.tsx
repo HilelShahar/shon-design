@@ -11,26 +11,42 @@ import { useEffect, useRef, useState } from "react";
  * It plays once (no loop) and rests on its final frame. Nothing restarts it:
  * `start` runs a single time per mount, and the video stays visible after it ends.
  * Both layers share one class, so size, object-fit and object-position match.
+ *
+ * An optional line is a late campaign title for one hero. Other heroes omit it.
  */
+export type HeroLockup = {
+  /** Reveal the line from this time onward. Playback is not paused. */
+  at: number;
+  headline: string;
+  /** Frame shown with the line when motion is reduced. */
+  rest: string;
+};
+
 export default function CaseStudyHeroMedia({
   still,
   video,
+  lockup,
 }: {
   still: string;
   video: string;
+  lockup?: HeroLockup;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
   // Starts false so the server render and first paint are the still only. The
   // video element is not mounted (and not downloaded) under reduced motion.
   const [motionOk, setMotionOk] = useState(false);
+  const [reduce, setReduce] = useState(false);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
     const query = window.matchMedia("(prefers-reduced-motion: reduce)");
     const sync = () => {
-      setMotionOk(!query.matches);
-      if (query.matches) setReady(false);
+      const reduced = query.matches;
+      setReduce(reduced);
+      setMotionOk(!reduced);
+      if (reduced) setReady(false);
     };
     sync();
     query.addEventListener("change", sync);
@@ -77,11 +93,47 @@ export default function CaseStudyHeroMedia({
     };
   }, [motionOk, failed]);
 
+  useEffect(() => {
+    const node = ref.current;
+    if (!lockup || !motionOk || failed || !node) return;
+    const at = lockup.at;
+    let raf = 0;
+    let frame = 0;
+
+    function reveal() {
+      if (node.currentTime < at && !node.ended) return;
+      setRevealed(true);
+    }
+    function watch() {
+      reveal();
+      if (node.currentTime < at && typeof node.requestVideoFrameCallback === "function") {
+        frame = node.requestVideoFrameCallback(watch);
+      }
+    }
+    function tick() {
+      reveal();
+      if (node.currentTime < at) raf = requestAnimationFrame(tick);
+    }
+
+    watch();
+    raf = requestAnimationFrame(tick);
+    node.addEventListener("timeupdate", reveal);
+    node.addEventListener("ended", reveal);
+    return () => {
+      cancelAnimationFrame(raf);
+      if (typeof node.cancelVideoFrameCallback === "function") node.cancelVideoFrameCallback(frame);
+      node.removeEventListener("timeupdate", reveal);
+      node.removeEventListener("ended", reveal);
+    };
+  }, [lockup, motionOk, failed]);
+
+  const showLockup = Boolean(lockup) && (revealed || reduce);
+
   return (
     <>
       <Image
         className="case-study-hero-media"
-        src={still}
+        src={reduce && lockup ? lockup.rest : still}
         alt=""
         fill
         priority
@@ -103,6 +155,11 @@ export default function CaseStudyHeroMedia({
           disableRemotePlayback
           tabIndex={-1}
         />
+      ) : null}
+      {showLockup && lockup ? (
+        <div className={motionOk ? "movimiento-lockup is-on" : "movimiento-lockup is-static"}>
+          <p className="movimiento-lockup-line">{lockup.headline}</p>
+        </div>
       ) : null}
     </>
   );

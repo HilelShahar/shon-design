@@ -1459,6 +1459,77 @@
   opacity: 1;
 }
 
+/* Movimiento end line. Sits in the open left of the final frame. */
+.movimiento-lockup {
+  position: absolute;
+  z-index: 2;
+  left: clamp(1.35rem, 4.2vw, 4.25rem);
+  top: clamp(5.25rem, 16vh, 7.5rem);
+  max-width: min(34vw, 22rem);
+  pointer-events: none;
+}
+
+.movimiento-lockup-line {
+  margin: 0;
+  color: #ffffff;
+  font-family: var(--font-playfair), ui-serif, Georgia, serif;
+  font-size: clamp(1.85rem, 2.7vw, 2.85rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.movimiento-lockup.is-on .movimiento-lockup-line {
+  animation: movimiento-rise 600ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.movimiento-lockup.is-static .movimiento-lockup-line {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes movimiento-rise {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .movimiento-lockup {
+    left: 1.75rem;
+    top: 6.15rem;
+    max-width: 42%;
+  }
+
+  .movimiento-lockup-line {
+    font-size: clamp(1.65rem, 3.2vw, 2.15rem);
+  }
+}
+
+@media (max-width: 767px) {
+  .movimiento-lockup {
+    left: 0.9rem;
+    top: 5.65rem;
+    max-width: 58%;
+  }
+
+  .movimiento-lockup-line {
+    font-size: clamp(1.35rem, 5.6vw, 1.65rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .movimiento-lockup-line {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .case-study-hero-video {
     display: none;
