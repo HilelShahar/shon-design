@@ -62,9 +62,12 @@ function HeroCrossfade({
   const [phase, setPhase] = useState<"boot" | "live" | "arm" | "fade">("boot");
 
   useEffect(() => {
-    const a = aRef.current;
-    const b = bRef.current;
-    if (!a || !b) return;
+    const aEl = aRef.current;
+    const bEl = bRef.current;
+    if (!aEl || !bEl) return;
+    // Copies keep the narrowed element type inside the async startup closure.
+    const a: HTMLVideoElement = aEl;
+    const b: HTMLVideoElement = bEl;
     let dead = false;
     let started = false;
 
@@ -123,9 +126,11 @@ function HeroCrossfade({
 
   useEffect(() => {
     if (phase !== "live") return;
-    const outgoing = (lead === "a" ? aRef : bRef).current;
-    const incoming = (lead === "a" ? bRef : aRef).current;
-    if (!outgoing || !incoming) return;
+    const outgoingEl = (lead === "a" ? aRef : bRef).current;
+    const incomingEl = (lead === "a" ? bRef : aRef).current;
+    if (!outgoingEl || !incomingEl) return;
+    const outgoing: HTMLVideoElement = outgoingEl;
+    const incoming: HTMLVideoElement = incomingEl;
 
     const token = {};
     let current: object | null = token;
@@ -211,9 +216,11 @@ function HeroCrossfade({
 
   useEffect(() => {
     if (phase !== "fade") return;
-    const outgoing = (lead === "a" ? aRef : bRef).current;
-    const incoming = (lead === "a" ? bRef : aRef).current;
-    if (!outgoing || !incoming) return;
+    const outgoingEl = (lead === "a" ? aRef : bRef).current;
+    const incomingEl = (lead === "a" ? bRef : aRef).current;
+    if (!outgoingEl || !incomingEl) return;
+    const outgoing: HTMLVideoElement = outgoingEl;
+    const incoming: HTMLVideoElement = incomingEl;
     let done = false;
 
     function finish() {
@@ -362,8 +369,9 @@ export default function CaseStudyHeroMedia({
   }, [crossfade, motionOk, failed]);
 
   useEffect(() => {
-    const node = ref.current;
-    if (crossfade || !lockup || !motionOk || failed || !node) return;
+    const nodeEl = ref.current;
+    if (crossfade || !lockup || !motionOk || failed || !nodeEl) return;
+    const node: HTMLVideoElement = nodeEl;
     const at = lockup.at;
     let raf = 0;
     let frame = 0;
