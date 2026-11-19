@@ -70,49 +70,79 @@ function HeroCrossfade({
     const b: HTMLVideoElement = bEl;
     let dead = false;
     let started = false;
+    let gesture: (() => void) | null = null;
 
     function fail() {
       if (!dead) onErrorRef.current();
     }
 
+    function clearGesture() {
+      if (!gesture) return;
+      window.removeEventListener("pointerdown", gesture);
+      window.removeEventListener("touchstart", gesture);
+      gesture = null;
+    }
+
+    function armGesture() {
+      if (gesture) return;
+      gesture = () => {
+        clearGesture();
+        void start();
+      };
+      window.addEventListener("pointerdown", gesture);
+      window.addEventListener("touchstart", gesture, { passive: true });
+    }
+
+    // Phones often refuse to buffer a second copy until something is playing.
+    // Warm it without holding the visible copy back, and resume the lead if
+    // the spare play paused it.
+    function primeSpare() {
+      if (b.readyState < HTMLMediaElement.HAVE_METADATA) return;
+      b.play()
+        .then(() => {
+          b.pause();
+          if (b.currentTime > 0.02) b.currentTime = 0;
+          if (!dead && a.paused) void a.play();
+        })
+        .catch(() => {});
+    }
+
     async function start() {
       if (dead || started) return;
-      if (a.readyState < HTMLMediaElement.HAVE_FUTURE_DATA) return;
-      if (b.readyState < HTMLMediaElement.HAVE_FUTURE_DATA) return;
-      // Seeking the parked copy later fires canplay again. Never restart from that.
+      // Metadata is enough. Waiting for HAVE_FUTURE_DATA on both copies never
+      // arrives on mobile, so the still underneath stays on screen.
+      if (a.readyState < HTMLMediaElement.HAVE_METADATA) return;
       started = true;
       a.muted = true;
       b.muted = true;
-      try {
-        await b.play();
-        b.pause();
-        if (b.currentTime > 0.02) b.currentTime = 0;
-      } catch {
-        // The copy can still be started at the handoff if this prime is refused.
-      }
-      if (dead) return;
+      a.playsInline = true;
+      b.playsInline = true;
+      a.autoplay = true;
       try {
         await a.play();
       } catch {
         started = false;
+        armGesture();
         return;
       }
-      if (!dead) setPhase("live");
+      if (dead) return;
+      clearGesture();
+      primeSpare();
+      setPhase("live");
     }
 
+    a.addEventListener("loadedmetadata", start);
     a.addEventListener("loadeddata", start);
     a.addEventListener("canplay", start);
-    b.addEventListener("loadeddata", start);
-    b.addEventListener("canplay", start);
     a.addEventListener("error", fail);
     b.addEventListener("error", fail);
     start();
     return () => {
       dead = true;
+      clearGesture();
+      a.removeEventListener("loadedmetadata", start);
       a.removeEventListener("loadeddata", start);
       a.removeEventListener("canplay", start);
-      b.removeEventListener("loadeddata", start);
-      b.removeEventListener("canplay", start);
       a.removeEventListener("error", fail);
       b.removeEventListener("error", fail);
     };
@@ -136,28 +166,16 @@ function HeroCrossfade({
     let current: object | null = token;
     let frame = 0;
     let handoff = false;
-    let waiting = false;
 
     if (cueAt == null || outgoing.currentTime < cueAt) cuedRef.current = false;
 
     async function begin() {
       if (handoff || current !== token) return;
-      if (incoming.readyState < HTMLMediaElement.HAVE_FUTURE_DATA) {
-        if (!waiting) {
-          waiting = true;
-          incoming.addEventListener(
-            "canplay",
-            () => {
-              waiting = false;
-              void begin();
-            },
-            { once: true },
-          );
-        }
-        return;
-      }
+      // play() is what starts the spare copy loading on mobile. A full buffer
+      // is not required before the fade.
       handoff = true;
       incoming.muted = true;
+      incoming.playsInline = true;
       try {
         if (incoming.currentTime > 0.04) {
           await new Promise<void>((resolve) => {
